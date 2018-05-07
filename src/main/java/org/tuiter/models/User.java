@@ -134,7 +134,8 @@ public class User {
 			return false;
 		}
 		User aux = (User) obj;
-		if(username.equals(aux.getUsername()) && password.equals(aux.getPassword()) && email.equals(aux.getEmail())){
+		if(username.equals(aux.getUsername()) && password.equals(aux.getPassword()) && 
+				email.equals(aux.getEmail()) && gender.equals(aux.gender)){
 			return true;
 		} else {
 			return false;
