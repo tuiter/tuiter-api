@@ -1,22 +1,27 @@
 package org.tuiter.beans;
 
+import org.tuiter.util.Gender;
+
 public class SignupBean {
 	private String email;
 	private String name;
 	private String password;
 	private String photoUrl;
 	private String username;
+	private Gender gender;
 
 	public SignupBean() {
 		
 	}
 
-	public SignupBean(String username, String email, String name, String photo_url, String password) {
+	public SignupBean(String username, String email, String name, String photo_url, String password, 
+			Gender gender) {
 		this.email = email;
 		this.name = name;
 		this.password = password;
 		this.photoUrl = photo_url;
 		this.username = username;
+		this.gender = gender;
 	}
 
 	public String getEmail() {
@@ -57,5 +62,13 @@ public class SignupBean {
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	public Gender getGender() {
+		return gender;
+	}
+
+	public void setGender(Gender gender) {
+		this.gender = gender;
 	}
 }

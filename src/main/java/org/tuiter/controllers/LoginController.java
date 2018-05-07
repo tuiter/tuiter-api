@@ -17,7 +17,8 @@ import org.tuiter.services.interfaces.UserService;
 import org.tuiter.util.ServerConstants;
 
 @RestController
-@RequestMapping(ServerConstants.AUTHENTICATION_REQUEST)
+@RequestMapping(ServerConstants.SERVER_REQUEST +
+				ServerConstants.AUTHENTICATION_REQUEST)
 public class LoginController {
 	private UserService userService;
 	

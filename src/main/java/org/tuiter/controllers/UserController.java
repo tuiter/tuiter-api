@@ -43,7 +43,7 @@ public class UserController {
 					consumes = MediaType.APPLICATION_JSON_VALUE
 					) 
 	public ResponseEntity<HttpStatus> signup(@RequestBody SignupBean body) {
-		User user = new User(body.getUsername(), body.getEmail(), body.getName(), body.getPassword());
+		User user = new User(body.getUsername(), body.getEmail(), body.getName(), body.getPassword(), body.getGender());
 		userService.save(user);
 		
 		return new ResponseEntity<>(HttpStatus.OK);

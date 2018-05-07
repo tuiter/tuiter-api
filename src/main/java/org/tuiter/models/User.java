@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.tuiter.beans.modelbeans.UserBean;
+import org.tuiter.util.Gender;
 
 @Document(collection = "users")
 public class User {
@@ -19,8 +20,30 @@ public class User {
 	private List<User> following;
 	private String name;
 	private String password;
+	private Gender gender;
 	
 	public User() {}
+	
+	public User(String username, String email, String name, String password, Gender gender) {
+		this.username = username;
+		this.email = email;
+		this.photo_url = "";
+		this.name = name;
+		this.password = password;
+		followers = new ArrayList<>();
+		following = new ArrayList<>();
+		this.gender = gender;
+	}
+	
+	public User(String username, String email, String photo_url, String name, String password, Gender gender) {
+		this.username = username;
+		this.email = email;
+		this.photo_url = photo_url;
+		this.name = name;
+		this.password = password;
+		followers = new ArrayList<>();
+		following = new ArrayList<>();
+	}
 	
 	public User(String username, String email, String name, String password) {
 		this.username = username;
@@ -31,19 +54,9 @@ public class User {
 		followers = new ArrayList<>();
 		following = new ArrayList<>();
 	}
-	
-	public User(String username, String email, String photo_url, String name, String password) {
-		this.username = username;
-		this.email = email;
-		this.photo_url = photo_url;
-		this.name = name;
-		this.password = password;
-		followers = new ArrayList<>();
-		following = new ArrayList<>();
-	}
-	
+
 	public UserBean createBean(){
-		return new UserBean(username, email, name, photo_url, followers, following);
+		return new UserBean(username, email, name, photo_url, followers, following, gender);
 	}
 
 	public String getId() {
@@ -106,6 +119,15 @@ public class User {
 		this.password = password;
 	}
 	
+	
+	public Gender getGender() {
+		return gender;
+	}
+
+	public void setGender(Gender gender) {
+		this.gender = gender;
+	}
+
 	@Override
 	public boolean equals(Object obj){
 		if(!(obj instanceof User)){

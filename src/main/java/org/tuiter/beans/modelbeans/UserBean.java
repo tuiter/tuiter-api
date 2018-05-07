@@ -3,6 +3,7 @@ package org.tuiter.beans.modelbeans;
 import java.util.List;
 
 import org.tuiter.models.User;
+import org.tuiter.util.Gender;
 
 public class UserBean {
 	private String username;
@@ -11,19 +12,21 @@ public class UserBean {
 	private String photo_url;
 	private List<User> followers;
 	private List<User> following;
+	private Gender gender;
 	
 	public UserBean() {
 		
 	}
 	
 	public UserBean(String username, String email, String name, String photo_url, List<User> followers,
-			List<User> following) {
+			List<User> following, Gender gender) {
 		this.username = username;
 		this.email = email;
 		this.name = name;
 		this.photo_url = photo_url;
 		this.followers = followers;
 		this.following = following;
+		this.gender = gender;
 	}
 
 	public String getUsername() {
@@ -73,4 +76,13 @@ public class UserBean {
 	public void setFollowing(List<User> following) {
 		this.following = following;
 	}
+
+	public Gender getGender() {
+		return gender;
+	}
+
+	public void setGender(Gender gender) {
+		this.gender = gender;
+	}
+	
 }
