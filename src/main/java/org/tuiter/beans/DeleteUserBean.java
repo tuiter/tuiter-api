@@ -1,5 +1,8 @@
 package org.tuiter.beans;
 
+import org.tuiter.errors.annotations.ValidPassword;
+import org.tuiter.errors.annotations.ValidUsername;
+
 public class DeleteUserBean {
 	private String password;
 	private String username;
@@ -13,6 +16,7 @@ public class DeleteUserBean {
 		this.username = username;
 	}
 
+	@ValidPassword
 	public String getPassword() {
 		return password;
 	}
@@ -21,6 +25,7 @@ public class DeleteUserBean {
 		this.password = password;
 	}
 	
+	@ValidUsername
 	public String getUsername() {
 		return username;
 	}

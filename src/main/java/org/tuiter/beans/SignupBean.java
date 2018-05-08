@@ -1,14 +1,19 @@
 package org.tuiter.beans;
 
+import org.tuiter.errors.annotations.ValidEmail;
+import org.tuiter.errors.annotations.ValidGender;
+import org.tuiter.errors.annotations.ValidName;
+import org.tuiter.errors.annotations.ValidPassword;
+import org.tuiter.errors.annotations.ValidUsername;
 import org.tuiter.util.Gender;
 
 public class SignupBean {
 	private String email;
+	private Gender gender;
 	private String name;
 	private String password;
 	private String photoUrl;
 	private String username;
-	private Gender gender;
 
 	public SignupBean() {
 		
@@ -23,7 +28,8 @@ public class SignupBean {
 		this.username = username;
 		this.gender = gender;
 	}
-
+	
+	@ValidEmail
 	public String getEmail() {
 		return email;
 	}
@@ -31,7 +37,17 @@ public class SignupBean {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	
+	@ValidGender
+	public Gender getGender() {
+		return gender;
+	}
 
+	public void setGender(Gender gender) {
+		this.gender = gender;
+	}
+
+	@ValidName
 	public String getName() {
 		return name;
 	}
@@ -40,6 +56,7 @@ public class SignupBean {
 		this.name = name;
 	}
 
+	@ValidPassword
 	public String getPassword() {
 		return password;
 	}
@@ -56,19 +73,12 @@ public class SignupBean {
 		this.photoUrl = photo_url;
 	}
 	
+	@ValidUsername
 	public String getUsername() {
 		return username;
 	}
 
 	public void setUsername(String username) {
 		this.username = username;
-	}
-
-	public Gender getGender() {
-		return gender;
-	}
-
-	public void setGender(Gender gender) {
-		this.gender = gender;
 	}
 }

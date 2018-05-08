@@ -1,5 +1,7 @@
 package org.tuiter.util;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public enum Gender {
     M("Male"),
     F("Female"),
@@ -11,6 +13,7 @@ public enum Gender {
         this.name = name;
     }
 
+    @JsonValue
     public String getName() {
         return this.name;
     }

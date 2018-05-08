@@ -1,9 +1,12 @@
 package org.tuiter.beans;
 
+import org.tuiter.util.Gender;
+
 public class EditUserBean {
 	private String username;
+	private Gender gender;
 	private String name;
-	private String photo_url;
+	private String photoUrl;
 	private String oldPassword;
 	private String newPassword;
 	
@@ -15,17 +18,13 @@ public class EditUserBean {
 		super();
 		this.username = username;
 		this.name = name;
-		this.photo_url = photo_url;
+		this.photoUrl = photo_url;
 		this.oldPassword = oldPassword;
 		this.newPassword = newPassword;
 	}
 
 	public EditUserBean(String username, String name, String oldPassword, String newPassword) {
-		this.username = username;
-		this.name = name;
-		this.photo_url = "";
-		this.oldPassword = oldPassword;
-		this.newPassword = newPassword;
+		this(username, name, "", oldPassword, newPassword);
 	}
 
 	public String getUsername() {
@@ -44,12 +43,20 @@ public class EditUserBean {
 		this.name = name;
 	}
 
-	public String getPhoto_url() {
-		return photo_url;
+	public String getPhotoUrl() {
+		return photoUrl;
+	}
+	
+	public void setPhotoUrl(String photoUrl) {
+		this.photoUrl = photoUrl;
+	}
+	
+	public Gender getGender() {
+		return gender;
 	}
 
-	public void setPhoto_url(String photo_url) {
-		this.photo_url = photo_url;
+	public void setGender(Gender gender) {
+		this.gender = gender;
 	}
 
 	public String getOldPassword() {
@@ -67,5 +74,4 @@ public class EditUserBean {
 	public void setNewPassword(String newPassword) {
 		this.newPassword = newPassword;
 	}
-	
 }
