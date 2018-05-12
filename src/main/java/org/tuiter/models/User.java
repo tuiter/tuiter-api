@@ -14,9 +14,9 @@ import org.tuiter.util.Gender;
 public class User {
 	@Id
 	private String id;
-	@Indexed(unique = true)
+	//@Indexed(unique = true)
 	private String username;
-	@Indexed(unique = true)
+	//@Indexed(unique = true)
 	private String email;
 	private String photo_url;
 	private List<User> followers;
