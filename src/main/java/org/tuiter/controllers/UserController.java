@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.tuiter.beans.DeleteUserBean;
 import org.tuiter.beans.EditUserBean;
+import org.tuiter.beans.ResetPasswordBean;
 import org.tuiter.beans.SignupBean;
 import org.tuiter.errors.ErrorCode;
 import org.tuiter.errors.exceptions.TuiterApiException;
@@ -129,6 +129,35 @@ public class UserController {
 			) 
 	public ResponseEntity<HttpStatus> delete(@PathVariable String id) {
 		userService.delete(id);
+		
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/reset_password",
+			method = RequestMethod.PUT,
+			produces = MediaType.APPLICATION_JSON_VALUE
+			) 
+	public ResponseEntity<HttpStatus> resetPassword(@Valid @RequestBody ResetPasswordBean body) {
+		User user = userService.findByEmail(body.getEmail());
+		
+		if (user == null) {
+			throw new TuiterApiException("User not found!", HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.NOT_FOUND);			
+		}
+		
+		if (!body.getNewPassword().isEmpty() && !body.getConfirmNewPassword().isEmpty()) {
+			if (!body.getOldPassword().equals(user.getPassword())) {
+				throw new TuiterApiException("Password is incorrect!", HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.INCORRECT_PASSWORD);
+			}
+			
+			if (!body.getNewPassword().equals(body.getConfirmNewPassword())) {
+				throw new TuiterApiException("New password is incorrect!", HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.INCORRECT_PASSWORD);
+			}
+			
+		}
+		
+		user.setPassword(body.getNewPassword());
+		
+		userService.update(user);
 		
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
