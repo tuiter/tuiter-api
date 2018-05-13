@@ -1,69 +1,58 @@
 package org.tuiter.models;
 
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.tuiter.beans.modelbeans.UserBean;
 import org.tuiter.util.Gender;
 
 @Document(collection = "users")
 public class User {
 	@Id
 	private String id;
-	//@Indexed(unique = true)
-	private String username;
-	//@Indexed(unique = true)
+	
+	@Indexed(unique = true)
 	private String email;
-	private String photo_url;
-	private List<User> followers;
-	private List<User> following;
+	@Indexed(unique = true)
+	private String username;
+	
+	private Gender gender;
 	private String name;
 	private String password;
-	private Gender gender;
+	private String photoUrl;
 	
-	public User() {}
-	
-	public User(String username, String email, String name, String password, Gender gender) {
-		this.username = username;
+	public User(String email, String username, Gender gender, String name, String password, String photo_url) {
 		this.email = email;
-		this.photo_url = "";
-		this.name = name;
-		this.password = password;
-		followers = new ArrayList<>();
-		following = new ArrayList<>();
+		this.username = username;
+		
 		this.gender = gender;
-	}
-	
-	public User(String username, String email, String photo_url, String name, String password, Gender gender) {
-		this.username = username;
-		this.email = email;
-		this.photo_url = photo_url;
 		this.name = name;
 		this.password = password;
-		followers = new ArrayList<>();
-		following = new ArrayList<>();
+		this.photoUrl = photo_url;
 	}
 	
-	public User(String username, String email, String name, String password) {
-		this.username = username;
-		this.email = email;
-		this.photo_url = "";
-		this.name = name;
-		this.password = password;
-		followers = new ArrayList<>();
-		following = new ArrayList<>();
+	public User(String email, String username, Gender gender,  String name, String password) {
+		this(email, username, gender, name, password, "");
 	}
-
-	public UserBean createBean(){
-		return new UserBean(username, email, name, photo_url, followers, following, gender);
+	
+	public User(String email, String username, String name, String password) {
+		this(email, username, Gender.UNKNOWN, name, password, "");
+	}
+	
+	public User() {
+		
 	}
 
 	public String getId() {
 		return id;
+	}
+	
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public String getUsername() {
@@ -73,45 +62,29 @@ public class User {
 	public void setUsername(String username) {
 		this.username = username;
 	}
-
-	public String getEmail() {
-		return email;
+	
+	public Gender getGender() {
+		return gender;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+	public void setGender(Gender gender) {
+		this.gender = gender;
 	}
-
-	public String getPhoto_url() {
-		return photo_url;
-	}
-
-	public void setPhoto_url(String photo_url) {
-		this.photo_url = photo_url;
-	}
-
-	public List<User> getFollowers() {
-		return followers;
-	}
-
-	public void setFollowers(List<User> followers) {
-		this.followers = followers;
-	}
-
-	public List<User> getFollowing() {
-		return following;
-	}
-
-	public void setFollowing(List<User> following) {
-		this.following = following;
-	}
-
+	
 	public String getName() {
 		return name;
 	}
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getPhotoUrl() {
+		return photoUrl;
+	}
+
+	public void setPhotoUrl(String photoUrl) {
+		this.photoUrl = photoUrl;
 	}
 
 	public String getPassword() {
@@ -121,27 +94,37 @@ public class User {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
-	
-	public Gender getGender() {
-		return gender;
-	}
 
-	public void setGender(Gender gender) {
-		this.gender = gender;
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((username == null) ? 0 : username.hashCode());
+		return result;
 	}
 
 	@Override
-	public boolean equals(Object obj){
-		if(!(obj instanceof User)){
-			return false;
-		}
-		User aux = (User) obj;
-		if(username.equals(aux.getUsername()) && password.equals(aux.getPassword()) && 
-				email.equals(aux.getEmail()) && gender.equals(aux.gender)){
+	public boolean equals(Object obj) {
+		if (this == obj)
 			return true;
-		} else {
+		if (obj == null)
 			return false;
-		}
+		if (getClass() != obj.getClass())
+			return false;
+		User other = (User) obj;
+		if (username == null) {
+			if (other.username != null)
+				return false;
+		} else if (!username.equals(other.username))
+			return false;
+		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", email=" + email + ", username=" + username + ", gender=" + gender + ", name="
+				+ name + ", password=" + password + ", photoUrl=" + photoUrl + "]";
+	}
+
+	
 }
