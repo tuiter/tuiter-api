@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +25,7 @@ import org.tuiter.util.Bean2ModelFactory;
 import org.tuiter.util.ServerConstants;
 
 @RestController
+@CrossOrigin
 @RequestMapping(ServerConstants.SERVER_REQUEST 
 				+ ServerConstants.USER_REQUEST)
 public class UserController {
