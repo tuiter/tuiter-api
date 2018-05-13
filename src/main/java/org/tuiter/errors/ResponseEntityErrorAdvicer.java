@@ -5,8 +5,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import org.tuiter.errors.exceptions.TuiterApiException;
 
 @ControllerAdvice
 public class ResponseEntityErrorAdvicer extends ResponseEntityExceptionHandler {
@@ -17,5 +19,8 @@ public class ResponseEntityErrorAdvicer extends ResponseEntityExceptionHandler {
         return super.handleExceptionInternal(exception, error, headers, status, request);
     }
     
-    
+    @ExceptionHandler
+    protected ResponseEntity<Object> handleApiException(TuiterApiException exception) {
+    	return new ResponseEntity<>(exception, exception.getStatus());
+    }
 }	
