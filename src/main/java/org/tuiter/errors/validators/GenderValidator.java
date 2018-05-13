@@ -15,7 +15,6 @@ public class GenderValidator implements ConstraintValidator<ValidGender, Gender>
 	
 	@Override
 	public boolean isValid(Gender value, ConstraintValidatorContext context) {
-		System.out.println("adsaçldasklasjkdlsaj " + value);
 		return Arrays.asList(values).contains(value == null ? null : value.toString());
 	}
 

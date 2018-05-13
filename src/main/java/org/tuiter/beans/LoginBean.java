@@ -1,19 +1,19 @@
 package org.tuiter.beans;
 
 public class LoginBean {
-	private String username;
+	private String email;
 	private String password;
 	
 	public LoginBean(){
 		
 	}
 
-	public String getUsername() {
-		return username;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setUsername(String email) {
+		this.email = email;
 	}
 
 	public String getPassword() {
