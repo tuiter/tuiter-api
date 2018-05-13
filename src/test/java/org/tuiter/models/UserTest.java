@@ -12,9 +12,9 @@ public class UserTest {
 	
 	@Before
 	public void createUsers () {
-		user1 = new User("joaoc", "joaoc@email.com", "João Clóvis", "123456", Gender.M);
-		user2 = new User("mariaa", "mariaa@email.com", "Maria Araújo", "543543543", Gender.F);
-		user3 = new User("alex", "alex@email.com", "Alex Garibaldi", "dilma123", Gender.UNKNOWN);
+		user1 = new User("joaoc", "joaoc@email.com", Gender.M, "123456", "João Clóvis");
+		user2 = new User("mariaa", "mariaa@email.com", Gender.F, "543543543", "Maria Araújo");
+		user3 = new User("alex", "alex@email.com", Gender.UNKNOWN, "dilma123", "Alex Garibaldi");
 	}
 	
 	@Test
@@ -53,10 +53,10 @@ public class UserTest {
 	
 	@Test
 	public void equalsTest() {
-		Assert.assertEquals(user1, new User("joaoc", "joaoc@email.com", "João Clóvis", "123456", Gender.M));
-		Assert.assertEquals(user2, new User("mariaa", "mariaa@email.com", "Maria Araújo", "543543543", Gender.F));
+		Assert.assertEquals(user1, new User("joaoc", "joaoc@email.com", Gender.M, "123456", "João Clóvis"));
+		Assert.assertEquals(user2, new User("mariaa", "mariaa@email.com", Gender.F, "543543543", "Maria Araújo"));
 		Assert.assertNotEquals(user1, user2);
-		Assert.assertNotEquals(user1, new User("jojo", "jojo@email.com", "Josefina", "123456", Gender.F));
-		Assert.assertNotEquals(user2, new User("auaua", "auaua@email.com", "Auricele", "090909", Gender.F));
+		Assert.assertNotEquals(user1, new User("jojo", "jojo@email.com", Gender.F, "123456", "Josefina"));
+		Assert.assertNotEquals(user2, new User("auaua", "auaua@email.com", Gender.F, "090909", "Auricele"));
 	}
 }
