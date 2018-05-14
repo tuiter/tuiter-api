@@ -5,6 +5,6 @@ public class ServerConstants {
 	
 	public static final String SERVER_REQUEST = "/tuiterapi";
 	
-	public static final String AUTHENTICATION_REQUEST = "/authentication";
+	public static final String AUTHENTICATION_REQUEST = "/auth";
 	public static final String USER_REQUEST = "/users";
 }

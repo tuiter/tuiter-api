@@ -20,7 +20,7 @@ public class ResponseEntityErrorAdvicer extends ResponseEntityExceptionHandler {
     }
     
     @ExceptionHandler
-    protected ResponseEntity<Object> handleApiException(TuiterApiException exception) {
+    protected ResponseEntity<TuiterApiException> handleApiException(TuiterApiException exception) {
     	return new ResponseEntity<>(exception, exception.getStatus());
     }
 }	
