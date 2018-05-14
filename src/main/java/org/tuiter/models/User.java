@@ -6,6 +6,8 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.tuiter.util.Gender;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Document(collection = "users")
 public class User {
 	@Id
@@ -18,6 +20,7 @@ public class User {
 	
 	private Gender gender;
 	private String name;
+	@JsonIgnore
 	private String password;
 	private String photoUrl;
 	
