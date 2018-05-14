@@ -143,6 +143,9 @@ public class UserController {
 			throw new TuiterApiException("User not found!", HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.NOT_FOUND);			
 		}
 		
+		if (!user.getPassword().equals(body.getOldPassword()))
+			throw new TuiterApiException("Password incorrect!", HttpStatus.UNAUTHORIZED, ErrorCode.INCORRECT_PASSWORD);
+		
 		if (body.getNewPassword().isEmpty()) {
 			throw new TuiterApiException("Password is empty!", HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.INCORRECT_PASSWORD);
 		}
