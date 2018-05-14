@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.tuiter.beans.LoginBean;
+import org.tuiter.errors.ErrorCode;
+import org.tuiter.errors.exceptions.TuiterApiException;
 import org.tuiter.models.User;
 import org.tuiter.services.implementations.UserServiceImpl;
 import org.tuiter.services.interfaces.UserService;
@@ -27,14 +29,19 @@ public class LoginController {
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<User> login(@RequestBody LoginBean requestBody) throws ServletException {
-		try {			
-			User dbUser = userService.findByUsername(requestBody.getUsername());
-			
-			return new ResponseEntity<>(dbUser, HttpStatus.OK);
-		} catch(RuntimeException e) {
-			e.printStackTrace();
-			throw new ServletException("Request error while trying to login... " + e.getMessage());
+		User user = userService.findByUsername(requestBody.getUsername());
+		
+		if (user == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);		
 		}
+		
+		if (!requestBody.getPassword().isEmpty()) {
+			if (!user.getPassword().equals(requestBody.getPassword())) {
+				throw new ServletException("Password is incorrect!");
+			}
+		}
+			
+			return new ResponseEntity<>(user, HttpStatus.OK);
 	}
 	
 	@Autowired

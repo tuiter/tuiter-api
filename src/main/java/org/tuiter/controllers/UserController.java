@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.tuiter.beans.DeleteUserBean;
 import org.tuiter.beans.EditUserBean;
+import org.tuiter.beans.ResetPasswordBean;
 import org.tuiter.beans.SignupBean;
 import org.tuiter.errors.ErrorCode;
 import org.tuiter.errors.exceptions.TuiterApiException;
@@ -129,6 +129,30 @@ public class UserController {
 			) 
 	public ResponseEntity<HttpStatus> delete(@PathVariable String id) {
 		userService.delete(id);
+		
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/{id}/pass",
+			method = RequestMethod.PATCH
+			) 
+	public ResponseEntity<HttpStatus> resetPassword(@PathVariable String id, @Valid @RequestBody ResetPasswordBean body) {
+		User user = userService.findById(id);
+		
+		if (user == null) {
+			throw new TuiterApiException("User not found!", HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.NOT_FOUND);			
+		}
+		
+		if (!user.getPassword().equals(body.getOldPassword()))
+			throw new TuiterApiException("Password incorrect!", HttpStatus.UNAUTHORIZED, ErrorCode.INCORRECT_PASSWORD);
+		
+		if (body.getNewPassword().isEmpty()) {
+			throw new TuiterApiException("Password is empty!", HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.INCORRECT_PASSWORD);
+		}
+		
+		user.setPassword(body.getNewPassword());
+		
+		userService.update(user);
 		
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
