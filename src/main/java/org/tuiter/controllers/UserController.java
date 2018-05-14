@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +25,7 @@ import org.tuiter.util.Bean2ModelFactory;
 import org.tuiter.util.ServerConstants;
 
 @RestController
+@CrossOrigin
 @RequestMapping(ServerConstants.SERVER_REQUEST 
 				+ ServerConstants.USER_REQUEST)
 public class UserController {
@@ -34,7 +36,7 @@ public class UserController {
 		this.userService = userService;
 	}
 	
-	@RequestMapping(value = "/get/{id}",
+	@RequestMapping(value = "/{id}",
 					method = RequestMethod.GET,
 					produces = MediaType.APPLICATION_JSON_VALUE
 					) 
@@ -48,21 +50,16 @@ public class UserController {
 		return new ResponseEntity<>(userService.findById(id), HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/get/all",
-					method = RequestMethod.GET,
-					produces = MediaType.APPLICATION_JSON_VALUE
+	@RequestMapping(
+					method = RequestMethod.GET
 					) 
 	public ResponseEntity<Iterable<User>> getUsers() {
 		
 		return new ResponseEntity<>(userService.findAll(), HttpStatus.OK); 
 	}
 	
-	@RequestMapping(value = "/signup",
-					method = RequestMethod.POST,
-					produces = MediaType.APPLICATION_JSON_VALUE,
-					consumes = MediaType.APPLICATION_JSON_VALUE
-					) 
-	public ResponseEntity<HttpStatus> signup(@Valid @RequestBody SignupBean body) {
+	@RequestMapping(method = RequestMethod.POST) 
+	public ResponseEntity<User> signup(@Valid @RequestBody SignupBean body) {
 		User user = Bean2ModelFactory.createUser(body);
 
 		if (userService.findByUsername(user.getUsername()) != null) {
@@ -73,9 +70,9 @@ public class UserController {
 			throw new TuiterApiException("Email already in the database!", HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.ALREADY_CREATED);
 		}
 		
-		userService.save(user);
+		user = userService.save(user);
 		
-		return new ResponseEntity<>(HttpStatus.OK);
+		return new ResponseEntity<>(user, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/edit",

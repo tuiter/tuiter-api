@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,6 +18,7 @@ import org.tuiter.services.interfaces.UserService;
 import org.tuiter.util.ServerConstants;
 
 @RestController
+@CrossOrigin
 @RequestMapping(ServerConstants.SERVER_REQUEST +
 				ServerConstants.AUTHENTICATION_REQUEST)
 public class LoginController {
@@ -28,7 +30,7 @@ public class LoginController {
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<User> login(@RequestBody LoginBean requestBody) throws ServletException {
 		try {			
-			User dbUser = userService.findByUsername(requestBody.getUsername());
+			User dbUser = userService.findByEmail(requestBody.getEmail());
 			
 			return new ResponseEntity<>(dbUser, HttpStatus.OK);
 		} catch(RuntimeException e) {
