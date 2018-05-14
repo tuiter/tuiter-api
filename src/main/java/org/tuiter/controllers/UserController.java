@@ -133,26 +133,18 @@ public class UserController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/reset_password",
-			method = RequestMethod.PUT,
-			produces = MediaType.APPLICATION_JSON_VALUE
+	@RequestMapping(value = "/{id}/pass",
+			method = RequestMethod.PATCH
 			) 
-	public ResponseEntity<HttpStatus> resetPassword(@Valid @RequestBody ResetPasswordBean body) {
-		User user = userService.findByEmail(body.getEmail());
+	public ResponseEntity<HttpStatus> resetPassword(@PathVariable String id, @Valid @RequestBody ResetPasswordBean body) {
+		User user = userService.findById(id);
 		
 		if (user == null) {
 			throw new TuiterApiException("User not found!", HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.NOT_FOUND);			
 		}
 		
-		if (!body.getNewPassword().isEmpty() && !body.getConfirmNewPassword().isEmpty()) {
-			if (!body.getOldPassword().equals(user.getPassword())) {
-				throw new TuiterApiException("Password is incorrect!", HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.INCORRECT_PASSWORD);
-			}
-			
-			if (!body.getNewPassword().equals(body.getConfirmNewPassword())) {
-				throw new TuiterApiException("New password is incorrect!", HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.INCORRECT_PASSWORD);
-			}
-			
+		if (body.getNewPassword().isEmpty()) {
+			throw new TuiterApiException("Password is empty!", HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.INCORRECT_PASSWORD);
 		}
 		
 		user.setPassword(body.getNewPassword());
