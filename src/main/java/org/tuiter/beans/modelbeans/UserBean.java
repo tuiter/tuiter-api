@@ -18,8 +18,7 @@ public class UserBean {
 		
 	}
 	
-	public UserBean(String username, String email, String name, String photo_url, List<User> followers,
-			List<User> following, Gender gender) {
+	public UserBean(String username, String email, String name, String photo_url, Gender gender) {
 		this.username = username;
 		this.email = email;
 		this.name = name;

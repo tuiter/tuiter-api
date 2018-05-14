@@ -36,7 +36,7 @@ public class UserController {
 		this.userService = userService;
 	}
 	
-	@RequestMapping(value = "/{id}",
+	@RequestMapping(value = "get/{id}",
 					method = RequestMethod.GET,
 					produces = MediaType.APPLICATION_JSON_VALUE
 					) 
@@ -50,14 +50,19 @@ public class UserController {
 		return new ResponseEntity<>(userService.findById(id), HttpStatus.OK);
 	}
 	
-	@RequestMapping(method = RequestMethod.GET
+	@RequestMapping(value = "/getall",
+					method = RequestMethod.GET,
+					produces = MediaType.APPLICATION_JSON_VALUE					
 					) 
 	public ResponseEntity<Iterable<User>> getUsers() {
 		
 		return new ResponseEntity<>(userService.findAll(), HttpStatus.OK); 
 	}
 	
-	@RequestMapping(method = RequestMethod.POST
+	@RequestMapping(value = "/signup",
+					method = RequestMethod.POST,
+					consumes = MediaType.APPLICATION_JSON_VALUE,
+					produces = MediaType.APPLICATION_JSON_VALUE
 					) 
 	public ResponseEntity<User> signup(@Valid @RequestBody SignupBean body) {
 		User user = Bean2ModelFactory.createUser(body);
@@ -89,12 +94,6 @@ public class UserController {
 		
 		if (!body.getName().isEmpty()) {
 			user.setName(body.getName());
-		}
-		
-		if (!body.getNewPassword().isEmpty()) {
-			if (!body.getOldPassword().equals(user.getPassword())) {
-				throw new TuiterApiException("Password is incorrect!", HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.INCORRECT_PASSWORD);
-			}
 		}
 		
 		if (!body.getPhotoUrl().isEmpty()) {
