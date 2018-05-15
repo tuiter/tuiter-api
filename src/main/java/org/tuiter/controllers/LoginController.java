@@ -49,8 +49,8 @@ public class LoginController {
 		}
 		
 		
-		
-		String token = buildToken(user.getUsername());
+		String token = "";	
+//		String token = buildToken(user.getUsername());
 		
 		AuthenticationResponse response = new AuthenticationResponse(token, Model2BeanFactory.createUserBean(user));
 			

@@ -47,11 +47,10 @@ public class UserController {
 			throw new TuiterApiException("User not found!", HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.NOT_FOUND);
 		}
 		
-		return new ResponseEntity<>(userService.findById(id), HttpStatus.OK);
+		return new ResponseEntity<>(user, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/getall",
-					method = RequestMethod.GET,
+	@RequestMapping(method = RequestMethod.GET,
 					produces = MediaType.APPLICATION_JSON_VALUE					
 					) 
 	public ResponseEntity<Iterable<User>> getUsers() {
@@ -59,8 +58,7 @@ public class UserController {
 		return new ResponseEntity<>(userService.findAll(), HttpStatus.OK); 
 	}
 	
-	@RequestMapping(value = "/signup",
-					method = RequestMethod.POST,
+	@RequestMapping(method = RequestMethod.POST,
 					consumes = MediaType.APPLICATION_JSON_VALUE,
 					produces = MediaType.APPLICATION_JSON_VALUE
 					) 
