@@ -10,22 +10,17 @@ public class UserBean {
 	private String email;
 	private String name;
 	private String photo_url;
-	private List<User> followers;
-	private List<User> following;
 	private Gender gender;
 	
 	public UserBean() {
 		
 	}
 	
-	public UserBean(String username, String email, String name, String photo_url, List<User> followers,
-			List<User> following, Gender gender) {
+	public UserBean(String username, String email, String name, String photo_url, Gender gender) {
 		this.username = username;
 		this.email = email;
 		this.name = name;
 		this.photo_url = photo_url;
-		this.followers = followers;
-		this.following = following;
 		this.gender = gender;
 	}
 
@@ -59,22 +54,6 @@ public class UserBean {
 
 	public void setPhoto_url(String photo_url) {
 		this.photo_url = photo_url;
-	}
-
-	public List<User> getFollowers() {
-		return followers;
-	}
-
-	public void setFollowers(List<User> followers) {
-		this.followers = followers;
-	}
-
-	public List<User> getFollowing() {
-		return following;
-	}
-
-	public void setFollowing(List<User> following) {
-		this.following = following;
 	}
 
 	public Gender getGender() {
