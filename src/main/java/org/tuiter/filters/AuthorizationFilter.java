@@ -9,6 +9,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.web.filter.GenericFilterBean;
+import org.tuiter.util.SecurityConstants;
+
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureException;
 
@@ -31,7 +33,7 @@ public class AuthorizationFilter extends GenericFilterBean {
 		String token = header.substring(AUTHORIZATION_TYPE.length());
 		
 		try {
-			Jwts.parser().setSigningKey("auto123")
+			Jwts.parser().setSigningKey(SecurityConstants.SECRET)
 						 .parseClaimsJws(token).getBody();
 		} catch(SignatureException e) {
 			throw new ServletException("Invalid token.");

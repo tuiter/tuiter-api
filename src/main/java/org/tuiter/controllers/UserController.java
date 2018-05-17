@@ -39,7 +39,7 @@ public class UserController {
 	@RequestMapping(value = "get/{id}",
 					method = RequestMethod.GET,
 					produces = MediaType.APPLICATION_JSON_VALUE
-					) 
+					)
 	public ResponseEntity<User> getUserById(@PathVariable String id) {
 		User user = userService.findById(id);
 				
@@ -83,21 +83,15 @@ public class UserController {
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE
 			) 
-	public ResponseEntity<HttpStatus> edit(@RequestBody EditUserBean body) {
-		User user = userService.findByUsername(body.getUsername());
+	public ResponseEntity<HttpStatus> edit(@Valid @RequestBody EditUserBean body) {
+		User user = userService.findByUsername(body.getRequester());
 		
 		if (user == null) {
 			throw new TuiterApiException("User not found!", HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.NOT_FOUND);			
 		}
 		
-		if (!body.getName().isEmpty()) {
-			user.setName(body.getName());
-		}
-		
-		if (!body.getPhotoUrl().isEmpty()) {
-			user.setPhotoUrl(body.getPhotoUrl());
-		}
-		
+		user.setName(body.getName());
+		user.setPhotoUrl(body.getPhotoUrl());
 		user.setGender(body.getGender());
 	
 		userService.update(user);

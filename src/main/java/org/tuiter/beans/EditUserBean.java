@@ -1,34 +1,47 @@
 package org.tuiter.beans;
 
+import org.tuiter.errors.annotations.ValidGender;
+import org.tuiter.errors.annotations.ValidName;
 import org.tuiter.util.Gender;
 
 public class EditUserBean {
-	private String username;
+	private String requester;
+	
+	@ValidGender
 	private Gender gender;
+	@ValidName
 	private String name;
 	private String photoUrl;
 	
 	public EditUserBean() {
 		
 	}
-
-	public EditUserBean(String username, String name, String photo_url) {
+	
+	public EditUserBean(String requester, String name, String photo_url, Gender gender) {
 		super();
-		this.username = username;
+		this.requester = requester;
+		this.name = name;
+		this.photoUrl = photo_url;
+		this.gender = gender;
+	}
+
+	public EditUserBean(String requester, String name, String photo_url) {
+		super();
+		this.requester = requester;
 		this.name = name;
 		this.photoUrl = photo_url;
 	}
 
-	public EditUserBean(String username, String name, String oldPassword, String newPassword) {
-		this(username, name, "");
+	public EditUserBean(String requester, String name) {
+		this(requester, name, "");
 	}
 
-	public String getUsername() {
-		return username;
+	public String getRequester() {
+		return requester;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setRequester(String requester) {
+		this.requester = requester;
 	}
 
 	public String getName() {
