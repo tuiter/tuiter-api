@@ -24,7 +24,6 @@ import org.tuiter.errors.exceptions.UserNotFoundException;
 import org.tuiter.models.User;
 import org.tuiter.services.implementations.UserServiceImpl;
 import org.tuiter.services.interfaces.UserService;
-import org.tuiter.util.Bean2ModelFactory;
 import org.tuiter.util.ServerConstants;
 
 @RestController
@@ -42,7 +41,7 @@ public class UserController {
 	@RequestMapping(value = "get/{id}",
 					method = RequestMethod.GET,
 					produces = MediaType.APPLICATION_JSON_VALUE
-					) 
+					)
 	public ResponseEntity<User> getUserById(@PathVariable String id) {
 		User user;
 		try {
@@ -81,6 +80,7 @@ public class UserController {
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE
 			) 
+
 	public ResponseEntity<HttpStatus> edit(@RequestBody EditUserBean body) {
 		
 		try {

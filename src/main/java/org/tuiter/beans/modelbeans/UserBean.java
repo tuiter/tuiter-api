@@ -1,8 +1,5 @@
 package org.tuiter.beans.modelbeans;
 
-import java.util.List;
-
-import org.tuiter.models.User;
 import org.tuiter.util.Gender;
 
 public class UserBean {

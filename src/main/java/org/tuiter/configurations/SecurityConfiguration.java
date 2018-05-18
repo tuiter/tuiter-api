@@ -8,14 +8,13 @@ import org.tuiter.util.ServerConstants;
 
 @Configuration
 public class SecurityConfiguration {
-	
 	@Bean
-	public FilterRegistrationBean buildAuthorizationFilter() {
+	public FilterRegistrationBean<AuthorizationFilter> buildAuthorizationFilter() {
 		
-		FilterRegistrationBean filterRegistration = new FilterRegistrationBean();
+		FilterRegistrationBean<AuthorizationFilter> filterRegistration = new FilterRegistrationBean<>();
 		filterRegistration.setFilter(new AuthorizationFilter());
 		
-		filterRegistration.addUrlPatterns( ServerConstants.SERVER_REQUEST + ServerConstants.USER_REQUEST + "/edit", ServerConstants.SERVER_REQUEST + ServerConstants.USER_REQUEST + "/getall");
+		filterRegistration.addUrlPatterns(ServerConstants.SERVER_REQUEST + ServerConstants.USER_REQUEST + "/edit", ServerConstants.SERVER_REQUEST + ServerConstants.USER_REQUEST + "/getall");
 		return filterRegistration;
 	}
 	
