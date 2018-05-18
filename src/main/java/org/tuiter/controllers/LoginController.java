@@ -21,7 +21,6 @@ import org.tuiter.beans.LoginBean;
 import org.tuiter.models.User;
 import org.tuiter.services.implementations.UserServiceImpl;
 import org.tuiter.services.interfaces.UserService;
-import org.tuiter.util.Model2BeanFactory;
 import org.tuiter.util.SecurityConstants;
 import org.tuiter.util.ServerConstants;
 
@@ -59,7 +58,7 @@ public class LoginController {
 			
 		String token = buildToken(appUser.getUsername());
 		
-		AuthenticationResponse response = new AuthenticationResponse(token, Model2BeanFactory.createUserBean(appUser));
+		AuthenticationResponse response = new AuthenticationResponse(token, appUser);
 			
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
