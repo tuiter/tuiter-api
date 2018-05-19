@@ -1,13 +1,13 @@
 package org.tuiter.beans;
 
-import org.tuiter.beans.modelbeans.UserBean;
+import org.tuiter.models.User;
 
 public class AuthenticationResponse {
 	private String token;
-	private UserBean user;
+	private User user;
 	
 	
-	public AuthenticationResponse(String token, UserBean user) {
+	public AuthenticationResponse(String token, User user) {
 		this.token = token;
 		this.user = user;
 	}
@@ -17,7 +17,7 @@ public class AuthenticationResponse {
 	}
 	
 	
-	public UserBean getUser() {
+	public User getUser() {
 		return user;
 	}
 }
