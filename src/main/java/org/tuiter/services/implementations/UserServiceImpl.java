@@ -51,6 +51,14 @@ public class UserServiceImpl implements UserService {
 	public User findByUsername(String username) {
 		return userRepository.findByUsername(username);
 	}
+	
+	@Override
+	public User findByIdentifier(String identifier) {
+		User user = this.userRepository.findAll().stream().filter(tempUser -> tempUser.getEmail().equals(identifier) 
+				|| tempUser.getUsername().equals(identifier)).findFirst().orElse(null);
+		
+		return user;
+	}
 
 	@Override
 	public User save(User user) {

@@ -13,6 +13,7 @@ public interface UserService {
 	public User findByEmail(String email);
 	public User findById(String id) throws UserNotFoundException;
 	public User findByUsername(String username);
+	public User findByIdentifier(String identifier);
 	public User save(User user);
 	public User delete(String username) throws UserNotFoundException;
 	public User deleteById(String username) throws UserNotFoundException;
