@@ -17,11 +17,13 @@ import org.tuiter.beans.EditUserBean;
 import org.tuiter.beans.ResetPasswordBean;
 import org.tuiter.beans.SignupBean;
 import org.tuiter.errors.ErrorCode;
+import org.tuiter.errors.exceptions.IncorretPasswordException;
 import org.tuiter.errors.exceptions.TuiterApiException;
+import org.tuiter.errors.exceptions.UserAlreadyExistsException;
+import org.tuiter.errors.exceptions.UserNotFoundException;
 import org.tuiter.models.User;
 import org.tuiter.services.implementations.UserServiceImpl;
 import org.tuiter.services.interfaces.UserService;
-import org.tuiter.util.Bean2ModelFactory;
 import org.tuiter.util.ServerConstants;
 
 @RestController
@@ -41,13 +43,13 @@ public class UserController {
 					produces = MediaType.APPLICATION_JSON_VALUE
 					)
 	public ResponseEntity<User> getUserById(@PathVariable String id) {
-		User user = userService.findById(id);
-				
-		if (user == null) {
-			throw new TuiterApiException("User not found!", HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.NOT_FOUND);
+		User user;
+		try {
+			user = userService.findById(id);
+			return new ResponseEntity<User>(user, HttpStatus.OK);
+		} catch (UserNotFoundException e) {
+			return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
 		}
-		
-		return new ResponseEntity<>(user, HttpStatus.OK);
 	}
 	
 	@RequestMapping(method = RequestMethod.GET,
@@ -63,19 +65,14 @@ public class UserController {
 					produces = MediaType.APPLICATION_JSON_VALUE
 					) 
 	public ResponseEntity<User> signup(@Valid @RequestBody SignupBean body) {
-		User user = Bean2ModelFactory.createUser(body);
-
-		if (userService.findByUsername(user.getUsername()) != null) {
-			throw new TuiterApiException("Username already in the database!", HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.ALREADY_CREATED);
+		try {
+			User user = userService.create(body);
+			return new ResponseEntity<>(user, HttpStatus.OK);
+		} catch (UserAlreadyExistsException exception) {
+			throw new TuiterApiException("User already exists!", HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.ALREADY_CREATED);
+		} catch (IncorretPasswordException e) {
+			throw new TuiterApiException("Password and confirmPassword don't match!", HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.INCORRECT_PASSWORD);
 		}
-		
-		if (userService.findByEmail(user.getEmail()) != null) {
-			throw new TuiterApiException("Email already in the database!", HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.ALREADY_CREATED);
-		}
-		
-		user = userService.save(user);
-		
-		return new ResponseEntity<>(user, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/edit",
@@ -83,20 +80,15 @@ public class UserController {
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE
 			) 
-	public ResponseEntity<HttpStatus> edit(@Valid @RequestBody EditUserBean body) {
-		User user = userService.findByUsername(body.getRequester());
+
+	public ResponseEntity<HttpStatus> edit(@RequestBody EditUserBean body) {
 		
-		if (user == null) {
-			throw new TuiterApiException("User not found!", HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.NOT_FOUND);			
+		try {
+			userService.update(body);
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (UserNotFoundException e) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		
-		user.setName(body.getName());
-		user.setPhotoUrl(body.getPhotoUrl());
-		user.setGender(body.getGender());
-	
-		userService.update(user);
-		
-		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/delete",
@@ -105,10 +97,12 @@ public class UserController {
 			consumes = MediaType.APPLICATION_JSON_VALUE
 			) 
 	public ResponseEntity<HttpStatus> delete(@RequestBody DeleteUserBean body) {
-		User user = userService.findByUsername(body.getUsername());
-		userService.delete(user.getId());
-		
-		return new ResponseEntity<>(HttpStatus.OK);
+		try {
+			userService.delete(body.getUsername());
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (UserNotFoundException e) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
 	}
 	
 	@RequestMapping(value = "/delete/{id}",
@@ -116,8 +110,11 @@ public class UserController {
 			produces = MediaType.APPLICATION_JSON_VALUE
 			) 
 	public ResponseEntity<HttpStatus> delete(@PathVariable String id) {
-		userService.delete(id);
-		
+		try {
+			userService.delete(id);
+		} catch (UserNotFoundException e) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
@@ -125,24 +122,14 @@ public class UserController {
 			method = RequestMethod.PATCH
 			) 
 	public ResponseEntity<HttpStatus> resetPassword(@PathVariable String id, @Valid @RequestBody ResetPasswordBean body) {
-		User user = userService.findById(id);
-		
-		if (user == null) {
-			throw new TuiterApiException("User not found!", HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.NOT_FOUND);			
-		}
-		
-		if (!user.getPassword().equals(body.getOldPassword()))
-			throw new TuiterApiException("Password incorrect!", HttpStatus.UNAUTHORIZED, ErrorCode.INCORRECT_PASSWORD);
-		
-		if (body.getNewPassword().isEmpty()) {
-			throw new TuiterApiException("Password is empty!", HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.INCORRECT_PASSWORD);
-		}
-		
-		user.setPassword(body.getNewPassword());
-		
-		userService.update(user);
-		
-		return new ResponseEntity<>(HttpStatus.OK);
+		try {
+			userService.resetPassword(id, body);
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (UserNotFoundException e) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		} catch (IncorretPasswordException e) {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}		
 	}
 }
 

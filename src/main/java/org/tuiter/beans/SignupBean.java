@@ -14,21 +14,24 @@ public class SignupBean {
 	private String password;
 	private String photoUrl;
 	private String username;
+	private String confirmPassword;
 
 	public SignupBean() {
 		
 	}
-
-	public SignupBean(String username, String email, String name, String photo_url, String password, 
-			Gender gender) {
+	
+	public SignupBean(String email, Gender gender, String name, String password, String photoUrl, String username,
+			String confirmPassword) {
+		super();
 		this.email = email;
+		this.gender = gender;
 		this.name = name;
 		this.password = password;
-		this.photoUrl = photo_url;
+		this.photoUrl = photoUrl;
 		this.username = username;
-		this.gender = gender;
+		this.confirmPassword = confirmPassword;
 	}
-	
+
 	@ValidEmail
 	public String getEmail() {
 		return email;
@@ -81,4 +84,14 @@ public class SignupBean {
 	public void setUsername(String username) {
 		this.username = username;
 	}
+
+	public String getConfirmPassword() {
+		return confirmPassword;
+	}
+
+	public void setConfirmPassword(String confirmPassword) {
+		this.confirmPassword = confirmPassword;
+	}
+	
+	
 }
