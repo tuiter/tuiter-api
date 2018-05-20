@@ -87,7 +87,7 @@ public class UserServiceImpl implements UserService {
 			if (!body.getName().isEmpty()) {
 				user.setName(body.getName());
 			}
-			if (!body.getPhotoUrl().isEmpty()) {
+			if (body.getPhotoUrl() != null && !body.getPhotoUrl().isEmpty()) {
 				user.setPhotoUrl(body.getPhotoUrl());
 			}
 			user.setGender(body.getGender());
