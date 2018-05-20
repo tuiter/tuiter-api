@@ -5,8 +5,6 @@ import org.tuiter.models.Essay;
 
 public interface EssayRepository extends MongoRepository<Essay, String> {
 	
-	public Iterable<Essay> findAllByUserUsername(String username);
-	
 	public Iterable<Essay> findAllByUserId(String id);
 
 	public Essay findByTitleAndUserId(String title, String id);
