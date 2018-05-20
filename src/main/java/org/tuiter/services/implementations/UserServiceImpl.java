@@ -80,8 +80,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User update(EditUserBean body) throws UserNotFoundException {
-		User user = userRepository.findByUsername(body.getRequester());
+	public User update(String id, EditUserBean body) throws UserNotFoundException {
+		User user = userRepository.findById(id).orElse(null);
 		
 		if(user != null){
 			if (!body.getName().isEmpty()) {
@@ -128,9 +128,6 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User create(SignupBean body) throws UserAlreadyExistsException, IncorretPasswordException {
-		if (!body.getPassword().equals(body.getConfirmPassword())) {
-			throw new IncorretPasswordException();
-		}
 		User user = Bean2ModelFactory.createUser(body);
 		if (!(exists(user.getEmail()))) {
 			return save(user);

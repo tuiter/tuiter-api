@@ -10,8 +10,6 @@ import org.tuiter.models.User;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
-import lombok.AllArgsConstructor;
-
 @JsonInclude(Include.NON_NULL)
 public class AuthenticatedUser implements Authentication {
 

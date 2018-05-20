@@ -38,10 +38,7 @@ public class UserController {
 		this.userService = userService;
 	}
 	
-	@RequestMapping(value = "get/{id}",
-					method = RequestMethod.GET,
-					produces = MediaType.APPLICATION_JSON_VALUE
-					)
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public ResponseEntity<User> getUserById(@PathVariable String id) {
 		User user;
 		try {
@@ -52,18 +49,13 @@ public class UserController {
 		}
 	}
 	
-	@RequestMapping(method = RequestMethod.GET,
-					produces = MediaType.APPLICATION_JSON_VALUE					
-					) 
+	@RequestMapping(method = RequestMethod.GET) 
 	public ResponseEntity<Iterable<User>> getUsers() {
 		
 		return new ResponseEntity<>(userService.findAll(), HttpStatus.OK); 
 	}
 	
-	@RequestMapping(method = RequestMethod.POST,
-					consumes = MediaType.APPLICATION_JSON_VALUE,
-					produces = MediaType.APPLICATION_JSON_VALUE
-					) 
+	@RequestMapping(method = RequestMethod.POST) 
 	public ResponseEntity<User> signup(@Valid @RequestBody SignupBean body) {
 		try {
 			User user = userService.create(body);
@@ -75,40 +67,14 @@ public class UserController {
 		}
 	}
 	
-	@RequestMapping(value = "/edit",
-			method = RequestMethod.PUT,
-			produces = MediaType.APPLICATION_JSON_VALUE,
-			consumes = MediaType.APPLICATION_JSON_VALUE
-			) 
-
-	public ResponseEntity<HttpStatus> edit(@RequestBody EditUserBean body) {
+	@RequestMapping(value = "/{id}", method = RequestMethod.PUT) 
+	public ResponseEntity<User> edit(@PathVariable String id, @Valid @RequestBody EditUserBean body) throws UserNotFoundException{	
+		User user = userService.update(id, body);
 		
-		try {
-			userService.update(body);
-			return new ResponseEntity<>(HttpStatus.OK);
-		} catch (UserNotFoundException e) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
+		return new ResponseEntity<>(user, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/delete",
-			method = RequestMethod.DELETE,
-			produces = MediaType.APPLICATION_JSON_VALUE,
-			consumes = MediaType.APPLICATION_JSON_VALUE
-			) 
-	public ResponseEntity<HttpStatus> delete(@RequestBody DeleteUserBean body) {
-		try {
-			userService.delete(body.getUsername());
-			return new ResponseEntity<>(HttpStatus.OK);
-		} catch (UserNotFoundException e) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
-	}
-	
-	@RequestMapping(value = "/delete/{id}",
-			method = RequestMethod.GET,
-			produces = MediaType.APPLICATION_JSON_VALUE
-			) 
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE) 
 	public ResponseEntity<HttpStatus> delete(@PathVariable String id) {
 		try {
 			userService.delete(id);
