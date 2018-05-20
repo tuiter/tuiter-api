@@ -18,8 +18,12 @@ import org.tuiter.beans.ResetPasswordBean;
 import org.tuiter.beans.SignupBean;
 import org.tuiter.errors.ErrorCode;
 import org.tuiter.errors.exceptions.TuiterApiException;
+import org.tuiter.errors.exceptions.UserNotExistsException;
+import org.tuiter.models.Essay;
 import org.tuiter.models.User;
+import org.tuiter.services.implementations.EssayServiceImpl;
 import org.tuiter.services.implementations.UserServiceImpl;
+import org.tuiter.services.interfaces.EssayService;
 import org.tuiter.services.interfaces.UserService;
 import org.tuiter.util.Bean2ModelFactory;
 import org.tuiter.util.ServerConstants;
@@ -30,10 +34,16 @@ import org.tuiter.util.ServerConstants;
 				+ ServerConstants.USER_REQUEST)
 public class UserController {
 	private UserService userService;
+	private EssayService essayService;
 	
 	@Autowired
 	public void setUserService(UserServiceImpl userService) {
 		this.userService = userService;
+	}
+	
+	@Autowired
+	public void setEssayService(EssayServiceImpl essayService) {
+		this.essayService = essayService;
 	}
 	
 	@RequestMapping(value = "get/{id}",
@@ -143,6 +153,18 @@ public class UserController {
 		userService.update(user);
 		
 		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/{id}/essays",
+			method = RequestMethod.GET
+			) 
+	public ResponseEntity<Iterable<Essay>> getEssaysByUser(@PathVariable String id) {
+		try {
+			return new ResponseEntity<Iterable<Essay>>(essayService.findAllByUserId(id), HttpStatus.OK);
+		} catch (UserNotExistsException e) {
+			throw new TuiterApiException("User not found!", HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.NOT_FOUND);			
+		}
+		
 	}
 }
 
