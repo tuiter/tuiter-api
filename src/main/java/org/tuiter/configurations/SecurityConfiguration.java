@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Configuration;
 import org.tuiter.filters.AuthorizationFilter;
 import org.tuiter.util.ServerConstants;
 
-@Configuration
 public class SecurityConfiguration {
 	@Bean
 	public FilterRegistrationBean<AuthorizationFilter> buildAuthorizationFilter() {
