@@ -63,8 +63,8 @@ public class EditUserBean {
 	public Gender getGender() {
 		return gender;
 	}
-
-	public void setGender(Gender gender) {
+ 
+public void setGender(Gender gender) {
 		this.gender = gender;
 	}
 }
