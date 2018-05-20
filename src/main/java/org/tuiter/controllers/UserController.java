@@ -68,7 +68,7 @@ public class UserController {
 	}
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT) 
-	public ResponseEntity<User> edit(@PathVariable String id, @Valid @RequestBody EditUserBean body) throws UserNotFoundException{	
+	public ResponseEntity<User> edit(@PathVariable String id, @Valid @RequestBody User body) throws UserNotFoundException{	
 		User user = userService.update(id, body);
 		
 		return new ResponseEntity<>(user, HttpStatus.OK);

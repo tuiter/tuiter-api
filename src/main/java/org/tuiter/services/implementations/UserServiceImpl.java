@@ -80,7 +80,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User update(String id, EditUserBean body) throws UserNotFoundException {
+	public User update(String id, User body) throws UserNotFoundException {
 		User user = userRepository.findById(id).orElse(null);
 		
 		if(user != null){

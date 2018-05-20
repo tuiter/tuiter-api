@@ -18,7 +18,7 @@ public interface UserService {
 	public User delete(String username) throws UserNotFoundException;
 	public User deleteById(String username) throws UserNotFoundException;
 	public User create(SignupBean body) throws UserAlreadyExistsException, IncorretPasswordException;
-	public User update(String id, EditUserBean body) throws UserNotFoundException;
+	public User update(String id, User body) throws UserNotFoundException;
 	public User resetPassword(String id, ResetPasswordBean body) throws UserNotFoundException, IncorretPasswordException;
 }
 
