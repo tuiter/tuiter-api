@@ -92,7 +92,7 @@ private EssayService essayService;
 	}
 	
 	@RequestMapping(value = "/delete/{id}",
-			method = RequestMethod.GET,
+			method = RequestMethod.DELETE,
 			produces = MediaType.APPLICATION_JSON_VALUE
 			) 
 	public ResponseEntity<HttpStatus> delete(@PathVariable String id) {
