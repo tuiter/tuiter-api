@@ -8,14 +8,14 @@ public class Essay {
 	@Id
 	private String id;
 
-	private User user;
+	private String userId;
 	private String title;
 	private String theme;
 	private String content;
 	
-	public Essay(User user, String title, String theme, String content) {
+	public Essay(String userId, String title, String theme, String content) {
 		super();
-		this.user = user;
+		this.userId = userId;
 		this.title = title;
 		this.theme = theme;
 		this.content = content;
@@ -25,9 +25,9 @@ public class Essay {
 		
 	}
 	
-	public Essay(User user, String title, String content) {
+	public Essay(String userId, String title, String content) {
 		super();
-		this.user = user;
+		this.userId = userId;
 		this.title = title;
 		this.content = content;
 	}
@@ -36,12 +36,12 @@ public class Essay {
 		return id;
 	}
 
-	public User getUser() {
-		return user;
+	public String getUserId() {
+		return userId;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
 	public String getTitle() {
@@ -76,7 +76,7 @@ public class Essay {
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((theme == null) ? 0 : theme.hashCode());
 		result = prime * result + ((title == null) ? 0 : title.hashCode());
-		result = prime * result + ((user == null) ? 0 : user.hashCode());
+		result = prime * result + ((userId == null) ? 0 : userId.hashCode());
 		return result;
 	}
 
@@ -109,17 +109,17 @@ public class Essay {
 				return false;
 		} else if (!title.equals(other.title))
 			return false;
-		if (user == null) {
-			if (other.user != null)
+		if (userId == null) {
+			if (other.userId != null)
 				return false;
-		} else if (!user.equals(other.user))
+		} else if (!userId.equals(other.userId))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "Essay [id=" + id + ", user=" + user + ", title=" + title + ", theme=" + theme + ", content=" + content
+		return "Essay [id=" + id + ", userId=" + userId + ", title=" + title + ", theme=" + theme + ", content=" + content
 				+ "]";
 	}
 }
