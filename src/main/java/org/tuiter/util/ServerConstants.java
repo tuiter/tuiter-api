@@ -7,4 +7,6 @@ public class ServerConstants {
 	
 	public static final String AUTHENTICATION_REQUEST = "/auth";
 	public static final String USER_REQUEST = "/users";
+	public static final String ESSAY_REQUEST = "/essays";
+	
 }

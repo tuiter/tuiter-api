@@ -54,8 +54,9 @@ public class UserServiceImpl implements UserService {
 	
 	@Override
 	public User findByIdentifier(String identifier) {
-		User user = this.userRepository.findAll().stream().filter(tempUser -> tempUser.getEmail().equals(identifier) 
-				|| tempUser.getUsername().equals(identifier)).findFirst().orElse(null);
+		User user = this.userRepository.findAll().stream().filter(
+				tempUser -> tempUser.getEmail().equals(identifier) || tempUser.getUsername().equals(identifier))
+				.findFirst().orElse(null);
 		
 		return user;
 	}

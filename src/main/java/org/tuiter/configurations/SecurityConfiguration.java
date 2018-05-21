@@ -13,7 +13,9 @@ public class SecurityConfiguration {
 		FilterRegistrationBean<AuthorizationFilter> filterRegistration = new FilterRegistrationBean<>();
 		filterRegistration.setFilter(new AuthorizationFilter());
 		
-		filterRegistration.addUrlPatterns(ServerConstants.SERVER_REQUEST + ServerConstants.USER_REQUEST + "/edit", ServerConstants.SERVER_REQUEST + ServerConstants.USER_REQUEST + "/getall");
+		filterRegistration.addUrlPatterns(ServerConstants.SERVER_REQUEST + ServerConstants.USER_REQUEST + "/edit",
+				ServerConstants.SERVER_REQUEST + ServerConstants.USER_REQUEST + "/getall");
+		filterRegistration.addUrlPatterns(ServerConstants.SERVER_REQUEST + ServerConstants.ESSAY_REQUEST + "/edit");
 		return filterRegistration;
 	}
 	
