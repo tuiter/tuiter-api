@@ -18,14 +18,14 @@ public class EssayTest {
 		
 		essay1 = new Essay("1", "Hoje e ontem", "Tempo", "Texto aqui");
 		essay2 = new Essay("2", "Hoje e amanhã", "Tempo", "Outro texto aqui");
-		essay3 = new Essay("3", "Pera e uva", "Comida", "Texto terceiro aqui");
+		essay3 = new Essay("2", "Pera e uva", "Comida", "Texto terceiro aqui");
 	}
 	
 	@Test
 	public void userTest() {
 		Assert.assertEquals(essay1.getUserId(), user1);
 		Assert.assertEquals(essay2.getUserId(), user2);
-		Assert.assertEquals(essay3.getUserId(), user1);
+		Assert.assertEquals(essay3.getUserId(), user2);
 		
 	}
 	
@@ -54,7 +54,7 @@ public class EssayTest {
 	public void equalsTest() {
 		Assert.assertEquals(essay1, new Essay(user1, "Hoje e ontem", "Tempo", "Texto aqui"));
 		Assert.assertEquals(essay2, new Essay(user2, "Hoje e amanhã", "Tempo", "Outro texto aqui"));
-		Assert.assertEquals(essay3, new Essay(user1, "Pera e uva", "Comida", "Texto terceiro aqui"));
+		Assert.assertEquals(essay3, new Essay(user2, "Pera e uva", "Comida", "Texto terceiro aqui"));
 		Assert.assertNotEquals(essay1, essay3);
 	}
 

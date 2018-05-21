@@ -12,7 +12,7 @@ public class UserTest {
 	
 	@Before
 	public void createUsers () {
-		user1 = new User("joaoc@email.com", "joaoc", Gender.M,  "João Clóvis", "123456");
+		user1 = new User("joaoc@email.com", "joaoc", Gender.M, "João Clóvis", "123456");
 		user2 = new User("mariaa@email.com", "mariaa", Gender.F, "Maria Araújo", "543543543");
 		user3 = new User("alex@email.com", "alex", Gender.UNKNOWN, "Alex Garibaldi", "dilma123");
 	}
@@ -54,6 +54,7 @@ public class UserTest {
 	@Test
 	public void equalsTest() {
 		Assert.assertEquals(user1, new User("joaoc@email.com", "joaoc", Gender.M,  "João Clóvis", "123456"));
+		Assert.assertEquals(user1, new User("joaoc@email.com", "joaoc", Gender.M, "João Clóvis", "123456"));
 		Assert.assertEquals(user2, new User("mariaa@email.com", "mariaa", Gender.F, "Maria Araújo", "543543543"));
 		Assert.assertNotEquals(user1, user2);
 		Assert.assertNotEquals(user1, new User("jojo", "jojo@email.com", Gender.F, "123456", "Josefina"));

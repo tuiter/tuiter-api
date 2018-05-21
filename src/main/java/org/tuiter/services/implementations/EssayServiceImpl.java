@@ -83,7 +83,7 @@ public class EssayServiceImpl implements EssayService{
 	}
 
 	@Override
-	public Iterable<Essay> findAllByUserId(String id) throws UserNotExistsException, UserNotFoundException {
+	public Iterable<Essay> findAllByUserId(String id) throws UserNotExistsException, UserNotFoundException{
 		User user = userService.findById(id);
 		
 		if (user != null) {
