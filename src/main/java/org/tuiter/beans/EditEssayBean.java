@@ -1,7 +1,6 @@
 package org.tuiter.beans;
 
 public class EditEssayBean {
-	private String id;
 	private String title;
 	private String theme;
 	private String content;
@@ -11,18 +10,9 @@ public class EditEssayBean {
 	}
 
 	public EditEssayBean(String id, String title, String theme, String content) {
-		this.id = id;
 		this.title = title;
 		this.theme = theme;
 		this.content = content;
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
 	}
 
 	public String getTitle() {
