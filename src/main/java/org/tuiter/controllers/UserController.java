@@ -107,6 +107,8 @@ public class UserController {
 			return new ResponseEntity<Iterable<Essay>>(essayService.findAllByUserId(id), HttpStatus.OK);
 		} catch (UserNotExistsException e) {
 			throw new TuiterApiException("User not found!", HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.NOT_FOUND);			
+		} catch (UserNotFoundException e) {
+			throw new TuiterApiException("User not found.", HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.NOT_FOUND);
 		}
 		
 	}
