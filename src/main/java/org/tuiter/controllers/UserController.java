@@ -4,7 +4,6 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,17 +11,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.tuiter.beans.DeleteUserBean;
-import org.tuiter.beans.EditUserBean;
 import org.tuiter.beans.ResetPasswordBean;
 import org.tuiter.beans.SignupBean;
 import org.tuiter.errors.ErrorCode;
 import org.tuiter.errors.exceptions.IncorretPasswordException;
 import org.tuiter.errors.exceptions.TuiterApiException;
-import org.tuiter.errors.exceptions.UserNotExistsException;
-import org.tuiter.models.Essay;
 import org.tuiter.errors.exceptions.UserAlreadyExistsException;
+import org.tuiter.errors.exceptions.UserNotExistsException;
 import org.tuiter.errors.exceptions.UserNotFoundException;
+import org.tuiter.models.Essay;
 import org.tuiter.models.User;
 import org.tuiter.services.implementations.EssayServiceImpl;
 import org.tuiter.services.implementations.UserServiceImpl;
@@ -116,6 +113,8 @@ public class UserController {
 			return new ResponseEntity<Iterable<Essay>>(essayService.findAllByUserId(id), HttpStatus.OK);
 		} catch (UserNotExistsException e) {
 			throw new TuiterApiException("User not found!", HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.NOT_FOUND);			
+		} catch (UserNotFoundException e) {
+			throw new TuiterApiException("User not found!", HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND);
 		}
 		
 	}

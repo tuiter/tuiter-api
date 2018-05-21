@@ -9,6 +9,7 @@ import org.tuiter.beans.modelbeans.EssayBean;
 import org.tuiter.errors.exceptions.EmptyFieldsException;
 import org.tuiter.errors.exceptions.EssayNotExistsException;
 import org.tuiter.errors.exceptions.UserNotExistsException;
+import org.tuiter.errors.exceptions.UserNotFoundException;
 import org.tuiter.models.Essay;
 import org.tuiter.models.User;
 import org.tuiter.repositories.EssayRepository;
@@ -82,8 +83,9 @@ public class EssayServiceImpl implements EssayService{
 	}
 
 	@Override
-	public Iterable<Essay> findAllByUserId(String id) throws UserNotExistsException{
+	public Iterable<Essay> findAllByUserId(String id) throws UserNotExistsException, UserNotFoundException {
 		User user = userService.findById(id);
+		
 		if (user != null) {
 			return essayRepository.findAllByUserId(id);
 		} else {
