@@ -41,8 +41,8 @@ public class EssayServiceImpl implements EssayService{
 	}
 
 	@Override
-	public Essay update(EditEssayBean bean) throws EssayNotExistsException, EmptyFieldsException{
-		Optional<Essay> essay_opt = essayRepository.findById(bean.getId());
+	public Essay update(String id, EditEssayBean bean) throws EssayNotExistsException, EmptyFieldsException{
+		Optional<Essay> essay_opt = essayRepository.findById(id);
 		if(essay_opt.isPresent()) {
 			Essay essay = essay_opt.get();
 			if(!bean.getTitle().isEmpty() && !bean.getTheme().isEmpty() && !bean.getContent().isEmpty()) {
