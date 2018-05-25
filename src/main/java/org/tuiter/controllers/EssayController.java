@@ -17,8 +17,11 @@ import org.tuiter.errors.exceptions.EssayNotExistsException;
 import org.tuiter.errors.exceptions.TuiterApiException;
 import org.tuiter.errors.exceptions.UserNotExistsException;
 import org.tuiter.models.Essay;
+import org.tuiter.models.Review;
 import org.tuiter.services.implementations.EssayServiceImpl;
+import org.tuiter.services.implementations.ReviewServiceImpl;
 import org.tuiter.services.interfaces.EssayService;
+import org.tuiter.services.interfaces.ReviewService;
 import org.tuiter.util.ServerConstants;
 
 @RestController
@@ -27,10 +30,16 @@ import org.tuiter.util.ServerConstants;
 				+ ServerConstants.ESSAY_REQUEST)
 public class EssayController {
 	private EssayService essayService;
+	private ReviewService reviewService;
 	
 	@Autowired
 	public void setEssayService(EssayServiceImpl essayService) {
 		this.essayService = essayService;
+	}
+	
+	@Autowired
+	public void setReviewService(ReviewServiceImpl reviewService) {
+		this.reviewService = reviewService;
 	}
 	
 	@RequestMapping(method = RequestMethod.POST) 
@@ -71,11 +80,21 @@ public class EssayController {
 		return new ResponseEntity<>(essay, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/{id}") 
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE) 
 	public ResponseEntity<HttpStatus> delete(@PathVariable String id) {
 		try {
 			essayService.delete(id);
 			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (EssayNotExistsException e) {
+			throw new TuiterApiException("Essay not found.", HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.NOT_FOUND);
+		}
+	}
+	
+	@RequestMapping(value = "/{id}/reviews", method = RequestMethod.GET) 
+	public ResponseEntity<Iterable<Review>> getReviewsByEssayId(@PathVariable String id) {
+		try {
+			Iterable<Review> reviews = reviewService.findAllByEssayId(id);
+			return new ResponseEntity<>(reviews, HttpStatus.OK);
 		} catch (EssayNotExistsException e) {
 			throw new TuiterApiException("Essay not found.", HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.NOT_FOUND);
 		}

@@ -1,23 +1,25 @@
 package org.tuiter.beans.modelbeans;
 
+import java.util.List;
+
 public class ReviewBean {
 	private String essayId;
 	private String reviewingUserId;
 	
 	private String title;
-	private String content;
-	private int rating;
+	private List<String> comments;
+	private List<Double> ratings;
 	
 	public ReviewBean() {
 		
 	}
 	
-	public ReviewBean(String essayId, String reviewingUserId, String title, String content, int rating) {
+	public ReviewBean(String essayId, String reviewingUserId, String title, List<String> comments, List<Double> ratings) {
 		this.essayId = essayId;
 		this.reviewingUserId = reviewingUserId;
 		this.title = title;
-		this.content = content;
-		this.rating = rating;
+		this.comments = comments;
+		this.ratings = ratings;
 	}
 
 	public String getEssayId() {
@@ -44,19 +46,19 @@ public class ReviewBean {
 		this.title = title;
 	}
 
-	public String getContent() {
-		return content;
+	public List<String> getComments() {
+		return comments;
 	}
 
-	public void setContent(String content) {
-		this.content = content;
+	public void setContent(List<String> comments) {
+		this.comments = comments;
 	}
 
-	public int getRating() {
-		return rating;
+	public List<Double> getRatings() {
+		return ratings;
 	}
 
-	public void setRating(int rating) {
-		this.rating = rating;
+	public void setRatings(List<Double> ratings) {
+		this.ratings = ratings;
 	}
 }

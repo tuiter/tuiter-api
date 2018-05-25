@@ -5,4 +5,5 @@ import org.tuiter.models.Review;
 
 public interface ReviewRepository extends MongoRepository<Review, String> {
 	public Iterable<Review> findAllByUserId(String id);
+	public Iterable<Review> findAllByEssayId(String id);
 }

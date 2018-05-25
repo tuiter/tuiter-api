@@ -1,5 +1,7 @@
 package org.tuiter.models;
 
+import java.util.List;
+
 import org.springframework.data.annotation.Id;
 
 public class Review {
@@ -10,15 +12,15 @@ public class Review {
 	private String userId;
 	
 	private String title;
-	private String content;
-	private int rating;
+	private List<String> comments;
+	private List<Double> ratings;
 	
-	public Review(String essayId, String userId, String title, String content, int rating) {
+	public Review(String essayId, String userId, String title, List<String> comments, List<Double> ratings) {
 		this.essayId = essayId;
 		this.userId = userId;
 		this.title = title;
-		this.content = content;
-		this.rating = rating;
+		this.comments = comments;
+		this.ratings = ratings;
 	}
 
 	public String getId() {
@@ -49,20 +51,20 @@ public class Review {
 		this.title = title;
 	}
 
-	public String getContent() {
-		return content;
+	public List<String> getComments() {
+		return comments;
 	}
 
-	public void setContent(String content) {
-		this.content = content;
+	public void setComments(List<String> comments) {
+		this.comments = comments;
 	}
 
-	public int getRating() {
-		return rating;
+	public List<Double> getRatings() {
+		return ratings;
 	}
 
-	public void setRating(int rating) {
-		this.rating = rating;
+	public void setRatings(List<Double> ratings) {
+		this.ratings = ratings;
 	}
 
 	@Override
@@ -93,6 +95,6 @@ public class Review {
 	@Override
 	public String toString() {
 		return "Review [id=" + id + ", essayId=" + essayId + ", userId=" + userId + ", title=" + title + ", content="
-				+ content + ", rating=" + rating + "]";
+				+ comments + ", rating=" + ratings + "]";
 	}
 }

@@ -49,6 +49,16 @@ public class ReviewController {
 		}
 	}
 	
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET) 
+	public ResponseEntity<Review> getById(@PathVariable String id) {
+		try {
+			Review review = reviewService.findById(id);
+			return new ResponseEntity<>(review, HttpStatus.OK);
+		} catch(ReviewNotExistsException e) {
+			throw new TuiterApiException("Review not found.", HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.NOT_FOUND);
+		}
+	}
+	
 	@RequestMapping(value="/{id}", method = RequestMethod.PUT) 
 	public ResponseEntity<Review> update(@PathVariable String id, @RequestBody EditReviewBean body) {
 		try {

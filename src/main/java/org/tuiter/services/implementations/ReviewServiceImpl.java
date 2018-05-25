@@ -4,9 +4,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.tuiter.beans.EditEssayBean;
 import org.tuiter.beans.EditReviewBean;
-import org.tuiter.beans.modelbeans.EssayBean;
 import org.tuiter.beans.modelbeans.ReviewBean;
 import org.tuiter.errors.exceptions.EmptyFieldsException;
 import org.tuiter.errors.exceptions.EssayNotExistsException;
@@ -47,7 +45,7 @@ public class ReviewServiceImpl implements ReviewService {
 		Essay essay = essayService.findById(bean.getEssayId());
 		
 		if(user != null && essay != null) {
-			Review review = new Review(essay.getId(), user.getId(), bean.getTitle(), bean.getContent(), bean.getRating());
+			Review review = new Review(essay.getId(), user.getId(), bean.getTitle(), bean.getComments(), bean.getRatings());
 			return reviewRepository.save(review);
 		} else {
 			throw new UserNotExistsException();
@@ -59,10 +57,10 @@ public class ReviewServiceImpl implements ReviewService {
 		Optional<Review> reviewOpt = reviewRepository.findById(id);
 		if(reviewOpt.isPresent()) {
 			Review review = reviewOpt.get();
-			if(!bean.getTitle().isEmpty() && !bean.getContent().isEmpty()) {
+			if(!bean.getTitle().isEmpty() && !bean.getComments().isEmpty()) {
 				review.setTitle(bean.getTitle());
-				review.setContent(bean.getContent());
-				review.setRating(bean.getRating());
+				review.setComments(bean.getComments());
+				review.setRatings(bean.getRatings());
 				reviewRepository.save(review);
 				return review;
 			} else {
@@ -93,6 +91,17 @@ public class ReviewServiceImpl implements ReviewService {
 			return reviewRepository.findAllByUserId(id);
 		} else {
 			throw new UserNotExistsException();
+		}
+	}
+	
+	@Override
+	public Iterable<Review> findAllByEssayId(String id) throws EssayNotExistsException {
+		Essay essay = essayService.findById(id);
+		
+		if (essay != null) {
+			return reviewRepository.findAllByEssayId(id);
+		} else {
+			throw new EssayNotExistsException();
 		}
 	}
 	

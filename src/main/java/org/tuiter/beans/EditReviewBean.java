@@ -1,18 +1,21 @@
 package org.tuiter.beans;
 
+import java.util.List;
+
 public class EditReviewBean {
+	
 	private String title;
-	private String content;
-	private int rating;
+	private List<String> comments;
+	private List<Double> ratings;
 
 	public EditReviewBean() {
 		
 	}
 
-	public EditReviewBean(String title, String content, int rating) {
+	public EditReviewBean(String title, List<String> comments, List<Double> ratings) {
 		this.title = title;
-		this.content = content;
-		this.rating = rating;
+		this.comments = comments;
+		this.ratings = ratings;
 	}
 
 	public String getTitle() {
@@ -23,19 +26,20 @@ public class EditReviewBean {
 		this.title = title;
 	}
 
-	public String getContent() {
-		return content;
+	public List<String> getComments() {
+		return comments;
 	}
 
-	public void setContent(String content) {
-		this.content = content;
+	public void setComments(List<String> comments) {
+		this.comments = comments;
+		
 	}
 
-	public int getRating() {
-		return rating;
+	public List<Double> getRatings() {
+		return ratings;
 	}
 
-	public void setRating(int rating) {
-		this.rating = rating;
+	public void setRating(List<Double> ratings) {
+		this.ratings = ratings;
 	}	
 }
