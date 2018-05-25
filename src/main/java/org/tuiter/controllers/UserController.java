@@ -20,10 +20,13 @@ import org.tuiter.errors.exceptions.UserAlreadyExistsException;
 import org.tuiter.errors.exceptions.UserNotExistsException;
 import org.tuiter.errors.exceptions.UserNotFoundException;
 import org.tuiter.models.Essay;
+import org.tuiter.models.Review;
 import org.tuiter.models.User;
 import org.tuiter.services.implementations.EssayServiceImpl;
+import org.tuiter.services.implementations.ReviewServiceImpl;
 import org.tuiter.services.implementations.UserServiceImpl;
 import org.tuiter.services.interfaces.EssayService;
+import org.tuiter.services.interfaces.ReviewService;
 import org.tuiter.services.interfaces.UserService;
 import org.tuiter.util.ServerConstants;
 
@@ -34,6 +37,7 @@ import org.tuiter.util.ServerConstants;
 public class UserController {
 	private UserService userService;
 	private EssayService essayService;
+	private ReviewService reviewService;
 	
 	@Autowired
 	public void setUserService(UserServiceImpl userService) {
@@ -43,6 +47,11 @@ public class UserController {
 	@Autowired
 	public void setEssayService(EssayServiceImpl essayService) {
 		this.essayService = essayService;
+	}
+	
+	@Autowired
+	public void setReviewService(ReviewServiceImpl reviewService) {
+		this.reviewService = reviewService;
 	}
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
@@ -111,6 +120,20 @@ public class UserController {
 	public ResponseEntity<Iterable<Essay>> getEssaysByUser(@PathVariable String id) {
 		try {
 			return new ResponseEntity<Iterable<Essay>>(essayService.findAllByUserId(id), HttpStatus.OK);
+		} catch (UserNotExistsException e) {
+			throw new TuiterApiException("User not found!", HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.NOT_FOUND);			
+		} catch (UserNotFoundException e) {
+			throw new TuiterApiException("User not found!", HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND);
+		}
+		
+	}
+	
+	@RequestMapping(value = "/{id}/reviews",
+			method = RequestMethod.GET
+			) 
+	public ResponseEntity<Iterable<Review>> getReviewsByUser(@PathVariable String id) {
+		try {
+			return new ResponseEntity<>(reviewService.findAllByUserId(id), HttpStatus.OK);
 		} catch (UserNotExistsException e) {
 			throw new TuiterApiException("User not found!", HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.NOT_FOUND);			
 		} catch (UserNotFoundException e) {

@@ -26,7 +26,7 @@ import org.tuiter.util.ServerConstants;
 @RequestMapping(ServerConstants.SERVER_REQUEST 
 				+ ServerConstants.ESSAY_REQUEST)
 public class EssayController {
-private EssayService essayService;
+	private EssayService essayService;
 	
 	@Autowired
 	public void setEssayService(EssayServiceImpl essayService) {
