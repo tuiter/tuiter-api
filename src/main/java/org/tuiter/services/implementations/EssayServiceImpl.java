@@ -50,6 +50,7 @@ public class EssayServiceImpl implements EssayService{
 				essay.setTitle(bean.getTitle());
 				essay.setTheme(bean.getTheme());
 				essay.setContent(bean.getContent());
+				essay.setType(bean.getType());
 				essayRepository.save(essay);
 				return essay;
 			} else {
