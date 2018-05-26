@@ -1,6 +1,8 @@
 package org.tuiter.services.implementations;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -107,6 +109,24 @@ public class EssayServiceImpl implements EssayService{
 		Optional<Essay> essay = essayRepository.findById(id);
 		if(essay.isPresent()) {
 			return essay.get();
+		} else {
+			throw new EssayNotExistsException();
+		}
+	}
+
+	@Override
+	public Essay getEssayToReview(String id) throws EssayNotExistsException {
+		List<Essay> essays = essayRepository.findAll();
+		if (!essays.isEmpty()) {
+			Random rand = new Random();
+			int index = rand.nextInt(essays.size());
+			Essay essay = essays.get(index);
+			
+			while (essay.getUserId().equals(id)) {
+				index = rand.nextInt(essays.size());
+				essay = essays.get(index);
+			}
+			return essay;
 		} else {
 			throw new EssayNotExistsException();
 		}
