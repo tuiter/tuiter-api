@@ -18,17 +18,17 @@ public class SignupBean {
 	public SignupBean() {
 		
 	}
-
-	public SignupBean(String username, String email, String name, String photo_url, String password, 
-			Gender gender) {
+	
+	public SignupBean(String email, Gender gender, String name, String password, String photoUrl, String username) {
+		super();
 		this.email = email;
+		this.gender = gender;
 		this.name = name;
 		this.password = password;
-		this.photoUrl = photo_url;
+		this.photoUrl = photoUrl;
 		this.username = username;
-		this.gender = gender;
 	}
-	
+
 	@ValidEmail
 	public String getEmail() {
 		return email;
@@ -81,4 +81,5 @@ public class SignupBean {
 	public void setUsername(String username) {
 		this.username = username;
 	}
+	
 }

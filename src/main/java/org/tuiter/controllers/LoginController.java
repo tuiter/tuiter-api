@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.tuiter.beans.AuthenticationResponse;
 import org.tuiter.beans.LoginBean;
 import org.tuiter.models.User;
+import org.tuiter.services.implementations.AuthenticationService;
 import org.tuiter.services.implementations.UserServiceImpl;
 import org.tuiter.services.interfaces.UserService;
 import org.tuiter.util.SecurityConstants;
@@ -32,52 +33,24 @@ import io.jsonwebtoken.SignatureAlgorithm;
 @RequestMapping(ServerConstants.SERVER_REQUEST +
 				ServerConstants.AUTHENTICATION_REQUEST)
 public class LoginController {
-	private UserService userService;
+	@Autowired
+    private AuthenticationService authenticationService;
 	
 	@RequestMapping(value = "/login",
 					method = RequestMethod.POST, 
 					produces = MediaType.APPLICATION_JSON_VALUE,
 					consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<AuthenticationResponse> login(@RequestBody LoginBean requestBody) throws ServletException {
-		User appUser = userService.findByEmail(requestBody.getIdentifier());
+		User user = authenticationService.authenticate(requestBody);
 		
-		if (appUser == null) {
-			appUser = userService.findByUsername(requestBody.getIdentifier());
-		}
-		
-		if (appUser == null) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
-		
-		if (!requestBody.getPassword().isEmpty()) {
-			if (!appUser.getPassword().equals(requestBody.getPassword())) {
-				throw new ServletException("Password is incorrect!");
-			}
-		}
-		
-			
-		String token = buildToken(appUser.getUsername());
-		
-		AuthenticationResponse response = new AuthenticationResponse(token, appUser);
-			
-		return new ResponseEntity<>(response, HttpStatus.OK);
-	}
-	
-	private String buildToken(String username) {
-		ZonedDateTime expirationTime = ZonedDateTime.now(ZoneOffset.UTC).plus(SecurityConstants.EXPIRATION_TIME, ChronoUnit.MILLIS);
-		
-		String token = Jwts.builder()
-				   .setSubject(username)
-				   .setExpiration(Date.from(expirationTime.toInstant()))
-				   .signWith(SignatureAlgorithm.HS256, SecurityConstants.SECRET)
-				   .compact();
-		
-		return token;
-	}
-	
-	@Autowired
-	public void setUserService(UserServiceImpl userServiceImpl) {
-		this.userService = userServiceImpl;
-	}	
+		String token;
 
+        try {
+            token = authenticationService.tokenFor(user);
+            AuthenticationResponse authBean = new AuthenticationResponse(token, user);
+            return new ResponseEntity<>(authBean, HttpStatus.OK);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+	}
 }

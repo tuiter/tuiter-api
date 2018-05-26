@@ -53,6 +53,7 @@ public class UserTest {
 	
 	@Test
 	public void equalsTest() {
+		Assert.assertEquals(user1, new User("joaoc@email.com", "joaoc", Gender.M,  "João Clóvis", "123456"));
 		Assert.assertEquals(user1, new User("joaoc@email.com", "joaoc", Gender.M, "João Clóvis", "123456"));
 		Assert.assertEquals(user2, new User("mariaa@email.com", "mariaa", Gender.F, "Maria Araújo", "543543543"));
 		Assert.assertNotEquals(user1, user2);

@@ -9,6 +9,7 @@ import org.tuiter.beans.modelbeans.EssayBean;
 import org.tuiter.errors.exceptions.EmptyFieldsException;
 import org.tuiter.errors.exceptions.EssayNotExistsException;
 import org.tuiter.errors.exceptions.UserNotExistsException;
+import org.tuiter.errors.exceptions.UserNotFoundException;
 import org.tuiter.models.Essay;
 import org.tuiter.models.User;
 import org.tuiter.repositories.EssayRepository;
@@ -41,8 +42,8 @@ public class EssayServiceImpl implements EssayService{
 	}
 
 	@Override
-	public Essay update(EditEssayBean bean) throws EssayNotExistsException, EmptyFieldsException{
-		Optional<Essay> essay_opt = essayRepository.findById(bean.getId());
+	public Essay update(String id, EditEssayBean bean) throws EssayNotExistsException, EmptyFieldsException{
+		Optional<Essay> essay_opt = essayRepository.findById(id);
 		if(essay_opt.isPresent()) {
 			Essay essay = essay_opt.get();
 			if(!bean.getTitle().isEmpty() && !bean.getTheme().isEmpty() && !bean.getContent().isEmpty()) {
@@ -82,8 +83,9 @@ public class EssayServiceImpl implements EssayService{
 	}
 
 	@Override
-	public Iterable<Essay> findAllByUserId(String id) throws UserNotExistsException{
+	public Iterable<Essay> findAllByUserId(String id) throws UserNotExistsException, UserNotFoundException{
 		User user = userService.findById(id);
+		
 		if (user != null) {
 			return essayRepository.findAllByUserId(id);
 		} else {
