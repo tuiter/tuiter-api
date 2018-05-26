@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.tuiter.beans.ResetPasswordBean;
 import org.tuiter.beans.SignupBean;
 import org.tuiter.errors.ErrorCode;
+import org.tuiter.errors.exceptions.EssayNotExistsException;
 import org.tuiter.errors.exceptions.IncorretPasswordException;
 import org.tuiter.errors.exceptions.TuiterApiException;
 import org.tuiter.errors.exceptions.UserAlreadyExistsException;
@@ -140,6 +141,16 @@ public class UserController {
 			throw new TuiterApiException("User not found!", HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND);
 		}
 		
+	}
+	
+	@RequestMapping(value="/{id}/evaluate", method = RequestMethod.GET)
+	public ResponseEntity<Essay> getEssay(@PathVariable String id) {
+		try {
+			Essay essay = essayService.getEssayToReview(id);
+			return new ResponseEntity<Essay>(essay, HttpStatus.OK);
+		} catch (EssayNotExistsException e) {	
+			throw new TuiterApiException("There are no essays available.", HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.NOT_FOUND);
+		}
 	}
 }
 
