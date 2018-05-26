@@ -33,7 +33,7 @@ public class EssayServiceImpl implements EssayService{
 	public Essay create(EssayBean bean) throws UserNotExistsException{
 		User user = userService.findByUsername(bean.getUserUsername());
 		if(user != null) {
-			Essay essay = new Essay(user.getId(), bean.getTitle(), bean.getTheme(), bean.getContent());
+			Essay essay = new Essay(user.getId(), bean.getTitle(), bean.getTheme(), bean.getContent(), bean.getType());
 			return essayRepository.save(essay);
 		} else {
 			throw new UserNotExistsException();

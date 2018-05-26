@@ -1,20 +1,24 @@
 package org.tuiter.beans;
 
+import org.tuiter.util.Type;
+
 public class EditEssayBean {
 	private String id;
 	private String title;
 	private String theme;
 	private String content;
+	private Type type;
 
 	public EditEssayBean() {
 		
 	}
 
-	public EditEssayBean(String id, String title, String theme, String content) {
+	public EditEssayBean(String id, String title, String theme, String content, Type type) {
 		this.id = id;
 		this.title = title;
 		this.theme = theme;
 		this.content = content;
+		this.type = type;
 	}
 
 	public String getId() {
@@ -47,6 +51,14 @@ public class EditEssayBean {
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+	public Type getType() {
+		return type;
+	}
+
+	public void setType(Type type) {
+		this.type = type;
 	}
 		
 }

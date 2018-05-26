@@ -3,6 +3,7 @@ package org.tuiter.models;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.tuiter.util.Type;
 
 public class EssayTest {
 	String user1;
@@ -16,9 +17,9 @@ public class EssayTest {
 		user1 = "1";
 		user2 = "2";
 		
-		essay1 = new Essay("1", "Hoje e ontem", "Tempo", "Texto aqui");
-		essay2 = new Essay("2", "Hoje e amanhã", "Tempo", "Outro texto aqui");
-		essay3 = new Essay("3", "Pera e uva", "Comida", "Texto terceiro aqui");
+		essay1 = new Essay("1", "Hoje e ontem", "Tempo", "Texto aqui", Type.IMAGE);
+		essay2 = new Essay("2", "Hoje e amanhã", "Tempo", "Outro texto aqui", Type.TEXT);
+		essay3 = new Essay("1", "Pera e uva", "Comida", "Texto terceiro aqui", Type.TEXT);
 	}
 	
 	@Test
@@ -52,9 +53,9 @@ public class EssayTest {
 	
 	@Test
 	public void equalsTest() {
-		Assert.assertEquals(essay1, new Essay(user1, "Hoje e ontem", "Tempo", "Texto aqui"));
-		Assert.assertEquals(essay2, new Essay(user2, "Hoje e amanhã", "Tempo", "Outro texto aqui"));
-		Assert.assertEquals(essay3, new Essay(user1, "Pera e uva", "Comida", "Texto terceiro aqui"));
+		Assert.assertEquals(essay1, new Essay(user1, "Hoje e ontem", "Tempo", "Texto aqui", Type.IMAGE));
+		Assert.assertEquals(essay2, new Essay(user2, "Hoje e amanhã", "Tempo", "Outro texto aqui", Type.TEXT));
+		Assert.assertEquals(essay3, new Essay(user1, "Pera e uva", "Comida", "Texto terceiro aqui", Type.TEXT));
 		Assert.assertNotEquals(essay1, essay3);
 	}
 
