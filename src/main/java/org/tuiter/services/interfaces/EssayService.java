@@ -17,5 +17,5 @@ public interface EssayService {
 	public Essay findByTitleAndUserId(String title, String userId);
 	public Essay findById(String id) throws EssayNotExistsException;
 	public Essay update(String id, EditEssayBean bean) throws EssayNotExistsException, EmptyFieldsException;
-	public Essay getEssayToReview(String id) throws EssayNotExistsException;
+	public Essay getEssayToReview(String id) throws EssayNotExistsException, UserNotFoundException, UserNotExistsException;
 }

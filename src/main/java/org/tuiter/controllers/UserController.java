@@ -150,6 +150,10 @@ public class UserController {
 			return new ResponseEntity<Essay>(essay, HttpStatus.OK);
 		} catch (EssayNotExistsException e) {	
 			throw new TuiterApiException("There are no essays available.", HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.NOT_FOUND);
+		} catch (UserNotExistsException e) {
+			throw new TuiterApiException("User not found!", HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.NOT_FOUND);			
+		} catch (UserNotFoundException e) {
+			throw new TuiterApiException("User not found!", HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND);
 		}
 	}
 }
