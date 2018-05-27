@@ -2,6 +2,7 @@ package org.tuiter.models;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.tuiter.util.Type;
 
 @Document(collection = "essays")
 public class Essay {
@@ -12,24 +13,27 @@ public class Essay {
 	private String title;
 	private String theme;
 	private String content;
+	private Type type;
 	
-	public Essay(String userId, String title, String theme, String content) {
+	public Essay(String userId, String title, String theme, String content, Type type) {
 		super();
 		this.userId = userId;
 		this.title = title;
 		this.theme = theme;
 		this.content = content;
+		this.type = type;
 	}
 	
 	public Essay() {
 		
 	}
 	
-	public Essay(String userId, String title, String content) {
+	public Essay(String userId, String title, String content, Type type) {
 		super();
 		this.userId = userId;
 		this.title = title;
 		this.content = content;
+		this.type = type;
 	}
 
 	public String getId() {
@@ -68,6 +72,14 @@ public class Essay {
 		this.content = content;
 	}
 
+	public Type getType() {
+		return type;
+	}
+
+	public void setType(Type type) {
+		this.type = type;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -76,6 +88,7 @@ public class Essay {
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((theme == null) ? 0 : theme.hashCode());
 		result = prime * result + ((title == null) ? 0 : title.hashCode());
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		result = prime * result + ((userId == null) ? 0 : userId.hashCode());
 		return result;
 	}
@@ -109,6 +122,8 @@ public class Essay {
 				return false;
 		} else if (!title.equals(other.title))
 			return false;
+		if (type != other.type)
+			return false;
 		if (userId == null) {
 			if (other.userId != null)
 				return false;
@@ -119,7 +134,7 @@ public class Essay {
 
 	@Override
 	public String toString() {
-		return "Essay [id=" + id + ", userId=" + userId + ", title=" + title + ", theme=" + theme + ", content=" + content
-				+ "]";
+		return "Essay [id=" + id + ", userId=" + userId + ", title=" + title + ", theme=" + theme + ", content="
+				+ content + ", type=" + type + "]";
 	}
 }
