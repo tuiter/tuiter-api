@@ -14,9 +14,12 @@ import org.tuiter.errors.exceptions.UserNotExistsException;
 import org.tuiter.errors.exceptions.UserNotFoundException;
 import org.tuiter.models.Essay;
 import org.tuiter.models.User;
+import org.tuiter.util.EssayStatus;
 import org.tuiter.repositories.EssayRepository;
 import org.tuiter.services.interfaces.EssayService;
 import org.tuiter.services.interfaces.UserService;
+import java.util.stream.Collectors;
+
 @Service
 public class EssayServiceImpl implements EssayService{
 	private EssayRepository essayRepository;
@@ -121,6 +124,13 @@ public class EssayServiceImpl implements EssayService{
 		if (!essays.isEmpty()) {
 			Random rand = new Random();
 			int index = rand.nextInt(essays.size());
+			
+			List<Essay> notReviewedEssays = essays.stream().filter(
+					essay -> essay.getStatus().equals(EssayStatus.PENDING)).collect(Collectors.toList());
+			
+			if(!notReviewedEssays.isEmpty())
+				essays = notReviewedEssays;
+			
 			Essay essay = essays.get(index);
 			
 			while (essay.getUserId().equals(id)) {
