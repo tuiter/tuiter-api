@@ -4,7 +4,6 @@ import java.util.List;
 
 public class EditReviewBean {
 	
-	private String title;
 	private List<String> comments;
 	private List<Double> ratings;
 
@@ -12,18 +11,9 @@ public class EditReviewBean {
 		
 	}
 
-	public EditReviewBean(String title, List<String> comments, List<Double> ratings) {
-		this.title = title;
+	public EditReviewBean( List<String> comments, List<Double> ratings) {
 		this.comments = comments;
 		this.ratings = ratings;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
 	}
 
 	public List<String> getComments() {

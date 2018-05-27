@@ -11,14 +11,12 @@ public class Review {
 	private String essayId;
 	private String userId;
 	
-	private String title;
 	private List<String> comments;
 	private List<Double> ratings;
 	
-	public Review(String essayId, String userId, String title, List<String> comments, List<Double> ratings) {
+	public Review(String essayId, String userId, List<String> comments, List<Double> ratings) {
 		this.essayId = essayId;
 		this.userId = userId;
-		this.title = title;
 		this.comments = comments;
 		this.ratings = ratings;
 	}
@@ -41,14 +39,6 @@ public class Review {
 
 	public void setUserId(String userId) {
 		this.userId = userId;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
 	}
 
 	public List<String> getComments() {
@@ -94,7 +84,7 @@ public class Review {
 
 	@Override
 	public String toString() {
-		return "Review [id=" + id + ", essayId=" + essayId + ", userId=" + userId + ", title=" + title + ", content="
+		return "Review [id=" + id + ", essayId=" + essayId + ", userId=" + userId + ", content="
 				+ comments + ", rating=" + ratings + "]";
 	}
 }

@@ -45,7 +45,7 @@ public class ReviewServiceImpl implements ReviewService {
 		Essay essay = essayService.findById(bean.getEssayId());
 		
 		if(user != null && essay != null) {
-			Review review = new Review(essay.getId(), user.getId(), bean.getTitle(), bean.getComments(), bean.getRatings());
+			Review review = new Review(essay.getId(), user.getId(), bean.getComments(), bean.getRatings());
 			return reviewRepository.save(review);
 		} else {
 			throw new UserNotExistsException();
@@ -57,8 +57,7 @@ public class ReviewServiceImpl implements ReviewService {
 		Optional<Review> reviewOpt = reviewRepository.findById(id);
 		if(reviewOpt.isPresent()) {
 			Review review = reviewOpt.get();
-			if(!bean.getTitle().isEmpty() && !bean.getComments().isEmpty()) {
-				review.setTitle(bean.getTitle());
+			if(!bean.getComments().isEmpty()) {
 				review.setComments(bean.getComments());
 				review.setRatings(bean.getRatings());
 				reviewRepository.save(review);
