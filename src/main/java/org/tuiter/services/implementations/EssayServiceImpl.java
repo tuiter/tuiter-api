@@ -17,7 +17,7 @@ import org.tuiter.errors.exceptions.UserNotFoundException;
 import org.tuiter.models.Essay;
 import org.tuiter.models.User;
 import org.tuiter.models.Review;
-import org.tuiter.util.EssayStatus;
+import org.tuiter.util.ReviewStatus;
 import org.tuiter.repositories.EssayRepository;
 import org.tuiter.services.interfaces.EssayService;
 import org.tuiter.services.interfaces.UserService;
@@ -131,13 +131,19 @@ public class EssayServiceImpl implements EssayService{
 
 	@Override
 	public Essay getEssayToReview(String id) throws EssayNotExistsException, UserNotFoundException, UserNotExistsException {
+		for (Review review : reviewService.findAllByUserId(id)) {
+			if (review.getStatus().equals(ReviewStatus.PENDING))
+				return essayRepository.findById(review.getEssayId()).get();
+		}
+		
 		List<Essay> essays = essayRepository.findAll();
 		if (!essays.isEmpty()) {
 			Random rand = new Random();
 			int index = rand.nextInt(essays.size());
+
 			
 			List<Essay> notReviewedEssays = essays.stream().filter(
-					essay -> essay.getStatus().equals(EssayStatus.PENDING))
+					essay -> essay.getStatus().equals(ReviewStatus.PENDING))
 					.collect(Collectors.toList());
 			
 			if(!notReviewedEssays.isEmpty())
@@ -149,6 +155,7 @@ public class EssayServiceImpl implements EssayService{
 				index = rand.nextInt(essays.size());
 				essay = essays.get(index);
 			}
+			reviewService.create(id, essay.getId());
 			return essay;
 		} else {
 			throw new EssayNotExistsException();

@@ -1,6 +1,7 @@
 package org.tuiter.services.implementations;
 
 import java.util.Optional;
+import java.util.LinkedList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,9 @@ import org.tuiter.errors.exceptions.UserNotFoundException;
 import org.tuiter.models.Essay;
 import org.tuiter.models.Review;
 import org.tuiter.models.User;
+import org.tuiter.util.ReviewStatus;
 import org.tuiter.repositories.ReviewRepository;
+import org.tuiter.repositories.EssayRepository;
 import org.tuiter.services.interfaces.EssayService;
 import org.tuiter.services.interfaces.ReviewService;
 import org.tuiter.services.interfaces.UserService;
@@ -23,10 +26,16 @@ public class ReviewServiceImpl implements ReviewService {
 	private ReviewRepository reviewRepository;
 	private EssayService essayService;
 	private UserService userService;
+	private EssayRepository essayRepository;
 		
 	@Autowired
 	public void setReviewRepository(ReviewRepository reviewRepository) {
 		this.reviewRepository = reviewRepository;
+	}
+
+	@Autowired
+	public void setEssayRepository(EssayRepository essayRepository) {
+		this.essayRepository = essayRepository;
 	}
 	
 	@Autowired
@@ -52,14 +61,25 @@ public class ReviewServiceImpl implements ReviewService {
 		}
 	}
 
+	public Review create(String userId, String essayId) throws UserNotExistsException, UserNotFoundException, EssayNotExistsException {
+		ReviewBean bean = new ReviewBean(essayId, userId, new LinkedList<String>(), new LinkedList<Double>());
+		return this.create(bean);
+	}
+
 	@Override
-	public Review update(String id, EditReviewBean bean) throws ReviewNotExistsException, EmptyFieldsException{
+	public Review update(String id, EditReviewBean bean) throws ReviewNotExistsException, EmptyFieldsException, EssayNotExistsException {
 		Optional<Review> reviewOpt = reviewRepository.findById(id);
 		if(reviewOpt.isPresent()) {
 			Review review = reviewOpt.get();
 			if(!bean.getComments().isEmpty()) {
 				review.setComments(bean.getComments());
 				review.setRatings(bean.getRatings());
+				review.setStatus(ReviewStatus.CORRECTED);
+
+				Essay essay = essayService.findById(review.getEssayId());
+				essay.setStatus(ReviewStatus.CORRECTED);
+
+				essayRepository.save(essay);
 				reviewRepository.save(review);
 				return review;
 			} else {

@@ -1,8 +1,10 @@
 package org.tuiter.models;
 
 import java.util.List;
+import org.tuiter.util.ReviewStatus;
 
 import org.springframework.data.annotation.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Review {
 	@Id
@@ -13,12 +15,15 @@ public class Review {
 	
 	private List<String> comments;
 	private List<Double> ratings;
+	@JsonIgnore
+	private ReviewStatus status;
 	
 	public Review(String essayId, String userId, List<String> comments, List<Double> ratings) {
 		this.essayId = essayId;
 		this.userId = userId;
 		this.comments = comments;
 		this.ratings = ratings;
+		this.status = ReviewStatus.PENDING;
 	}
 
 	public String getId() {
@@ -55,6 +60,14 @@ public class Review {
 
 	public void setRatings(List<Double> ratings) {
 		this.ratings = ratings;
+	}
+
+	public ReviewStatus getStatus() {
+		return this.status;
+	}
+
+	public void setStatus(ReviewStatus status) {
+		this.status = status;
 	}
 
 	@Override

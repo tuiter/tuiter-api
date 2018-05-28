@@ -2,13 +2,13 @@ package org.tuiter.util;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
-public enum EssayStatus {
+public enum ReviewStatus {
     PENDING("Pending"),
     CORRECTED("Corrected");
 
     private final String name;
 
-    private EssayStatus(String name) {
+    private ReviewStatus(String name) {
         this.name = name;
     }
 
