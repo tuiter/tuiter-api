@@ -30,6 +30,8 @@ import org.tuiter.services.interfaces.EssayService;
 import org.tuiter.services.interfaces.ReviewService;
 import org.tuiter.services.interfaces.UserService;
 import org.tuiter.util.ServerConstants;
+import org.tuiter.beans.EssayToReviewResponse;
+
 
 @RestController
 @CrossOrigin
@@ -144,10 +146,10 @@ public class UserController {
 	}
 	
 	@RequestMapping(value="/{id}/evaluate", method = RequestMethod.GET)
-	public ResponseEntity<Essay> getEssay(@PathVariable String id) {
+	public ResponseEntity<EssayToReviewResponse> getEssay(@PathVariable String id) {
 		try {
-			Essay essay = essayService.getEssayToReview(id);
-			return new ResponseEntity<Essay>(essay, HttpStatus.OK);
+			EssayToReviewResponse essayToReviewResponse = essayService.getEssayToReview(id);
+			return new ResponseEntity<EssayToReviewResponse>(essayToReviewResponse, HttpStatus.OK);
 		} catch (EssayNotExistsException e) {	
 			throw new TuiterApiException("There are no essays available.", HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.NOT_FOUND);
 		} catch (UserNotExistsException e) {

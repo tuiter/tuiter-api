@@ -2,6 +2,7 @@ package org.tuiter.services.interfaces;
 
 import org.tuiter.beans.EditEssayBean;
 import org.tuiter.beans.modelbeans.EssayBean;
+import org.tuiter.beans.EssayToReviewResponse;
 import org.tuiter.errors.exceptions.EmptyFieldsException;
 import org.tuiter.errors.exceptions.EssayNotExistsException;
 import org.tuiter.errors.exceptions.UserNotExistsException;
@@ -17,5 +18,5 @@ public interface EssayService {
 	public Essay findByTitleAndUserId(String title, String userId);
 	public Essay findById(String id) throws EssayNotExistsException;
 	public Essay update(String id, EditEssayBean bean) throws EssayNotExistsException, EmptyFieldsException;
-	public Essay getEssayToReview(String id) throws EssayNotExistsException, UserNotFoundException, UserNotExistsException;
+	public EssayToReviewResponse getEssayToReview(String id) throws EssayNotExistsException, UserNotFoundException, UserNotExistsException;
 }

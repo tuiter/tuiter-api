@@ -24,6 +24,7 @@ import org.tuiter.services.interfaces.UserService;
 import org.tuiter.services.interfaces.ReviewService;
 import org.tuiter.services.implementations.ReviewServiceImpl;
 import java.util.stream.Collectors;
+import org.tuiter.beans.EssayToReviewResponse;
 
 @Service
 public class EssayServiceImpl implements EssayService{
@@ -130,10 +131,10 @@ public class EssayServiceImpl implements EssayService{
 	}
 
 	@Override
-	public Essay getEssayToReview(String id) throws EssayNotExistsException, UserNotFoundException, UserNotExistsException {
+	public EssayToReviewResponse getEssayToReview(String id) throws EssayNotExistsException, UserNotFoundException, UserNotExistsException {
 		for (Review review : reviewService.findAllByUserId(id)) {
 			if (review.getStatus().equals(ReviewStatus.PENDING))
-				return essayRepository.findById(review.getEssayId()).get();
+				return new EssayToReviewResponse(review.getId(), essayRepository.findById(review.getEssayId()).get());
 		}
 		
 		List<Essay> essays = essayRepository.findAll();
@@ -155,8 +156,8 @@ public class EssayServiceImpl implements EssayService{
 				index = rand.nextInt(essays.size());
 				essay = essays.get(index);
 			}
-			reviewService.create(id, essay.getId());
-			return essay;
+			Review review = reviewService.create(id, essay.getId());
+			return new EssayToReviewResponse(review.getId(), essay);
 		} else {
 			throw new EssayNotExistsException();
 		}
