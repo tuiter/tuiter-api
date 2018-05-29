@@ -1,6 +1,10 @@
 package org.tuiter.services.implementations;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Random;
+import java.util.Collection;
+import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,13 +16,20 @@ import org.tuiter.errors.exceptions.UserNotExistsException;
 import org.tuiter.errors.exceptions.UserNotFoundException;
 import org.tuiter.models.Essay;
 import org.tuiter.models.User;
+import org.tuiter.models.Review;
+import org.tuiter.util.ReviewStatus;
 import org.tuiter.repositories.EssayRepository;
 import org.tuiter.services.interfaces.EssayService;
 import org.tuiter.services.interfaces.UserService;
+import org.tuiter.services.interfaces.ReviewService;
+import org.tuiter.services.implementations.ReviewServiceImpl;
+import java.util.stream.Collectors;
+
 @Service
 public class EssayServiceImpl implements EssayService{
 	private EssayRepository essayRepository;
 	private UserService userService;
+	private ReviewService reviewService;
 		
 	@Autowired
 	public void setEssayRepository(EssayRepository essayRepository) {
@@ -28,6 +39,11 @@ public class EssayServiceImpl implements EssayService{
 	@Autowired
 	public void setUserService(UserServiceImpl userService) {
 		this.userService = userService;
+	}
+	
+	@Autowired
+	public void setReviewService(ReviewServiceImpl reviewService) {
+		this.reviewService = reviewService;
 	}
 
 	@Override
@@ -111,5 +127,48 @@ public class EssayServiceImpl implements EssayService{
 		} else {
 			throw new EssayNotExistsException();
 		}
+	}
+
+	@Override
+	public Essay getEssayToReview(String id) throws EssayNotExistsException, UserNotFoundException, UserNotExistsException {
+		for (Review review : reviewService.findAllByUserId(id)) {
+			if (review.getStatus().equals(ReviewStatus.PENDING))
+				return essayRepository.findById(review.getEssayId()).get();
+		}
+		
+		List<Essay> essays = essayRepository.findAll();
+		if (!essays.isEmpty()) {
+			Random rand = new Random();
+			int index = rand.nextInt(essays.size());
+
+			
+			List<Essay> notReviewedEssays = essays.stream().filter(
+					essay -> essay.getStatus().equals(ReviewStatus.PENDING))
+					.collect(Collectors.toList());
+			
+			if(!notReviewedEssays.isEmpty())
+				essays = notReviewedEssays;
+			
+			Essay essay = essays.get(index);
+			
+			while (essay.getUserId().equals(id) || userAlreadyReview(reviewService.findAllByUserId(id), essay.getId())) {
+				index = rand.nextInt(essays.size());
+				essay = essays.get(index);
+			}
+			reviewService.create(id, essay.getId());
+			return essay;
+		} else {
+			throw new EssayNotExistsException();
+		}
+	}
+	
+	private Boolean userAlreadyReview(Iterable<Review> essays, String essayId) {
+		Collection<Review> listOfReviews = new ArrayList();
+		essays.forEach(listOfReviews::add);
+		for(Review review : listOfReviews) {
+			if (review.getEssayId().equals(essayId))
+				return true;
+		}
+		return false;
 	}
 }

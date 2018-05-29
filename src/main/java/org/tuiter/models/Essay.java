@@ -2,7 +2,10 @@ package org.tuiter.models;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.tuiter.util.ReviewStatus;
 import org.tuiter.util.Type;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Document(collection = "essays")
 public class Essay {
@@ -15,6 +18,9 @@ public class Essay {
 	private String content;
 	private Type type;
 	
+	@JsonIgnore
+	private ReviewStatus status;
+	
 	public Essay(String userId, String title, String theme, String content, Type type) {
 		super();
 		this.userId = userId;
@@ -22,6 +28,7 @@ public class Essay {
 		this.theme = theme;
 		this.content = content;
 		this.type = type;
+		this.status = ReviewStatus.PENDING;
 	}
 	
 	public Essay() {
@@ -34,6 +41,7 @@ public class Essay {
 		this.title = title;
 		this.content = content;
 		this.type = type;
+		this.status = ReviewStatus.PENDING;
 	}
 
 	public String getId() {
@@ -78,6 +86,14 @@ public class Essay {
 
 	public void setType(Type type) {
 		this.type = type;
+	}
+
+	public ReviewStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(ReviewStatus status) {
+		this.status = status;
 	}
 
 	@Override

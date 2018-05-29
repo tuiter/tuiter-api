@@ -11,10 +11,11 @@ import org.tuiter.models.Review;
 
 public interface ReviewService {
 	public Review create(ReviewBean bean) throws UserNotExistsException, UserNotFoundException, EssayNotExistsException;
+	public Review create(String userId, String essayId) throws UserNotExistsException, UserNotFoundException, EssayNotExistsException;
 	public Review delete(String id) throws ReviewNotExistsException;
 	public Iterable<Review> findAllByUserId(String id) throws UserNotExistsException, UserNotFoundException;
 	public Iterable<Review> findAllByEssayId(String id) throws EssayNotExistsException;
 	public Iterable<Review> findAll();
 	public Review findById(String id) throws ReviewNotExistsException;
-	public Review update(String id, EditReviewBean bean) throws ReviewNotExistsException, EmptyFieldsException;
+	public Review update(String id, EditReviewBean bean) throws ReviewNotExistsException, EmptyFieldsException, EssayNotExistsException;
 }

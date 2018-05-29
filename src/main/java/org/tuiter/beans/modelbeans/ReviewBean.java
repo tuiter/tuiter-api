@@ -6,7 +6,6 @@ public class ReviewBean {
 	private String essayId;
 	private String reviewingUserId;
 	
-	private String title;
 	private List<String> comments;
 	private List<Double> ratings;
 	
@@ -14,10 +13,9 @@ public class ReviewBean {
 		
 	}
 	
-	public ReviewBean(String essayId, String reviewingUserId, String title, List<String> comments, List<Double> ratings) {
+	public ReviewBean(String essayId, String reviewingUserId, List<String> comments, List<Double> ratings) {
 		this.essayId = essayId;
 		this.reviewingUserId = reviewingUserId;
-		this.title = title;
 		this.comments = comments;
 		this.ratings = ratings;
 	}
@@ -36,14 +34,6 @@ public class ReviewBean {
 
 	public void setReviewingUserId(String reviewingUserId) {
 		this.reviewingUserId = reviewingUserId;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
 	}
 
 	public List<String> getComments() {

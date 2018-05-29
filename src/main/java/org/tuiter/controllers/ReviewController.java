@@ -68,6 +68,8 @@ public class ReviewController {
 			throw new TuiterApiException("Invalid body", HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.EMPTY_FIELDS);
 		} catch (ReviewNotExistsException e) {
 			throw new TuiterApiException("Review not found.", HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.NOT_FOUND);
+		} catch(EssayNotExistsException e) {
+			throw new TuiterApiException("Essay not found.", HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.NOT_FOUND);
 		}
 	}
 }

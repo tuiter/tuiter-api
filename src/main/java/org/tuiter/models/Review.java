@@ -1,8 +1,10 @@
 package org.tuiter.models;
 
 import java.util.List;
+import org.tuiter.util.ReviewStatus;
 
 import org.springframework.data.annotation.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Review {
 	@Id
@@ -11,16 +13,17 @@ public class Review {
 	private String essayId;
 	private String userId;
 	
-	private String title;
 	private List<String> comments;
 	private List<Double> ratings;
+	@JsonIgnore
+	private ReviewStatus status;
 	
-	public Review(String essayId, String userId, String title, List<String> comments, List<Double> ratings) {
+	public Review(String essayId, String userId, List<String> comments, List<Double> ratings) {
 		this.essayId = essayId;
 		this.userId = userId;
-		this.title = title;
 		this.comments = comments;
 		this.ratings = ratings;
+		this.status = ReviewStatus.PENDING;
 	}
 
 	public String getId() {
@@ -43,14 +46,6 @@ public class Review {
 		this.userId = userId;
 	}
 
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
 	public List<String> getComments() {
 		return comments;
 	}
@@ -65,6 +60,14 @@ public class Review {
 
 	public void setRatings(List<Double> ratings) {
 		this.ratings = ratings;
+	}
+
+	public ReviewStatus getStatus() {
+		return this.status;
+	}
+
+	public void setStatus(ReviewStatus status) {
+		this.status = status;
 	}
 
 	@Override
@@ -94,7 +97,7 @@ public class Review {
 
 	@Override
 	public String toString() {
-		return "Review [id=" + id + ", essayId=" + essayId + ", userId=" + userId + ", title=" + title + ", content="
+		return "Review [id=" + id + ", essayId=" + essayId + ", userId=" + userId + ", content="
 				+ comments + ", rating=" + ratings + "]";
 	}
 }
