@@ -133,8 +133,9 @@ public class EssayServiceImpl implements EssayService{
 	@Override
 	public EssayToReviewResponse getEssayToReview(String id) throws EssayNotExistsException, UserNotFoundException, UserNotExistsException {
 		for (Review review : reviewService.findAllByUserId(id)) {
-			if (review.getStatus().equals(ReviewStatus.PENDING))
+			if (review.getStatus().equals(ReviewStatus.PENDING) && essayRepository.findById(review.getEssayId()).isPresent()) {
 				return new EssayToReviewResponse(review.getId(), essayRepository.findById(review.getEssayId()).get());
+			}
 		}
 		
 		List<Essay> essays = essayRepository.findAll();
