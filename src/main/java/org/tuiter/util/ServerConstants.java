@@ -9,5 +9,6 @@ public class ServerConstants {
 	public static final String USER_REQUEST = "/users";
 	public static final String ESSAY_REQUEST = "/essays";
 	public static final String REVIEW_REQUEST = "/reviews";
+	public static final String NOTIFICATION_REQUEST = "/notifications";
 	
 }
