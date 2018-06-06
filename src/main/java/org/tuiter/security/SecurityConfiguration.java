@@ -10,7 +10,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.tuiter.security.jwt.JwtAuthenticationEntryPoint;
 import org.tuiter.security.jwt.JwtAuthenticationFilter;
-import org.tuiter.util.ServerConstants;
 
 @Configuration
 @EnableWebSecurity
@@ -29,6 +28,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/tuiterapi/auth/login").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "**").permitAll()
                 .antMatchers(HttpMethod.POST, "/tuiterapi/users").permitAll()
+                .antMatchers("/tuiterapi/notifications/**").permitAll()
+                .antMatchers("/send/message").permitAll()
+                .antMatchers("/chat").permitAll()
+                .antMatchers("/tuiterapi/notifications").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(new JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)

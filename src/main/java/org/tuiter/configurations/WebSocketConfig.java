@@ -11,18 +11,23 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 	
-	@Override
+	/*@Override
 	public void configureMessageBroker(MessageBrokerRegistry config) {
 		config.enableSimpleBroker("/notif");
 		config.setApplicationDestinationPrefixes("/tuitersocket");
-	}
+	}*/
  
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
 		registry
-		.addEndpoint(ServerConstants.SERVER_REQUEST + ServerConstants.NOTIFICATION_REQUEST + "/websock")
+		.addEndpoint(ServerConstants.SERVER_REQUEST + ServerConstants.NOTIFICATION_REQUEST + "/ws")
 		.setAllowedOrigins("*")
 		.withSockJS();
 	}
 	
+	@Override
+    public void configureMessageBroker(MessageBrokerRegistry registry) {
+        registry.setApplicationDestinationPrefixes(ServerConstants.SERVER_REQUEST)
+                .enableSimpleBroker("/chat");
+    }
 }

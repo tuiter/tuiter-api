@@ -3,17 +3,16 @@ package org.tuiter.beans.modelbeans;
 public class NotificationBean {
 	private String userId;
 	private String reviewId;
-	private String timeStamp;
 	private String description;
 
 	public NotificationBean() {
 		
 	}
 
-	public NotificationBean(String userId, String reviewId, String timeStamp) {
+	public NotificationBean(String userId, String reviewId, String description) {
 		this.userId = userId;
 		this.reviewId = reviewId;
-		this.timeStamp = timeStamp;
+		this.description = description;
 	}
 
 	public String getUserId() {
@@ -39,12 +38,4 @@ public class NotificationBean {
 	public void setReviewId(String reviewId) {
 		this.reviewId = reviewId;
 	}
-
-	public String getTimeStamp() {
-		return timeStamp;
-	}
-
-	public void setTimeStamp(String timeStamp) {
-		this.timeStamp = timeStamp;
-	}			
 }

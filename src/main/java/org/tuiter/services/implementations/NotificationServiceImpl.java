@@ -3,6 +3,7 @@ package org.tuiter.services.implementations;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.tuiter.beans.modelbeans.NotificationBean;
 import org.tuiter.errors.exceptions.NotificationNotExistsException;
 import org.tuiter.errors.exceptions.ReviewNotExistsException;
@@ -16,6 +17,7 @@ import org.tuiter.services.interfaces.NotificationService;
 import org.tuiter.services.interfaces.ReviewService;
 import org.tuiter.services.interfaces.UserService;
 
+@Service
 public class NotificationServiceImpl implements NotificationService {
 	private NotificationRepository notificationRepository;
 	private UserService userService;
