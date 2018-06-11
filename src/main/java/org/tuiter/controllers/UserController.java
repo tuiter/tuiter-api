@@ -11,26 +11,30 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.tuiter.beans.EssayToReviewResponse;
 import org.tuiter.beans.ResetPasswordBean;
 import org.tuiter.beans.SignupBean;
 import org.tuiter.errors.ErrorCode;
 import org.tuiter.errors.exceptions.EssayNotExistsException;
 import org.tuiter.errors.exceptions.IncorretPasswordException;
+import org.tuiter.errors.exceptions.NotificationNotExistsException;
 import org.tuiter.errors.exceptions.TuiterApiException;
 import org.tuiter.errors.exceptions.UserAlreadyExistsException;
 import org.tuiter.errors.exceptions.UserNotExistsException;
 import org.tuiter.errors.exceptions.UserNotFoundException;
 import org.tuiter.models.Essay;
+import org.tuiter.models.Notification;
 import org.tuiter.models.Review;
 import org.tuiter.models.User;
 import org.tuiter.services.implementations.EssayServiceImpl;
+import org.tuiter.services.implementations.NotificationServiceImpl;
 import org.tuiter.services.implementations.ReviewServiceImpl;
 import org.tuiter.services.implementations.UserServiceImpl;
 import org.tuiter.services.interfaces.EssayService;
+import org.tuiter.services.interfaces.NotificationService;
 import org.tuiter.services.interfaces.ReviewService;
 import org.tuiter.services.interfaces.UserService;
 import org.tuiter.util.ServerConstants;
-import org.tuiter.beans.EssayToReviewResponse;
 
 
 @RestController
@@ -41,6 +45,7 @@ public class UserController {
 	private UserService userService;
 	private EssayService essayService;
 	private ReviewService reviewService;
+	private NotificationService notificationService;
 	
 	@Autowired
 	public void setUserService(UserServiceImpl userService) {
@@ -55,6 +60,11 @@ public class UserController {
 	@Autowired
 	public void setReviewService(ReviewServiceImpl reviewService) {
 		this.reviewService = reviewService;
+	}
+	
+	@Autowired
+	public void setNotificationService(NotificationServiceImpl notificationService) {
+		this.notificationService = notificationService;
 	}
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
@@ -156,6 +166,28 @@ public class UserController {
 			throw new TuiterApiException("User not found!", HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.NOT_FOUND);			
 		} catch (UserNotFoundException e) {
 			throw new TuiterApiException("User not found!", HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND);
+		}
+	}
+	
+	@RequestMapping(value = "/{userId}/notifications", method = RequestMethod.GET)
+	public Iterable<Notification> getNotificationsByUser(@PathVariable String userId) {
+		try {
+			return notificationService.findAllByUserId(userId);
+		} catch(UserNotExistsException e) {
+			throw new TuiterApiException("User not found!");
+		} catch(UserNotFoundException e) {
+			throw new TuiterApiException("User not found!");
+		}
+	}
+	
+	@RequestMapping(value = "/{userId}/notifications", method = RequestMethod.PATCH)
+	public ResponseEntity<Iterable<Notification>> viewAll(@PathVariable String userId) {
+		try {
+			return new ResponseEntity<>(notificationService.setAllAsViewedByUser(userId), HttpStatus.OK);
+		} catch(UserNotExistsException e) {
+			throw new TuiterApiException("Notification not exists!");
+		} catch(UserNotFoundException e) {
+			throw new TuiterApiException("Notification not exists!");
 		}
 	}
 }
