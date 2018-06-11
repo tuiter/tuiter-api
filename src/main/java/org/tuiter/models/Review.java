@@ -1,20 +1,36 @@
 package org.tuiter.models;
 
 import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Table;
+
 import org.tuiter.util.ReviewStatus;
 
 import org.springframework.data.annotation.Id;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+@Entity
+@Table(name = "reviews")
 public class Review {
 	@Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(nullable = false, unique = true)
 	private String id;
 	
+	@Column(nullable = false)
 	private String essayId;
+	
+	@Column(nullable = false)
 	private String userId;
 	
 	private List<String> comments;
 	private List<Double> ratings;
+	
+	
 	@JsonIgnore
 	private ReviewStatus status;
 	

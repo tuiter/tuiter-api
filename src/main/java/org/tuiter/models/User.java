@@ -1,27 +1,42 @@
 package org.tuiter.models;
 
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 import org.tuiter.util.Gender;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-@Document(collection = "users")
+@Entity
+@Table(name = "users")
 public class User {
 	@Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(nullable = false, unique = true)
 	private String id;
 	
-	@Indexed(unique = true)
+	@Column(nullable = false, unique = true)
 	private String email;
-	@Indexed(unique = true)
+	
+	@Column(nullable = false, unique = true)
 	private String username;
 	
+	@Column(nullable = false)
 	private Gender gender;
+	
+	@Column(nullable = false)
 	private String name;
+	
 	@JsonIgnore
+	@Column(nullable = false)
 	private String password;
+	
+	@Column
 	private String photoUrl;
 	
 	public User(String email, String username, Gender gender, String name, String password, String photo_url) {
