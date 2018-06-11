@@ -59,7 +59,7 @@ public class EssayServiceImpl implements EssayService{
 	}
 
 	@Override
-	public Essay update(String id, EditEssayBean bean) throws EssayNotExistsException, EmptyFieldsException{
+	public Essay update(Integer id, EditEssayBean bean) throws EssayNotExistsException, EmptyFieldsException{
 		Optional<Essay> essay_opt = essayRepository.findById(id);
 		if(essay_opt.isPresent()) {
 			Essay essay = essay_opt.get();
@@ -121,7 +121,7 @@ public class EssayServiceImpl implements EssayService{
 	}
 
 	@Override
-	public Essay findById(String id) throws EssayNotExistsException {
+	public Essay findById(Integer id) throws EssayNotExistsException {
 		Optional<Essay> essay = essayRepository.findById(id);
 		if(essay.isPresent()) {
 			return essay.get();

@@ -1,11 +1,15 @@
 package org.tuiter.repositories;
 
-import org.springframework.data.mongodb.repository.MongoRepository;
+import java.util.Collection;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 import org.tuiter.models.Essay;
 
-public interface EssayRepository extends MongoRepository<Essay, String> {
+@Repository
+public interface EssayRepository extends JpaRepository<Essay, Long> {
 	
-	public Iterable<Essay> findAllByUserId(String id);
+	public Collection<Essay> findAllByUserId(String id);
 
 	public Essay findByTitleAndUserId(String title, String id);
 

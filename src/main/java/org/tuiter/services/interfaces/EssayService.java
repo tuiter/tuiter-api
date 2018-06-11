@@ -16,7 +16,7 @@ public interface EssayService {
 	public Iterable<Essay> findAllByUserId(String id) throws UserNotExistsException, UserNotFoundException;
 	public Iterable<Essay> findAll();
 	public Essay findByTitleAndUserId(String title, String userId);
-	public Essay findById(String id) throws EssayNotExistsException;
-	public Essay update(String id, EditEssayBean bean) throws EssayNotExistsException, EmptyFieldsException;
+	public Essay findById(Integer id) throws EssayNotExistsException;
+	public Essay update(Integer id, EditEssayBean bean) throws EssayNotExistsException, EmptyFieldsException;
 	public EssayToReviewResponse getEssayToReview(String id) throws EssayNotExistsException, UserNotFoundException, UserNotExistsException;
 }

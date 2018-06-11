@@ -1,9 +1,14 @@
 package org.tuiter.repositories;
 
-import org.springframework.data.mongodb.repository.MongoRepository;
 import org.tuiter.models.Review;
+import org.springframework.stereotype.Repository;
 
-public interface ReviewRepository extends MongoRepository<Review, String> {
-	public Iterable<Review> findAllByUserId(String id);
-	public Iterable<Review> findAllByEssayId(String id);
+import java.util.Collection;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+@Repository
+public interface ReviewRepository extends JpaRepository<Review, Long> {
+	public Collection<Review> findAllByUserId(Long id);
+	public Collection<Review> findAllByEssayId(Long id);
 }
