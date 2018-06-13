@@ -3,14 +3,11 @@ package org.tuiter.services.implementations;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.tuiter.beans.EditUserBean;
 import org.tuiter.beans.ResetPasswordBean;
 import org.tuiter.beans.SignupBean;
-import org.tuiter.errors.ErrorCode;
+import org.tuiter.errors.exceptions.EmptyFieldsException;
 import org.tuiter.errors.exceptions.IncorretPasswordException;
-import org.tuiter.errors.exceptions.TuiterApiException;
 import org.tuiter.errors.exceptions.UserAlreadyExistsException;
 import org.tuiter.errors.exceptions.UserNotFoundException;
 import org.tuiter.models.User;
@@ -67,10 +64,10 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User delete(String username) throws UserNotFoundException {
-		User deletedUser = findByUsername(username);
+	public User delete(String id) throws UserNotFoundException {
+		User deletedUser = findById(id);
 		if (deletedUser != null) {
-			userRepository.deleteById(deletedUser.getId());
+			userRepository.deleteById(id);
 			return deletedUser;
 		}
 		throw new UserNotFoundException();
@@ -109,7 +106,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User resetPassword(String id, ResetPasswordBean body) throws UserNotFoundException, IncorretPasswordException {
+	public User resetPassword(String id, ResetPasswordBean body) throws UserNotFoundException, 
+	IncorretPasswordException, EmptyFieldsException {
 		User user = findById(id);
 		if (user == null) {
 			throw new UserNotFoundException();			
@@ -119,7 +117,7 @@ public class UserServiceImpl implements UserService {
 		}
 		
 		if (body.getNewPassword().isEmpty()) {
-			throw new TuiterApiException("Password is empty!", HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.INCORRECT_PASSWORD);
+			throw new EmptyFieldsException("Password is empty!");
 		}
 		
 		user.setPassword(body.getNewPassword());
@@ -128,9 +126,9 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User create(SignupBean body) throws UserAlreadyExistsException, IncorretPasswordException {
+	public User create(SignupBean body) throws UserAlreadyExistsException {
 		User user = Bean2ModelFactory.createUser(body);
-		if (!(exists(user.getEmail()))) {
+		if (!exists(user.getEmail()) && userRepository.findByUsername(user.getUsername()) == null) {
 			return save(user);
 		} else {
 			throw new UserAlreadyExistsException();

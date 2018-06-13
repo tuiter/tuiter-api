@@ -63,7 +63,10 @@ public class EssayServiceImpl implements EssayService{
 		Optional<Essay> essay_opt = essayRepository.findById(id);
 		if(essay_opt.isPresent()) {
 			Essay essay = essay_opt.get();
-			if(!bean.getTitle().isEmpty() && !bean.getTheme().isEmpty() && !bean.getContent().isEmpty()) {
+			if(bean.getTitle() != null && !bean.getTitle().isEmpty() && 
+			   bean.getTheme() != null && !bean.getTheme().isEmpty() && 
+			   bean.getContent() != null && !bean.getContent().isEmpty() &&
+			   bean.getType() != null) {
 				essay.setTitle(bean.getTitle());
 				essay.setTheme(bean.getTheme());
 				essay.setContent(bean.getContent());
@@ -133,8 +136,9 @@ public class EssayServiceImpl implements EssayService{
 	@Override
 	public EssayToReviewResponse getEssayToReview(String id) throws EssayNotExistsException, UserNotFoundException, UserNotExistsException {
 		for (Review review : reviewService.findAllByUserId(id)) {
-			if (review.getStatus().equals(ReviewStatus.PENDING))
+			if (review.getStatus().equals(ReviewStatus.PENDING) && essayRepository.findById(review.getEssayId()).isPresent()) {
 				return new EssayToReviewResponse(review.getId(), essayRepository.findById(review.getEssayId()).get());
+			}
 		}
 		
 		List<Essay> essays = essayRepository.findAll();
@@ -164,7 +168,7 @@ public class EssayServiceImpl implements EssayService{
 	}
 	
 	private Boolean userAlreadyReview(Iterable<Review> essays, String essayId) {
-		Collection<Review> listOfReviews = new ArrayList();
+		Collection<Review> listOfReviews = new ArrayList<>();
 		essays.forEach(listOfReviews::add);
 		for(Review review : listOfReviews) {
 			if (review.getEssayId().equals(essayId))
