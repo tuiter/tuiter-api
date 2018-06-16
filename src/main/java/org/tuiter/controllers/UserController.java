@@ -17,7 +17,6 @@ import org.tuiter.beans.SignupBean;
 import org.tuiter.errors.ErrorCode;
 import org.tuiter.errors.exceptions.EssayNotExistsException;
 import org.tuiter.errors.exceptions.IncorretPasswordException;
-import org.tuiter.errors.exceptions.NotificationNotExistsException;
 import org.tuiter.errors.exceptions.TuiterApiException;
 import org.tuiter.errors.exceptions.UserAlreadyExistsException;
 import org.tuiter.errors.exceptions.UserNotExistsException;

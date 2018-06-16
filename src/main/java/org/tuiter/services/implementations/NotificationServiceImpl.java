@@ -7,8 +7,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
-import org.tuiter.beans.NotificationBean;
 import org.tuiter.errors.exceptions.EssayNotExistsException;
 import org.tuiter.errors.exceptions.NotificationNotExistsException;
 import org.tuiter.errors.exceptions.ReviewNotExistsException;
@@ -24,6 +24,8 @@ import org.tuiter.services.interfaces.UserService;
 
 @Service
 public class NotificationServiceImpl implements NotificationService {
+	@Autowired
+	private SimpMessagingTemplate messagingTemplate;
 	private NotificationRepository notificationRepository;
 	private UserService userService;
 	private EssayService essayService;
@@ -44,25 +46,29 @@ public class NotificationServiceImpl implements NotificationService {
 	}
 	
 	@Override
-	public Notification createOnReviewDone(String essayId, NotificationBean bean) throws UserNotExistsException, UserNotFoundException, ReviewNotExistsException, EssayNotExistsException {
-		User sender = userService.findById(bean.getSenderId());
+	public Notification createOnReviewDone(String essayId, String senderId) throws UserNotExistsException, UserNotFoundException, ReviewNotExistsException, EssayNotExistsException {
+		User sender = userService.findById(senderId);
 		
 		if(sender != null) {
-			Instant instant = Instant.now();
-			long timeStampMillis = instant.toEpochMilli();
-			LocalDateTime timeStamp =  Instant.ofEpochMilli(timeStampMillis).atZone(ZoneId.systemDefault()).toLocalDateTime();
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd LLLL yyyy | HH:MM:ss");
-			
+			String timeStamp = generateTimeStamp(); 			
 			Essay essay = essayService.findById(essayId);
 			User receiver = userService.findById(essay.getUserId());
+			String description = "O usuário '" + sender.getUsername() + "' fez um revisão na sua redação: " + "'" + essay.getTitle() + "'.";
 			
-			String description = "O usuário /'" + sender.getUsername() + "/' fez um revisão na sua redação: " + "/'" + essay.getTitle() + "/'.";
-			
-			Notification notification = new Notification(receiver.getId(), timeStamp.format(formatter), description, true);
+			Notification notification = new Notification(receiver.getId(), timeStamp, description, true);
+			messagingTemplate.convertAndSend("/notification_ch/" + notification.getUserId(), notification);
 			return notificationRepository.save(notification);
 		} else {
 			throw new UserNotExistsException();
 		}
+	}
+	
+	private String generateTimeStamp() {
+		Instant instant = Instant.now();
+		long timeStampMillis = instant.toEpochMilli();
+		LocalDateTime timeStamp =  Instant.ofEpochMilli(timeStampMillis).atZone(ZoneId.systemDefault()).toLocalDateTime();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd LLLL yyyy - HH:MM:ss");
+		return timeStamp.format(formatter);
 	}
 
 	@Override

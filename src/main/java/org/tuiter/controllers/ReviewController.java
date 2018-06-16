@@ -19,7 +19,9 @@ import org.tuiter.errors.exceptions.TuiterApiException;
 import org.tuiter.errors.exceptions.UserNotExistsException;
 import org.tuiter.errors.exceptions.UserNotFoundException;
 import org.tuiter.models.Review;
+import org.tuiter.services.implementations.NotificationServiceImpl;
 import org.tuiter.services.implementations.ReviewServiceImpl;
+import org.tuiter.services.interfaces.NotificationService;
 import org.tuiter.services.interfaces.ReviewService;
 import org.tuiter.util.ServerConstants;
 
@@ -28,11 +30,17 @@ import org.tuiter.util.ServerConstants;
 @RequestMapping(ServerConstants.SERVER_REQUEST 
 				+ ServerConstants.REVIEW_REQUEST)
 public class ReviewController {
-	private ReviewService reviewService;
+	private NotificationService notificationService;
+	private ReviewService reviewService;	
 	
 	@Autowired
 	public void setReviewService(ReviewServiceImpl reviewService) {
 		this.reviewService = reviewService;
+	}
+	
+	@Autowired
+	public void setNotificatonService(NotificationServiceImpl notificationService) {
+		this.notificationService = notificationService;
 	}
 	
 	@RequestMapping(method = RequestMethod.POST) 
@@ -63,7 +71,12 @@ public class ReviewController {
 	public ResponseEntity<Review> update(@PathVariable String id, @RequestBody EditReviewBean body) {
 		try {
 			Review review = reviewService.update(id, body);
+			notificationService.createOnReviewDone(review.getEssayId(), review.getUserId());
 			return new ResponseEntity<>(review, HttpStatus.OK);
+		} catch(UserNotFoundException e) {
+			throw new TuiterApiException ("User not found!");
+		} catch(UserNotExistsException e) {
+			throw new TuiterApiException ("User not found!");
 		} catch(EmptyFieldsException e) {
 			throw new TuiterApiException("Invalid body", HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.EMPTY_FIELDS);
 		} catch (ReviewNotExistsException e) {
