@@ -1,0 +1,9 @@
+language: java
+jdk:
+  - openjdk10
+  - oraclejdk10
+
+cache:
+  directories:
+    - .autoconf
+    - $HOME/.m2
