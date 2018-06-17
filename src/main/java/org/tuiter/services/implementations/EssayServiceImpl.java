@@ -146,7 +146,6 @@ public class EssayServiceImpl implements EssayService{
 		List<Essay> essays = essayRepository.findAll();
 		if (!essays.isEmpty()) {
 			Random rand = new Random();
-			int index = rand.nextInt(essays.size());
 
 			
 			List<Essay> notReviewedEssays = essays.stream().filter(
@@ -156,6 +155,10 @@ public class EssayServiceImpl implements EssayService{
 			if(!notReviewedEssays.isEmpty())
 				essays = notReviewedEssays;
 			
+			if (essays.size() == 0)
+				throw new EssayNotExistsException();
+			
+			int index = rand.nextInt(essays.size());
 			Essay essay = essays.get(index);
 			
 			while (essay.getUserId().equals(id) || userAlreadyReview(reviewService.findAllByUserId(id), essay.getId())) {
