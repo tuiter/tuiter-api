@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.Collection;
+
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ import org.tuiter.services.interfaces.ReviewService;
 import org.tuiter.services.implementations.ReviewServiceImpl;
 import java.util.stream.Collectors;
 import org.tuiter.beans.EssayToReviewResponse;
+import org.tuiter.beans.EssaysReviews;
 
 @Service
 public class EssayServiceImpl implements EssayService{
@@ -175,5 +177,18 @@ public class EssayServiceImpl implements EssayService{
 				return true;
 		}
 		return false;
+	}
+
+	@Override
+	public List<EssaysReviews> getEssaysReviews(String userId) throws EssayNotExistsException, UserNotFoundException, UserNotExistsException {
+		Iterable<Essay> essays = findAllByUserId(userId);
+		List<EssaysReviews> reviews_list = new ArrayList<>();
+		for (Essay essay : essays) {
+			Iterable<Review> reviews = reviewService.findAllByEssayId(essay.getId());
+			for (Review review : reviews) {
+				reviews_list.add(new EssaysReviews(review, essay.getTitle(), essay.getTheme()));
+			}
+		}
+		return reviews_list;
 	}
 }
