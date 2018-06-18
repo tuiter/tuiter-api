@@ -108,6 +108,17 @@ public class NotificationServiceImpl implements NotificationService {
 			throw new NotificationNotExistsException();
 		}
 	}
+	
+	@Override
+	public Iterable<Notification> deleteAllByUserId(String userId) throws UserNotFoundException {
+		Optional<User> user = Optional.of(userService.findById(userId));
+		
+		if (user.isPresent()) {
+			return notificationRepository.deleteAllByUserId(userId);
+		} else {
+			throw new UserNotFoundException();
+		}
+	}
 
 	@Override
 	public Iterable<Notification> setAllAsViewedByUser(String userId) throws UserNotFoundException, UserNotExistsException {

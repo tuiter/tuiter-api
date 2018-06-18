@@ -14,4 +14,5 @@ public interface NotificationService {
 	public Iterable<Notification> findAll();
 	public Notification findById(String id) throws NotificationNotExistsException;
 	public Iterable<Notification> setAllAsViewedByUser(String userId) throws UserNotFoundException, UserNotExistsException;
+	public Iterable<Notification> deleteAllByUserId(String userId) throws UserNotFoundException;
 }

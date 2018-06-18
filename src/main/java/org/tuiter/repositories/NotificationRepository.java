@@ -6,5 +6,6 @@ import org.tuiter.models.Notification;
 public interface NotificationRepository extends MongoRepository<Notification, String> {
 	
 	public Iterable<Notification> findAllByUserId(String id);
+	public Iterable<Notification> deleteAllByUserId(String id);
 	
 }

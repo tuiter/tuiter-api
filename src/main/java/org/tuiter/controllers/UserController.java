@@ -19,6 +19,8 @@ import org.tuiter.errors.ApiError;
 import org.tuiter.errors.exceptions.EmptyFieldsException;
 import org.tuiter.errors.exceptions.EssayNotExistsException;
 import org.tuiter.errors.exceptions.IncorretPasswordException;
+import org.tuiter.errors.exceptions.NotificationNotExistsException;
+import org.tuiter.errors.exceptions.TuiterApiException;
 import org.tuiter.errors.exceptions.UserAlreadyExistsException;
 import org.tuiter.errors.exceptions.UserNotExistsException;
 import org.tuiter.errors.exceptions.UserNotFoundException;
@@ -202,12 +204,23 @@ public class UserController {
 	}
 	
 	@RequestMapping(value = "/{userId}/notifications", method = RequestMethod.PATCH)
-	public ResponseEntity<Object> viewAll(@PathVariable String userId) {
+	public ResponseEntity<Object> viewAllNotifications(@PathVariable String userId) {
 		try {
 			return new ResponseEntity<>(notificationService.setAllAsViewedByUser(userId), HttpStatus.OK);
 		} catch(UserNotExistsException e) {
 			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "User not found.");
 			return new ResponseEntity<>(apiError, apiError.getCode());
+		} catch(UserNotFoundException e) {
+			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "User not found.");
+			return new ResponseEntity<>(apiError, apiError.getCode());
+		}
+	}
+	
+	@RequestMapping(value = "/{userId}/notifications/all", method = RequestMethod.DELETE)
+	public ResponseEntity<Object> deleteAll(@PathVariable String userId) {
+		try {
+			notificationService.deleteAllByUserId(userId);
+			return new ResponseEntity<>(HttpStatus.OK);
 		} catch(UserNotFoundException e) {
 			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "User not found.");
 			return new ResponseEntity<>(apiError, apiError.getCode());
