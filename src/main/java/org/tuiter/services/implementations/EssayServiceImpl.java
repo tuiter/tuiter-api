@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.Collection;
+
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ import org.tuiter.services.interfaces.ReviewService;
 import org.tuiter.services.implementations.ReviewServiceImpl;
 import java.util.stream.Collectors;
 import org.tuiter.beans.EssayToReviewResponse;
+import org.tuiter.beans.EssaysReviews;
 
 @Service
 public class EssayServiceImpl implements EssayService{
@@ -63,7 +65,10 @@ public class EssayServiceImpl implements EssayService{
 		Optional<Essay> essay_opt = essayRepository.findById(id);
 		if(essay_opt.isPresent()) {
 			Essay essay = essay_opt.get();
-			if(!bean.getTitle().isEmpty() && !bean.getTheme().isEmpty() && !bean.getContent().isEmpty()) {
+			if(bean.getTitle() != null && !bean.getTitle().isEmpty() && 
+			   bean.getTheme() != null && !bean.getTheme().isEmpty() && 
+			   bean.getContent() != null && !bean.getContent().isEmpty() &&
+			   bean.getType() != null) {
 				essay.setTitle(bean.getTitle());
 				essay.setTheme(bean.getTheme());
 				essay.setContent(bean.getContent());
@@ -133,8 +138,9 @@ public class EssayServiceImpl implements EssayService{
 	@Override
 	public EssayToReviewResponse getEssayToReview(String id) throws EssayNotExistsException, UserNotFoundException, UserNotExistsException {
 		for (Review review : reviewService.findAllByUserId(id)) {
-			if (review.getStatus().equals(ReviewStatus.PENDING))
+			if (review.getStatus().equals(ReviewStatus.PENDING) && essayRepository.findById(review.getEssayId()).isPresent()) {
 				return new EssayToReviewResponse(review.getId(), essayRepository.findById(review.getEssayId()).get());
+			}
 		}
 		
 		List<Essay> essays = essayRepository.findAll();
@@ -164,12 +170,25 @@ public class EssayServiceImpl implements EssayService{
 	}
 	
 	private Boolean userAlreadyReview(Iterable<Review> essays, String essayId) {
-		Collection<Review> listOfReviews = new ArrayList();
+		Collection<Review> listOfReviews = new ArrayList<>();
 		essays.forEach(listOfReviews::add);
 		for(Review review : listOfReviews) {
 			if (review.getEssayId().equals(essayId))
 				return true;
 		}
 		return false;
+	}
+
+	@Override
+	public List<EssaysReviews> getEssaysReviews(String userId) throws EssayNotExistsException, UserNotFoundException, UserNotExistsException {
+		Iterable<Essay> essays = findAllByUserId(userId);
+		List<EssaysReviews> reviews_list = new ArrayList<>();
+		for (Essay essay : essays) {
+			Iterable<Review> reviews = reviewService.findAllByEssayId(essay.getId());
+			for (Review review : reviews) {
+				reviews_list.add(new EssaysReviews(review, essay.getTitle(), essay.getTheme()));
+			}
+		}
+		return reviews_list;
 	}
 }

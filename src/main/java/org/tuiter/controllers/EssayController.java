@@ -11,10 +11,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.tuiter.beans.EditEssayBean;
 import org.tuiter.beans.modelbeans.EssayBean;
-import org.tuiter.errors.ErrorCode;
+import org.tuiter.errors.ApiError;
 import org.tuiter.errors.exceptions.EmptyFieldsException;
 import org.tuiter.errors.exceptions.EssayNotExistsException;
-import org.tuiter.errors.exceptions.TuiterApiException;
 import org.tuiter.errors.exceptions.UserNotExistsException;
 import org.tuiter.models.Essay;
 import org.tuiter.models.Review;
@@ -43,34 +42,38 @@ public class EssayController {
 	}
 	
 	@RequestMapping(method = RequestMethod.POST) 
-	public ResponseEntity<Essay> create(@RequestBody EssayBean body) {
+	public ResponseEntity<Object> create(@RequestBody EssayBean body) {
 		try {
 			Essay essay = essayService.create(body);
 			return new ResponseEntity<>(essay, HttpStatus.OK);
 		} catch (UserNotExistsException e) {
-			throw new TuiterApiException("User not found.", HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.NOT_FOUND);
+			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "User not found.");
+			return new ResponseEntity<>(apiError, apiError.getCode());
 		}
 	}
 	
 	@RequestMapping(value="/{id}", method = RequestMethod.GET) 
-	public ResponseEntity<Essay> get(@PathVariable String id) {
+	public ResponseEntity<Object> get(@PathVariable String id) {
 		try {
 			Essay essay = essayService.findById(id);
 			return new ResponseEntity<>(essay, HttpStatus.OK);
 		} catch (EssayNotExistsException e) {
-			throw new TuiterApiException("Essay not found.", HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.NOT_FOUND);
+			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "Essay not found.");
+			return new ResponseEntity<>(apiError, apiError.getCode());
 		}
 	}
 	
 	@RequestMapping(value="/{id}", method = RequestMethod.PUT) 
-	public ResponseEntity<Essay> update(@PathVariable String id, @RequestBody EditEssayBean body) {
+	public ResponseEntity<Object> update(@PathVariable String id, @RequestBody EditEssayBean body) {
 		try {
 			Essay essay = essayService.update(id, body);
 			return new ResponseEntity<>(essay, HttpStatus.OK);
 		} catch (EssayNotExistsException e) {
-			throw new TuiterApiException("Essay not found.", HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.NOT_FOUND);
+			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "Essay not found.");
+			return new ResponseEntity<>(apiError, apiError.getCode());
 		} catch (EmptyFieldsException e) {
-			throw new TuiterApiException("There are empty fields in request body.", HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.EMPTY_FIELDS);
+			ApiError apiError = new ApiError(HttpStatus.NOT_ACCEPTABLE, "Fields cannot be empty.");
+			return new ResponseEntity<>(apiError, apiError.getCode());
 		}
 	}
 	
@@ -81,22 +84,24 @@ public class EssayController {
 	}
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE) 
-	public ResponseEntity<HttpStatus> delete(@PathVariable String id) {
+	public ResponseEntity<Object> delete(@PathVariable String id) {
 		try {
 			essayService.delete(id);
 			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (EssayNotExistsException e) {
-			throw new TuiterApiException("Essay not found.", HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.NOT_FOUND);
+			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "Essay not found.");
+			return new ResponseEntity<>(apiError, apiError.getCode());
 		}
 	}
 	
 	@RequestMapping(value = "/{id}/reviews", method = RequestMethod.GET) 
-	public ResponseEntity<Iterable<Review>> getReviewsByEssayId(@PathVariable String id) {
+	public ResponseEntity<Object> getReviewsByEssayId(@PathVariable String id) {
 		try {
 			Iterable<Review> reviews = reviewService.findAllByEssayId(id);
 			return new ResponseEntity<>(reviews, HttpStatus.OK);
 		} catch (EssayNotExistsException e) {
-			throw new TuiterApiException("Essay not found.", HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.NOT_FOUND);
+			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "Essay not found.");
+			return new ResponseEntity<>(apiError, apiError.getCode());
 		}
 	}
 }

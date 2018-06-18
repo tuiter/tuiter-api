@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/corrigeai/corrigeai-api.svg?branch=master)](https://travis-ci.org/corrigeai/corrigeai-api)
 # tuiter-api
 
 To run:

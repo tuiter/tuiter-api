@@ -1,47 +1,30 @@
 package org.tuiter.errors;
 
-import java.time.LocalDateTime;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.http.HttpStatus;
 
 public class ApiError {
-	private String code;
-	private String message;
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
-	private LocalDateTime timestamp;
+	private HttpStatus code;
+	private String error;
 	
-	public ApiError(String code, String message) {
+	public ApiError(HttpStatus code, String error) {
 		this.code = code;
-		this.message = message;
-		this.timestamp = LocalDateTime.now();
+		this.error = error;
 	}
 
-	public String getCode() {
+	public HttpStatus getCode() {
 		return code;
 	}
 
-	public void setCode(String code) {
+	public void setCode(HttpStatus code) {
 		this.code = code;
 	}
 
-	public String getMessage() {
-		return message;
+	public String getError() {
+		return error;
 	}
 
-	public void setMessage(String message) {
-		this.message = message;
+	public void setError(String error) {
+		this.error = error;
 	}
 
-	public LocalDateTime getTimestamp() {
-		return timestamp;
-	}
-
-	public void setTimestamp(LocalDateTime timestamp) {
-		this.timestamp = timestamp;
-	}
-
-	@Override
-	public String toString() {
-		return "ApiError [code=" + code + ", message=" + message + ", timestamp=" + timestamp + "]";
-	}
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.tuiter.beans.EditReviewBean;
 import org.tuiter.beans.modelbeans.ReviewBean;
+import org.tuiter.errors.ApiError;
 import org.tuiter.errors.ErrorCode;
 import org.tuiter.errors.exceptions.EmptyFieldsException;
 import org.tuiter.errors.exceptions.EssayNotExistsException;
@@ -44,31 +45,35 @@ public class ReviewController {
 	}
 	
 	@RequestMapping(method = RequestMethod.POST) 
-	public ResponseEntity<Review> create(@RequestBody ReviewBean body) {
+	public ResponseEntity<Object> create(@RequestBody ReviewBean body) {
 		try {
 			Review review = reviewService.create(body);
 			return new ResponseEntity<>(review, HttpStatus.OK);
 		} catch(UserNotFoundException e) {
-			throw new TuiterApiException("User not found.", HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.NOT_FOUND);
+			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "User not found.");
+			return new ResponseEntity<>(apiError, apiError.getCode());
 		} catch (UserNotExistsException e) {
-			throw new TuiterApiException("User not found.", HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.NOT_FOUND);
+			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "User not found.");
+			return new ResponseEntity<>(apiError, apiError.getCode());
 		} catch(EssayNotExistsException e) {
-			throw new TuiterApiException("Essay not found.", HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.NOT_FOUND);
+			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "Essay not found.");
+			return new ResponseEntity<>(apiError, apiError.getCode());
 		}
 	}
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET) 
-	public ResponseEntity<Review> getById(@PathVariable String id) {
+	public ResponseEntity<Object> getById(@PathVariable String id) {
 		try {
 			Review review = reviewService.findById(id);
 			return new ResponseEntity<>(review, HttpStatus.OK);
 		} catch(ReviewNotExistsException e) {
-			throw new TuiterApiException("Review not found.", HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.NOT_FOUND);
+			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "Review not found.");
+			return new ResponseEntity<>(apiError, apiError.getCode());
 		}
 	}
 	
 	@RequestMapping(value="/{id}", method = RequestMethod.PUT) 
-	public ResponseEntity<Review> update(@PathVariable String id, @RequestBody EditReviewBean body) {
+	public ResponseEntity<Object> update(@PathVariable String id, @RequestBody EditReviewBean body) {
 		try {
 			Review review = reviewService.update(id, body);
 			notificationService.createOnReviewDone(review.getEssayId(), review.getUserId());
@@ -78,11 +83,14 @@ public class ReviewController {
 		} catch(UserNotExistsException e) {
 			throw new TuiterApiException ("User not found!");
 		} catch(EmptyFieldsException e) {
-			throw new TuiterApiException("Invalid body", HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.EMPTY_FIELDS);
+			ApiError apiError = new ApiError(HttpStatus.NOT_ACCEPTABLE, "Fields cannot be empty.");
+			return new ResponseEntity<>(apiError, apiError.getCode());
 		} catch (ReviewNotExistsException e) {
-			throw new TuiterApiException("Review not found.", HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.NOT_FOUND);
+			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "Review not found.");
+			return new ResponseEntity<>(apiError, apiError.getCode());
 		} catch(EssayNotExistsException e) {
-			throw new TuiterApiException("Essay not found.", HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.NOT_FOUND);
+			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "Essay not found.");
+			return new ResponseEntity<>(apiError, apiError.getCode());
 		}
 	}
 }
