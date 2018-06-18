@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.tuiter.beans.EssayToReviewResponse;
+import org.tuiter.beans.EssaysReviews;
 import org.tuiter.beans.ResetPasswordBean;
 import org.tuiter.beans.SignupBean;
 import org.tuiter.errors.ApiError;
@@ -24,14 +26,14 @@ import org.tuiter.models.Essay;
 import org.tuiter.models.Review;
 import org.tuiter.models.User;
 import org.tuiter.services.implementations.EssayServiceImpl;
+import org.tuiter.services.implementations.NotificationServiceImpl;
 import org.tuiter.services.implementations.ReviewServiceImpl;
 import org.tuiter.services.implementations.UserServiceImpl;
 import org.tuiter.services.interfaces.EssayService;
+import org.tuiter.services.interfaces.NotificationService;
 import org.tuiter.services.interfaces.ReviewService;
 import org.tuiter.services.interfaces.UserService;
 import org.tuiter.util.ServerConstants;
-import org.tuiter.beans.EssayToReviewResponse;
-import org.tuiter.beans.EssaysReviews;
 
 
 @RestController
@@ -42,6 +44,7 @@ public class UserController {
 	private UserService userService;
 	private EssayService essayService;
 	private ReviewService reviewService;
+	private NotificationService notificationService;
 	
 	@Autowired
 	public void setUserService(UserServiceImpl userService) {
@@ -56,6 +59,11 @@ public class UserController {
 	@Autowired
 	public void setReviewService(ReviewServiceImpl reviewService) {
 		this.reviewService = reviewService;
+	}
+	
+	@Autowired
+	public void setNotificationService(NotificationServiceImpl notificationService) {
+		this.notificationService = notificationService;
 	}
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
@@ -180,6 +188,43 @@ public class UserController {
 		}
 	}
 	
+	@RequestMapping(value = "/{userId}/notifications", method = RequestMethod.GET)
+	public ResponseEntity<Object> getNotificationsByUser(@PathVariable String userId) {
+		try {
+			return new ResponseEntity<>(notificationService.findAllByUserId(userId), HttpStatus.OK);
+		} catch(UserNotExistsException e) {
+			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "User not found.");
+			return new ResponseEntity<>(apiError, apiError.getCode());
+		} catch(UserNotFoundException e) {
+			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "User not found.");
+			return new ResponseEntity<>(apiError, apiError.getCode());
+		}
+	}
+	
+	@RequestMapping(value = "/{userId}/notifications", method = RequestMethod.PATCH)
+	public ResponseEntity<Object> viewAllNotifications(@PathVariable String userId) {
+		try {
+			return new ResponseEntity<>(notificationService.setAllAsViewedByUser(userId), HttpStatus.OK);
+		} catch(UserNotExistsException e) {
+			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "User not found.");
+			return new ResponseEntity<>(apiError, apiError.getCode());
+		} catch(UserNotFoundException e) {
+			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "User not found.");
+			return new ResponseEntity<>(apiError, apiError.getCode());
+		}
+	}
+	
+	@RequestMapping(value = "/{userId}/notifications/all", method = RequestMethod.DELETE)
+	public ResponseEntity<Object> deleteAll(@PathVariable String userId) {
+		try {
+			notificationService.deleteAllByUserId(userId);
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch(UserNotFoundException e) {
+			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "User not found.");
+			return new ResponseEntity<>(apiError, apiError.getCode());
+		}
+	}
+
 	@RequestMapping(value = "/{id}/essaysReviews",
 			method = RequestMethod.GET
 			) 
@@ -198,7 +243,6 @@ public class UserController {
 			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "User not exist.");
 			return new ResponseEntity<>(apiError, apiError.getCode());
 		}
-		
 	}
 }
 
