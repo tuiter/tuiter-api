@@ -19,8 +19,6 @@ import org.tuiter.errors.ApiError;
 import org.tuiter.errors.exceptions.EmptyFieldsException;
 import org.tuiter.errors.exceptions.EssayNotExistsException;
 import org.tuiter.errors.exceptions.IncorretPasswordException;
-import org.tuiter.errors.exceptions.NotificationNotExistsException;
-import org.tuiter.errors.exceptions.TuiterApiException;
 import org.tuiter.errors.exceptions.UserAlreadyExistsException;
 import org.tuiter.errors.exceptions.UserNotExistsException;
 import org.tuiter.errors.exceptions.UserNotFoundException;
