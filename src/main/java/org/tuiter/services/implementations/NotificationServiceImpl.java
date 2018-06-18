@@ -53,7 +53,7 @@ public class NotificationServiceImpl implements NotificationService {
 			String timeStamp = generateTimeStamp(); 			
 			Essay essay = essayService.findById(essayId);
 			User receiver = userService.findById(essay.getUserId());
-			String description = "O usuário '" + sender.getUsername() + "' fez um revisão na sua redação: " + "'" + essay.getTitle() + "'.";
+			String description = "O usuário '" + sender.getUsername() + "' fez uma revisão na sua redação " + "'" + essay.getTitle() + "'.";
 			
 			Notification notification = new Notification(receiver.getId(), timeStamp, description, true);
 			messagingTemplate.convertAndSend("/notification_ch/" + notification.getUserId(), notification);
