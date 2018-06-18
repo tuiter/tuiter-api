@@ -31,6 +31,7 @@ import org.tuiter.services.interfaces.ReviewService;
 import org.tuiter.services.interfaces.UserService;
 import org.tuiter.util.ServerConstants;
 import org.tuiter.beans.EssayToReviewResponse;
+import org.tuiter.beans.EssaysReviews;
 
 
 @RestController
@@ -177,6 +178,27 @@ public class UserController {
 			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "User not found.");
 			return new ResponseEntity<>(apiError, apiError.getCode());
 		}
+	}
+	
+	@RequestMapping(value = "/{id}/essaysReviews",
+			method = RequestMethod.GET
+			) 
+	public ResponseEntity<Object> getEssaysStatusByUser(@PathVariable String id) {
+		try {
+			Iterable<EssaysReviews> reviews;
+			reviews = essayService.getEssaysReviews(id);
+			return new ResponseEntity<>(reviews, HttpStatus.OK);
+		} catch (UserNotExistsException e1) {
+			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "User not found.");
+			return new ResponseEntity<>(apiError, apiError.getCode());			
+		} catch (UserNotFoundException e) {
+			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "User not found.");
+			return new ResponseEntity<>(apiError, apiError.getCode());
+		} catch (EssayNotExistsException e) {
+			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "User not exist.");
+			return new ResponseEntity<>(apiError, apiError.getCode());
+		}
+		
 	}
 }
 
