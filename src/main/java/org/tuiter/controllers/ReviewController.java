@@ -79,9 +79,8 @@ public class ReviewController {
 			notificationService.createOnReviewDone(review.getEssayId(), review.getUserId());
 			return new ResponseEntity<>(review, HttpStatus.OK);
 		} catch(UserNotFoundException e) {
-			throw new TuiterApiException ("User not found!");
-		} catch(UserNotExistsException e) {
-			throw new TuiterApiException ("User not found!");
+			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "User not found.");
+			return new ResponseEntity<>(apiError, apiError.getCode());
 		} catch(EmptyFieldsException e) {
 			ApiError apiError = new ApiError(HttpStatus.NOT_ACCEPTABLE, "Fields cannot be empty.");
 			return new ResponseEntity<>(apiError, apiError.getCode());

@@ -46,7 +46,7 @@ public class NotificationServiceImpl implements NotificationService {
 	}
 	
 	@Override
-	public Notification createOnReviewDone(String essayId, String senderId) throws UserNotExistsException, UserNotFoundException, ReviewNotExistsException, EssayNotExistsException {
+	public Notification createOnReviewDone(String essayId, String senderId) throws UserNotFoundException, ReviewNotExistsException, EssayNotExistsException {
 		User sender = userService.findById(senderId);
 		
 		if(sender != null) {
@@ -59,7 +59,7 @@ public class NotificationServiceImpl implements NotificationService {
 			messagingTemplate.convertAndSend("/notification_ch/" + notification.getUserId(), notification);
 			return notificationRepository.save(notification);
 		} else {
-			throw new UserNotExistsException();
+			throw new UserNotFoundException();
 		}
 	}
 	

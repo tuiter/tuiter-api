@@ -29,8 +29,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.OPTIONS, "**").permitAll()
                 .antMatchers(HttpMethod.POST, "/tuiterapi/users").permitAll()
                 .antMatchers("/tuiterapi/notifications/**").permitAll()
-                .antMatchers("/send/message").permitAll()
-                .antMatchers("/chat").permitAll()
                 .antMatchers("/tuiterapi/notifications").permitAll()
                 .anyRequest().authenticated()
                 .and()

@@ -19,30 +19,12 @@ import org.tuiter.util.ServerConstants;
 @RequestMapping(ServerConstants.SERVER_REQUEST 
 				+ ServerConstants.NOTIFICATION_REQUEST)
 public class NotificationController {
-//	@Autowired
-//	private SimpMessagingTemplate messagingTemplate;
 	private NotificationService notificationService;
 	
 	@Autowired
 	public void setNotificationService(NotificationServiceImpl notificationService) {
 		this.notificationService = notificationService;
 	}
-	
-/*	@MessageMapping("/send/message/{essayId}")
-	public void notifyOnReview(@PathVariable String essayId, @RequestBody NotificationBean bean) {
-		try {
-			Notification notification = notificationService.createOnReviewDone(essayId, bean);
-			messagingTemplate.convertAndSend("/notification_ch/" + notification.getUserId(), notification);
-		} catch(ReviewNotExistsException e) {
-			throw new TuiterApiException("Review not exists!");
-		} catch(UserNotExistsException e) {
-			throw new TuiterApiException("User not exists!");
-		} catch(UserNotFoundException e) {
-			throw new TuiterApiException("User not exists!");
-		} catch(EssayNotExistsException e) {
-			throw new TuiterApiException("Essay not exists!");
-		}
-	}*/
 	
 	@RequestMapping(value = "/{notificationId}", method = RequestMethod.DELETE)
 	public ResponseEntity<HttpStatus> delete(@PathVariable String notificationId) {
