@@ -2,10 +2,14 @@ package org.corrige.ai.models.rating;
 
 import org.corrige.ai.util.Vote;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
+@Document(collection = "ratings")
 public class Rating {
+	
 	@Id
 	private String id;
+	
 	private String userId;
 	private String reviewId;
 	private Vote vote;
@@ -58,5 +62,21 @@ public class Rating {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	@Override
+	public String toString() {
+		return "Rating [id=" + id + ", userId=" + userId + ", reviewId=" + reviewId + ", vote=" + vote + ", comment="
+				+ comment + "]";
+	}
+	
+	
 
 }
