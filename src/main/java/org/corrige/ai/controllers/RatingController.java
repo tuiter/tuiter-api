@@ -45,7 +45,7 @@ public class RatingController {
 			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "Review not found.");
 			return new ResponseEntity<>(apiError, apiError.getCode());
 		} catch (EmptyFieldsException e) {
-			ApiError apiError = new ApiError(HttpStatus.NOT_ACCEPTABLE, "Field vote cannot be empty.");
+			ApiError apiError = new ApiError(HttpStatus.NOT_ACCEPTABLE, "Fields vote and comment cannot be empty.");
 			return new ResponseEntity<>(apiError, apiError.getCode());
 		}
 	}

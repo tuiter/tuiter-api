@@ -46,9 +46,13 @@ public class RatingServiceImpl implements RatingService {
 	ReviewNotExistsException, EmptyFieldsException {
 		if (userService.findById(rating.getUserId()) != null) {
 			if (reviewService.findById(rating.getReviewId()) != null) {
-				Rating newRating = new Rating(rating.getUserId(), rating.getReviewId(), rating.getVote(),
-									rating.getComment());
-				return ratingRepository.save(newRating);
+				if (rating.getVote() != null && rating.getComment() != null) {
+					Rating newRating = new Rating(rating.getUserId(), rating.getReviewId(), rating.getVote(),
+							rating.getComment());
+					return ratingRepository.save(newRating);
+				} else {
+					throw new EmptyFieldsException();
+				}
 			} else {
 				throw new ReviewNotExistsException();
 			}

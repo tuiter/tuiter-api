@@ -23,13 +23,6 @@ public class Rating {
 		this.vote = vote;
 		this.comment = comment;
 	}
-	
-	public Rating(String userId, String reviewId, Vote vote) {
-		this.userId = userId;
-		this.reviewId = reviewId;
-		this.vote = vote;
-		this.comment = "";
-	}
 
 	public String getUserId() {
 		return userId;
