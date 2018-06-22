@@ -9,18 +9,18 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
-import org.corrige.ai.errors.exceptions.EssayNotExistsException;
-import org.corrige.ai.errors.exceptions.NotificationNotExistsException;
-import org.corrige.ai.errors.exceptions.ReviewNotExistsException;
-import org.corrige.ai.errors.exceptions.UserNotExistsException;
-import org.corrige.ai.errors.exceptions.UserNotFoundException;
-import org.corrige.ai.models.Essay;
-import org.corrige.ai.models.Notification;
-import org.corrige.ai.models.User;
+import org.corrige.ai.models.essay.Essay;
+import org.corrige.ai.models.notification.Notification;
+import org.corrige.ai.models.user.User;
 import org.corrige.ai.repositories.NotificationRepository;
 import org.corrige.ai.services.interfaces.EssayService;
 import org.corrige.ai.services.interfaces.NotificationService;
 import org.corrige.ai.services.interfaces.UserService;
+import org.corrige.ai.validations.exceptions.EssayNotExistsException;
+import org.corrige.ai.validations.exceptions.NotificationNotExistsException;
+import org.corrige.ai.validations.exceptions.ReviewNotExistsException;
+import org.corrige.ai.validations.exceptions.UserNotExistsException;
+import org.corrige.ai.validations.exceptions.UserNotFoundException;
 
 @Service
 public class NotificationServiceImpl implements NotificationService {

@@ -1,7 +1,7 @@
 package org.corrige.ai.repositories;
 
+import org.corrige.ai.models.notification.Notification;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import org.corrige.ai.models.Notification;
 
 public interface NotificationRepository extends MongoRepository<Notification, String> {
 	

@@ -3,7 +3,8 @@ package org.corrige.ai.models;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.corrige.ai.util.Type;
+import org.corrige.ai.enums.Type;
+import org.corrige.ai.models.essay.Essay;
 
 public class EssayTest {
 	String user1;

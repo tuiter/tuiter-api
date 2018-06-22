@@ -4,16 +4,16 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.corrige.ai.beans.ResetPasswordBean;
-import org.corrige.ai.beans.SignupBean;
-import org.corrige.ai.errors.exceptions.EmptyFieldsException;
-import org.corrige.ai.errors.exceptions.IncorretPasswordException;
-import org.corrige.ai.errors.exceptions.UserAlreadyExistsException;
-import org.corrige.ai.errors.exceptions.UserNotFoundException;
-import org.corrige.ai.models.User;
+import org.corrige.ai.models.auth.ResetPasswordBean;
+import org.corrige.ai.models.user.SignupBean;
+import org.corrige.ai.models.user.User;
 import org.corrige.ai.repositories.UserRepository;
 import org.corrige.ai.services.interfaces.UserService;
 import org.corrige.ai.util.Bean2ModelFactory;
+import org.corrige.ai.validations.exceptions.EmptyFieldsException;
+import org.corrige.ai.validations.exceptions.IncorretPasswordException;
+import org.corrige.ai.validations.exceptions.UserAlreadyExistsException;
+import org.corrige.ai.validations.exceptions.UserNotFoundException;
 
 @Service
 public class UserServiceImpl implements UserService {

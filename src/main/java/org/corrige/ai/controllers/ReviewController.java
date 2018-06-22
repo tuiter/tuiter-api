@@ -9,22 +9,22 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.corrige.ai.beans.EditReviewBean;
-import org.corrige.ai.beans.modelbeans.ReviewBean;
-import org.corrige.ai.errors.ApiError;
-import org.corrige.ai.errors.ErrorCode;
-import org.corrige.ai.errors.exceptions.EmptyFieldsException;
-import org.corrige.ai.errors.exceptions.EssayNotExistsException;
-import org.corrige.ai.errors.exceptions.ReviewNotExistsException;
-import org.corrige.ai.errors.exceptions.TuiterApiException;
-import org.corrige.ai.errors.exceptions.UserNotExistsException;
-import org.corrige.ai.errors.exceptions.UserNotFoundException;
-import org.corrige.ai.models.Review;
+import org.corrige.ai.enums.ErrorCode;
+import org.corrige.ai.models.review.EditReviewBean;
+import org.corrige.ai.models.review.Review;
+import org.corrige.ai.models.review.ReviewBean;
 import org.corrige.ai.services.implementations.NotificationServiceImpl;
 import org.corrige.ai.services.implementations.ReviewServiceImpl;
 import org.corrige.ai.services.interfaces.NotificationService;
 import org.corrige.ai.services.interfaces.ReviewService;
 import org.corrige.ai.util.ServerConstants;
+import org.corrige.ai.validations.ApiError;
+import org.corrige.ai.validations.exceptions.EmptyFieldsException;
+import org.corrige.ai.validations.exceptions.EssayNotExistsException;
+import org.corrige.ai.validations.exceptions.ReviewNotExistsException;
+import org.corrige.ai.validations.exceptions.TuiterApiException;
+import org.corrige.ai.validations.exceptions.UserNotExistsException;
+import org.corrige.ai.validations.exceptions.UserNotFoundException;
 
 @RestController
 @CrossOrigin

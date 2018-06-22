@@ -1,11 +1,11 @@
 package org.corrige.ai.services.interfaces;
 
-import org.corrige.ai.errors.exceptions.EssayNotExistsException;
-import org.corrige.ai.errors.exceptions.NotificationNotExistsException;
-import org.corrige.ai.errors.exceptions.ReviewNotExistsException;
-import org.corrige.ai.errors.exceptions.UserNotExistsException;
-import org.corrige.ai.errors.exceptions.UserNotFoundException;
-import org.corrige.ai.models.Notification;
+import org.corrige.ai.models.notification.Notification;
+import org.corrige.ai.validations.exceptions.EssayNotExistsException;
+import org.corrige.ai.validations.exceptions.NotificationNotExistsException;
+import org.corrige.ai.validations.exceptions.ReviewNotExistsException;
+import org.corrige.ai.validations.exceptions.UserNotExistsException;
+import org.corrige.ai.validations.exceptions.UserNotFoundException;
 
 public interface NotificationService {
 	public Notification createOnReviewDone(String essayId, String senderId) throws UserNotFoundException, ReviewNotExistsException, EssayNotExistsException;

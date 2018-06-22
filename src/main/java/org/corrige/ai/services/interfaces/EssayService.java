@@ -2,16 +2,16 @@ package org.corrige.ai.services.interfaces;
 
 import java.util.List;
 
-import org.corrige.ai.beans.EditEssayBean;
-import org.corrige.ai.beans.modelbeans.EssayBean;
-import org.corrige.ai.beans.EssayToReviewResponse;
-import org.corrige.ai.beans.EssaysReviews;
-import org.corrige.ai.errors.exceptions.EmptyFieldsException;
-import org.corrige.ai.errors.exceptions.EssayNotExistsException;
-import org.corrige.ai.errors.exceptions.UserNotExistsException;
-import org.corrige.ai.errors.exceptions.UserNotFoundException;
-import org.corrige.ai.models.Essay;
-import org.corrige.ai.models.Review;
+import org.corrige.ai.models.essay.EditEssayBean;
+import org.corrige.ai.models.essay.Essay;
+import org.corrige.ai.models.essay.EssayBean;
+import org.corrige.ai.models.review.EssayToReviewResponse;
+import org.corrige.ai.models.review.EssaysReviews;
+import org.corrige.ai.models.review.Review;
+import org.corrige.ai.validations.exceptions.EmptyFieldsException;
+import org.corrige.ai.validations.exceptions.EssayNotExistsException;
+import org.corrige.ai.validations.exceptions.UserNotExistsException;
+import org.corrige.ai.validations.exceptions.UserNotFoundException;
 
 public interface EssayService {
 	public Essay create(EssayBean bean) throws UserNotExistsException;

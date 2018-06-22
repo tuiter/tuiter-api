@@ -1,7 +1,7 @@
 package org.corrige.ai.repositories;
 
+import org.corrige.ai.models.essay.Essay;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import org.corrige.ai.models.Essay;
 
 public interface EssayRepository extends MongoRepository<Essay, String> {
 	

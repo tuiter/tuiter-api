@@ -3,7 +3,8 @@ package org.corrige.ai.models;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.corrige.ai.util.Gender;
+import org.corrige.ai.enums.Gender;
+import org.corrige.ai.models.user.User;
 
 public class UserTest {
 	User user1;

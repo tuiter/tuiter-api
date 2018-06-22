@@ -12,25 +12,25 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.corrige.ai.beans.EditEssayBean;
-import org.corrige.ai.beans.EssayToReviewResponse;
-import org.corrige.ai.beans.modelbeans.EssayBean;
-import org.corrige.ai.errors.exceptions.EmptyFieldsException;
-import org.corrige.ai.errors.exceptions.EssayNotExistsException;
-import org.corrige.ai.errors.exceptions.UserNotExistsException;
-import org.corrige.ai.errors.exceptions.UserNotFoundException;
-import org.corrige.ai.models.Essay;
-import org.corrige.ai.models.Review;
-import org.corrige.ai.models.User;
+import org.corrige.ai.enums.ReviewStatus;
+import org.corrige.ai.models.essay.EditEssayBean;
+import org.corrige.ai.models.essay.Essay;
+import org.corrige.ai.models.essay.EssayBean;
+import org.corrige.ai.models.review.EssayToReviewResponse;
+import org.corrige.ai.models.review.EssaysReviews;
+import org.corrige.ai.models.review.Review;
+import org.corrige.ai.models.user.User;
 import org.corrige.ai.repositories.EssayRepository;
 import org.corrige.ai.services.interfaces.EssayService;
 import org.corrige.ai.services.interfaces.ReviewService;
 import org.corrige.ai.services.implementations.ReviewServiceImpl;
 import java.util.stream.Collectors;
-import org.corrige.ai.beans.EssayToReviewResponse;
-import org.corrige.ai.beans.EssaysReviews;
+
 import org.corrige.ai.services.interfaces.UserService;
-import org.corrige.ai.util.ReviewStatus;
+import org.corrige.ai.validations.exceptions.EmptyFieldsException;
+import org.corrige.ai.validations.exceptions.EssayNotExistsException;
+import org.corrige.ai.validations.exceptions.UserNotExistsException;
+import org.corrige.ai.validations.exceptions.UserNotFoundException;
 
 @Service
 public class EssayServiceImpl implements EssayService{

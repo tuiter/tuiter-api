@@ -1,7 +1,7 @@
 package org.corrige.ai.util;
 
-import org.corrige.ai.beans.SignupBean;
-import org.corrige.ai.models.User;
+import org.corrige.ai.models.user.SignupBean;
+import org.corrige.ai.models.user.User;
 
 public class Bean2ModelFactory {
 	public static User createUser(SignupBean bean) {

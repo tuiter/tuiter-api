@@ -7,11 +7,11 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
-import org.corrige.ai.beans.LoginBean;
-import org.corrige.ai.errors.exceptions.FailedAuthenticationException;
-import org.corrige.ai.models.User;
+import org.corrige.ai.models.auth.LoginBean;
+import org.corrige.ai.models.user.User;
 import org.corrige.ai.security.model.AuthenticatedUser;
 import org.corrige.ai.services.implementations.AuthenticationService;
+import org.corrige.ai.validations.exceptions.FailedAuthenticationException;
 
 @Component
 public class UserAuthenticationProvider implements AuthenticationProvider {

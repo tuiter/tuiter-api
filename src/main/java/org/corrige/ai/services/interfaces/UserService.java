@@ -1,12 +1,12 @@
 package org.corrige.ai.services.interfaces;
 
-import org.corrige.ai.beans.ResetPasswordBean;
-import org.corrige.ai.beans.SignupBean;
-import org.corrige.ai.errors.exceptions.EmptyFieldsException;
-import org.corrige.ai.errors.exceptions.IncorretPasswordException;
-import org.corrige.ai.errors.exceptions.UserAlreadyExistsException;
-import org.corrige.ai.errors.exceptions.UserNotFoundException;
-import org.corrige.ai.models.User;
+import org.corrige.ai.models.auth.ResetPasswordBean;
+import org.corrige.ai.models.user.SignupBean;
+import org.corrige.ai.models.user.User;
+import org.corrige.ai.validations.exceptions.EmptyFieldsException;
+import org.corrige.ai.validations.exceptions.IncorretPasswordException;
+import org.corrige.ai.validations.exceptions.UserAlreadyExistsException;
+import org.corrige.ai.validations.exceptions.UserNotFoundException;
 
 public interface UserService {
 	public Iterable<User> findAll();

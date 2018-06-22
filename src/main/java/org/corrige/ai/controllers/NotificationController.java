@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.corrige.ai.errors.exceptions.NotificationNotExistsException;
-import org.corrige.ai.errors.exceptions.TuiterApiException;
 import org.corrige.ai.services.implementations.NotificationServiceImpl;
 import org.corrige.ai.services.interfaces.NotificationService;
 import org.corrige.ai.util.ServerConstants;
+import org.corrige.ai.validations.exceptions.NotificationNotExistsException;
+import org.corrige.ai.validations.exceptions.TuiterApiException;
 
 @Controller
 @CrossOrigin

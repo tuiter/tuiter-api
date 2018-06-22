@@ -3,9 +3,9 @@ package org.corrige.ai.security.model;
 
 import java.util.Collection;
 
+import org.corrige.ai.models.user.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.corrige.ai.models.User;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;

@@ -9,12 +9,12 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.corrige.ai.beans.LoginBean;
-import org.corrige.ai.errors.exceptions.FailedAuthenticationException;
-import org.corrige.ai.errors.exceptions.UserNotFoundException;
-import org.corrige.ai.models.User;
+import org.corrige.ai.models.auth.LoginBean;
+import org.corrige.ai.models.user.User;
 import org.corrige.ai.services.interfaces.UserService;
 import org.corrige.ai.util.SecurityConstants;
+import org.corrige.ai.validations.exceptions.FailedAuthenticationException;
+import org.corrige.ai.validations.exceptions.UserNotFoundException;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;

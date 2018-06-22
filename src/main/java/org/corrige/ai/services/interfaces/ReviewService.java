@@ -1,13 +1,13 @@
 package org.corrige.ai.services.interfaces;
 
-import org.corrige.ai.beans.EditReviewBean;
-import org.corrige.ai.beans.modelbeans.ReviewBean;
-import org.corrige.ai.errors.exceptions.EmptyFieldsException;
-import org.corrige.ai.errors.exceptions.EssayNotExistsException;
-import org.corrige.ai.errors.exceptions.ReviewNotExistsException;
-import org.corrige.ai.errors.exceptions.UserNotExistsException;
-import org.corrige.ai.errors.exceptions.UserNotFoundException;
-import org.corrige.ai.models.Review;
+import org.corrige.ai.models.review.EditReviewBean;
+import org.corrige.ai.models.review.Review;
+import org.corrige.ai.models.review.ReviewBean;
+import org.corrige.ai.validations.exceptions.EmptyFieldsException;
+import org.corrige.ai.validations.exceptions.EssayNotExistsException;
+import org.corrige.ai.validations.exceptions.ReviewNotExistsException;
+import org.corrige.ai.validations.exceptions.UserNotExistsException;
+import org.corrige.ai.validations.exceptions.UserNotFoundException;
 
 public interface ReviewService {
 	public Review create(ReviewBean bean) throws UserNotExistsException, UserNotFoundException, EssayNotExistsException;
