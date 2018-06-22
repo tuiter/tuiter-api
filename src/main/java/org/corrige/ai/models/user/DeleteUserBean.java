@@ -7,9 +7,7 @@ public class DeleteUserBean {
 	private String password;
 	private String username;
 
-	public DeleteUserBean() {
-		
-	}
+	public DeleteUserBean() {}
 
 	public DeleteUserBean(String username, String password) {
 		this.password = password;

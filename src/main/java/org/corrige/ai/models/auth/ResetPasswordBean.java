@@ -6,9 +6,7 @@ public class ResetPasswordBean {
 	private String oldPassword;
 	private String newPassword;
 
-	public ResetPasswordBean() {
-		
-	}
+	public ResetPasswordBean() {}
 	
 	public ResetPasswordBean(String oldPassword, String newPassword) {
 		this.newPassword = newPassword;

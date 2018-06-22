@@ -1,6 +1,5 @@
 package org.corrige.ai.security.model;
 
-
 import java.util.Collection;
 
 import org.corrige.ai.models.user.User;

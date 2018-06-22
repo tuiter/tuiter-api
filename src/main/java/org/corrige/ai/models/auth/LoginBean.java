@@ -4,9 +4,7 @@ public class LoginBean {
 	private String identifier;
 	private String password;
 	
-	public LoginBean(){
-		
-	}
+	public LoginBean() {}
 	
 	public LoginBean(String identifier, String password) {
 		this.password = password;

@@ -9,12 +9,9 @@ public class EssayBean {
 	private String content;
 	private Type type;
 	
-	public EssayBean() {
-		
-	}
+	public EssayBean() {}
 
 	public EssayBean(String userUsername, String title, String theme, String content, Type type) {
-		super();
 		this.userUsername = userUsername;
 		this.title = title;
 		this.theme = theme;

@@ -15,12 +15,9 @@ public class SignupBean {
 	private String photoUrl;
 	private String username;
 
-	public SignupBean() {
-		
-	}
+	public SignupBean() {}
 	
 	public SignupBean(String email, Gender gender, String name, String password, String photoUrl, String username) {
-		super();
 		this.email = email;
 		this.gender = gender;
 		this.name = name;

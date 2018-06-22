@@ -5,16 +5,17 @@ import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Date;
+import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.corrige.ai.models.auth.LoginBean;
 import org.corrige.ai.models.user.User;
 import org.corrige.ai.services.interfaces.UserService;
 import org.corrige.ai.util.SecurityConstants;
 import org.corrige.ai.validations.exceptions.FailedAuthenticationException;
 import org.corrige.ai.validations.exceptions.UserNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -52,10 +53,10 @@ public class AuthenticationService {
 
     public User getUserFromToken(String token) throws IOException, URISyntaxException, UserNotFoundException {
         Jws<Claims> claims = Jwts.parser().setSigningKey(SecurityConstants.SECRET).parseClaimsJws(token);
-        User user = userService.findByUsername(claims.getBody().getSubject().toString());
+        Optional<User> user = userService.findByUsername(claims.getBody().getSubject().toString());
 
-        if (user != null)
-            return user;
+        if (user.isPresent())
+            return user.get();
         else
             throw new UserNotFoundException();
     }

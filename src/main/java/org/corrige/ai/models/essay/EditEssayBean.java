@@ -8,9 +8,7 @@ public class EditEssayBean {
 	private String content;
 	private Type type;
 
-	public EditEssayBean() {
-		
-	}
+	public EditEssayBean() {}
 
 	public EditEssayBean(String id, String title, String theme, String content, Type type) {
 		this.title = title;

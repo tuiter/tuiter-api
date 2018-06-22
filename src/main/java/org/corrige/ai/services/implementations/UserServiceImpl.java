@@ -1,19 +1,20 @@
 package org.corrige.ai.services.implementations;
 
+import java.util.Collection;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.corrige.ai.models.auth.ResetPasswordBean;
 import org.corrige.ai.models.user.SignupBean;
 import org.corrige.ai.models.user.User;
 import org.corrige.ai.repositories.UserRepository;
 import org.corrige.ai.services.interfaces.UserService;
-import org.corrige.ai.util.Bean2ModelFactory;
+import org.corrige.ai.util.UserBean2ModelFactory;
 import org.corrige.ai.validations.exceptions.EmptyFieldsException;
 import org.corrige.ai.validations.exceptions.IncorretPasswordException;
 import org.corrige.ai.validations.exceptions.UserAlreadyExistsException;
 import org.corrige.ai.validations.exceptions.UserNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -25,12 +26,12 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Iterable<User> findAll() {
+	public Collection<User> findAll() {
 		return userRepository.findAll();
 	}
 
 	@Override
-	public User findByEmail(String email) {
+	public Optional<User> findByEmail(String email) {
 		return userRepository.findByEmail(email);
 	}
 
@@ -45,7 +46,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User findByUsername(String username) {
+	public Optional<User> findByUsername(String username) {
 		return userRepository.findByUsername(username);
 	}
 	
@@ -127,7 +128,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User create(SignupBean body) throws UserAlreadyExistsException {
-		User user = Bean2ModelFactory.createUser(body);
+		User user = UserBean2ModelFactory.createUser(body);
 		if (!exists(user.getEmail()) && userRepository.findByUsername(user.getUsername()) == null) {
 			return save(user);
 		} else {

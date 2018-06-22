@@ -9,9 +9,7 @@ public class ReviewBean {
 	private List<String> comments;
 	private List<Double> ratings;
 	
-	public ReviewBean() {
-		
-	}
+	public ReviewBean() {}
 	
 	public ReviewBean(String essayId, String reviewingUserId, List<String> comments, List<Double> ratings) {
 		this.essayId = essayId;

@@ -1,12 +1,12 @@
 package org.corrige.ai.controllers;
 
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.Date;
-
 import javax.servlet.ServletException;
 
+import org.corrige.ai.models.auth.AuthenticationResponse;
+import org.corrige.ai.models.auth.LoginBean;
+import org.corrige.ai.models.user.User;
+import org.corrige.ai.services.implementations.AuthenticationService;
+import org.corrige.ai.util.ServerConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,17 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.corrige.ai.models.auth.AuthenticationResponse;
-import org.corrige.ai.models.auth.LoginBean;
-import org.corrige.ai.models.user.User;
-import org.corrige.ai.services.implementations.AuthenticationService;
-import org.corrige.ai.services.implementations.UserServiceImpl;
-import org.corrige.ai.services.interfaces.UserService;
-import org.corrige.ai.util.SecurityConstants;
-import org.corrige.ai.util.ServerConstants;
-
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 
 @RestController
 @CrossOrigin

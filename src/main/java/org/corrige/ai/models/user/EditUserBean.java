@@ -13,12 +13,9 @@ public class EditUserBean {
 	private String name;
 	private String photoUrl;
 	
-	public EditUserBean() {
-		
-	}
+	public EditUserBean() {}
 	
 	public EditUserBean(String requester, String name, String photo_url, Gender gender) {
-		super();
 		this.requester = requester;
 		this.name = name;
 		this.photoUrl = photo_url;
@@ -64,7 +61,7 @@ public class EditUserBean {
 		return gender;
 	}
  
-public void setGender(Gender gender) {
+	public void setGender(Gender gender) {
 		this.gender = gender;
 	}
 }

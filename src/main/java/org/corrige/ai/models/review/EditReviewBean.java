@@ -7,9 +7,7 @@ public class EditReviewBean {
 	private List<String> comments;
 	private List<Double> ratings;
 
-	public EditReviewBean() {
-		
-	}
+	public EditReviewBean() {}
 
 	public EditReviewBean( List<String> comments, List<Double> ratings) {
 		this.comments = comments;

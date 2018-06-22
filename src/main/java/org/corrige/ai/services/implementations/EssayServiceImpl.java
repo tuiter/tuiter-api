@@ -4,14 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
-import java.util.Collection;
-
-import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.corrige.ai.enums.ReviewStatus;
 import org.corrige.ai.models.essay.EditEssayBean;
 import org.corrige.ai.models.essay.Essay;
@@ -23,41 +17,28 @@ import org.corrige.ai.models.user.User;
 import org.corrige.ai.repositories.EssayRepository;
 import org.corrige.ai.services.interfaces.EssayService;
 import org.corrige.ai.services.interfaces.ReviewService;
-import org.corrige.ai.services.implementations.ReviewServiceImpl;
-import java.util.stream.Collectors;
-
 import org.corrige.ai.services.interfaces.UserService;
 import org.corrige.ai.validations.exceptions.EmptyFieldsException;
 import org.corrige.ai.validations.exceptions.EssayNotExistsException;
 import org.corrige.ai.validations.exceptions.UserNotExistsException;
 import org.corrige.ai.validations.exceptions.UserNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class EssayServiceImpl implements EssayService{
+	@Autowired
 	private EssayRepository essayRepository;
+	@Autowired
 	private UserService userService;
+	@Autowired
 	private ReviewService reviewService;
-		
-	@Autowired
-	public void setEssayRepository(EssayRepository essayRepository) {
-		this.essayRepository = essayRepository;
-	}
-
-	@Autowired
-	public void setUserService(UserServiceImpl userService) {
-		this.userService = userService;
-	}
-	
-	@Autowired
-	public void setReviewService(ReviewServiceImpl reviewService) {
-		this.reviewService = reviewService;
-	}
 
 	@Override
 	public Essay create(EssayBean bean) throws UserNotExistsException{
-		User user = userService.findByUsername(bean.getUserUsername());
-		if(user != null) {
-			Essay essay = new Essay(user.getId(), bean.getTitle(), bean.getTheme(), bean.getContent(), bean.getType());
+		Optional<User> user = userService.findByUsername(bean.getUserUsername());
+		if(user.isPresent()) {
+			Essay essay = new Essay(user.get().getId(), bean.getTitle(), bean.getTheme(), bean.getContent(), bean.getType());
 			return essayRepository.save(essay);
 		} else {
 			throw new UserNotExistsException();
@@ -101,12 +82,11 @@ public class EssayServiceImpl implements EssayService{
 
 	@Override
 	public Iterable<Essay> findAllByUserUsername(String username) throws UserNotExistsException{
-		User user = userService.findByUsername(username);
-		if (user != null) {
-			return essayRepository.findAllByUserId(user.getId());
-		} else {
+		Optional<User> user = userService.findByUsername(username);
+		if (user.isPresent()) 
+			return essayRepository.findAllByUserId(user.get().getId());
+		else 
 			throw new UserNotExistsException();
-		}
 	}
 
 	@Override

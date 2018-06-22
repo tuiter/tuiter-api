@@ -1,12 +1,10 @@
 package org.corrige.ai.models.essay;
 
 public class DeleteEssayBean {
-	String userId;
-	String essayId;
+	private String userId;
+	private String essayId;
 	
-	public DeleteEssayBean() {
-	
-	}
+	public DeleteEssayBean() {}
 	
 	public DeleteEssayBean(String userId, String essayId) {
 		this.userId = userId;

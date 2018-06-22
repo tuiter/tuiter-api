@@ -35,7 +35,6 @@ import org.corrige.ai.validations.exceptions.UserAlreadyExistsException;
 import org.corrige.ai.validations.exceptions.UserNotExistsException;
 import org.corrige.ai.validations.exceptions.UserNotFoundException;
 
-
 @RestController
 @CrossOrigin
 @RequestMapping(ServerConstants.SERVER_REQUEST 
@@ -80,7 +79,6 @@ public class UserController {
 	
 	@RequestMapping(method = RequestMethod.GET) 
 	public ResponseEntity<Iterable<User>> getUsers() {
-		
 		return new ResponseEntity<>(userService.findAll(), HttpStatus.OK); 
 	}
 	

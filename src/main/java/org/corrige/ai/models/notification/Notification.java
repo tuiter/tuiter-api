@@ -13,9 +13,7 @@ public class Notification {
 	private String description;
 	private boolean isNew;
 	
-	public Notification() {
-		
-	}
+	public Notification() {}
 	
 	public Notification(String userId, String timeStamp, String description, boolean isNew) {
 		this.userId = userId;

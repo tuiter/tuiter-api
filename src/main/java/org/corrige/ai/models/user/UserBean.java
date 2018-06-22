@@ -9,9 +9,7 @@ public class UserBean {
 	private String photo_url;
 	private Gender gender;
 	
-	public UserBean() {
-		
-	}
+	public UserBean() {}
 	
 	public UserBean(String username, String email, String name, String photo_url, Gender gender) {
 		this.username = username;

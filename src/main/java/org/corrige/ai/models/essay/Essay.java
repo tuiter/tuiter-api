@@ -22,7 +22,6 @@ public class Essay {
 	private ReviewStatus status;
 	
 	public Essay(String userId, String title, String theme, String content, Type type) {
-		super();
 		this.userId = userId;
 		this.title = title;
 		this.theme = theme;
@@ -31,9 +30,7 @@ public class Essay {
 		this.status = ReviewStatus.PENDING;
 	}
 	
-	public Essay() {
-		
-	}
+	public Essay() {}
 	
 	public Essay(String userId, String title, String content, Type type) {
 		super();
