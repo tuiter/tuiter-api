@@ -12,7 +12,7 @@ import org.corrige.ai.services.implementations.NotificationServiceImpl;
 import org.corrige.ai.services.interfaces.NotificationService;
 import org.corrige.ai.util.ServerConstants;
 import org.corrige.ai.validations.exceptions.NotificationNotExistsException;
-import org.corrige.ai.validations.exceptions.TuiterApiException;
+import org.corrige.ai.validations.exceptions.CorrigeAiApiException;
 
 @Controller
 @CrossOrigin
@@ -32,7 +32,7 @@ public class NotificationController {
 			notificationService.delete(notificationId);
 			return new ResponseEntity<>(HttpStatus.OK);
 		} catch(NotificationNotExistsException e) {
-			throw new TuiterApiException("Notification not exists!");
+			throw new CorrigeAiApiException("Notification not exists!");
 		}
 	}
 }

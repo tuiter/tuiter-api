@@ -1,18 +1,10 @@
 package org.corrige.ai.controllers;
 
+import java.util.Collection;
 import java.util.Optional;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
 import org.corrige.ai.models.auth.ResetPasswordBean;
 import org.corrige.ai.models.essay.Essay;
 import org.corrige.ai.models.review.EssayToReviewResponse;
@@ -36,6 +28,15 @@ import org.corrige.ai.validations.exceptions.IncorretPasswordException;
 import org.corrige.ai.validations.exceptions.UserAlreadyExistsException;
 import org.corrige.ai.validations.exceptions.UserNotExistsException;
 import org.corrige.ai.validations.exceptions.UserNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @CrossOrigin
@@ -90,14 +91,9 @@ public class UserController {
 	}
 	
 	@RequestMapping(method = RequestMethod.POST) 
-	public ResponseEntity<Object> signup(@Valid @RequestBody SignupBean body) {
-		try {
-			User user = userService.create(body);
-			return new ResponseEntity<>(user, HttpStatus.OK);
-		} catch (UserAlreadyExistsException exception) {
-			ApiError apiError = new ApiError(HttpStatus.NOT_ACCEPTABLE, "User already exists.");
-			return new ResponseEntity<>(apiError, apiError.getCode());
-		}
+	public ResponseEntity<Object> signup(@Valid @RequestBody SignupBean body) throws UserAlreadyExistsException {
+		User user = userService.create(body);
+		return new ResponseEntity<>(user, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT) 
@@ -126,18 +122,12 @@ public class UserController {
 	@RequestMapping(value = "/{id}/pass",
 			method = RequestMethod.PATCH
 			) 
-	public ResponseEntity<Object> resetPassword(@PathVariable String id, @Valid @RequestBody ResetPasswordBean body) {
+	public ResponseEntity<Object> resetPassword(@PathVariable String id, @Valid @RequestBody ResetPasswordBean body) throws EmptyFieldsException, IncorretPasswordException {
 		try {
 			userService.resetPassword(id, body);
 			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (UserNotFoundException e) {
 			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "User not found.");
-			return new ResponseEntity<>(apiError, apiError.getCode());
-		} catch (IncorretPasswordException e) {
-			ApiError apiError = new ApiError(HttpStatus.UNAUTHORIZED, "Incorrect password.");
-			return new ResponseEntity<>(apiError, apiError.getCode());
-		} catch (EmptyFieldsException e) {
-			ApiError apiError = new ApiError(HttpStatus.UNAUTHORIZED, "Field newPassword field name cannot be empty.");
 			return new ResponseEntity<>(apiError, apiError.getCode());
 		}
 	}
@@ -145,13 +135,10 @@ public class UserController {
 	@RequestMapping(value = "/{id}/essays",
 			method = RequestMethod.GET
 			) 
-	public ResponseEntity<Object> getEssaysByUser(@PathVariable String id) {
+	public ResponseEntity<Object> getEssaysByUser(@PathVariable String id) throws UserNotExistsException {
 		try {
 			Iterable<Essay> essays = essayService.findAllByUserId(id);
 			return new ResponseEntity<>(essays, HttpStatus.OK);
-		} catch (UserNotExistsException e1) {
-			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "User not found.");
-			return new ResponseEntity<>(apiError, apiError.getCode());			
 		} catch (UserNotFoundException e) {
 			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "User not found.");
 			return new ResponseEntity<>(apiError, apiError.getCode());
@@ -162,13 +149,10 @@ public class UserController {
 	@RequestMapping(value = "/{id}/reviews",
 			method = RequestMethod.GET
 			) 
-	public ResponseEntity<Object> getReviewsByUser(@PathVariable String id) {
+	public ResponseEntity<Object> getReviewsByUser(@PathVariable String id) throws UserNotExistsException {
 		try {
-			Iterable<Review> reviews = reviewService.findAllByUserId(id);
+			Collection<Review> reviews = reviewService.findAllByUserId(id);
 			return new ResponseEntity<>(reviews, HttpStatus.OK);
-		} catch (UserNotExistsException e1) {
-			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "User not found.");
-			return new ResponseEntity<>(apiError, apiError.getCode());			
 		} catch (UserNotFoundException e) {
 			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "User not found.");
 			return new ResponseEntity<>(apiError, apiError.getCode());
@@ -177,16 +161,10 @@ public class UserController {
 	}
 	
 	@RequestMapping(value="/{id}/evaluate", method = RequestMethod.GET)
-	public ResponseEntity<Object> getEssay(@PathVariable String id) {
+	public ResponseEntity<Object> getEssay(@PathVariable String id) throws UserNotExistsException, EssayNotExistsException {
 		try {
 			EssayToReviewResponse essayToReviewResponse = essayService.getEssayToReview(id);
 			return new ResponseEntity<>(essayToReviewResponse, HttpStatus.OK);
-		} catch (EssayNotExistsException e) {	
-			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "There are no essays available.");
-			return new ResponseEntity<>(apiError, apiError.getCode());	
-		} catch (UserNotExistsException e1) {
-			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "User not found.");
-			return new ResponseEntity<>(apiError, apiError.getCode());			
 		} catch (UserNotFoundException e) {
 			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "User not found.");
 			return new ResponseEntity<>(apiError, apiError.getCode());
@@ -207,12 +185,9 @@ public class UserController {
 	}
 	
 	@RequestMapping(value = "/{userId}/notifications", method = RequestMethod.PATCH)
-	public ResponseEntity<Object> viewAllNotifications(@PathVariable String userId) {
+	public ResponseEntity<Object> viewAllNotifications(@PathVariable String userId) throws UserNotExistsException {
 		try {
 			return new ResponseEntity<>(notificationService.setAllAsViewedByUser(userId), HttpStatus.OK);
-		} catch(UserNotExistsException e) {
-			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "User not found.");
-			return new ResponseEntity<>(apiError, apiError.getCode());
 		} catch(UserNotFoundException e) {
 			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "User not found.");
 			return new ResponseEntity<>(apiError, apiError.getCode());
@@ -233,19 +208,13 @@ public class UserController {
 	@RequestMapping(value = "/{id}/essaysReviews",
 			method = RequestMethod.GET
 			) 
-	public ResponseEntity<Object> getEssaysStatusByUser(@PathVariable String id) {
+	public ResponseEntity<Object> getEssaysStatusByUser(@PathVariable String id) throws EssayNotExistsException, UserNotExistsException {
 		try {
-			Iterable<EssaysReviews> reviews;
+			Collection<EssaysReviews> reviews;
 			reviews = essayService.getEssaysReviews(id);
 			return new ResponseEntity<>(reviews, HttpStatus.OK);
-		} catch (UserNotExistsException e1) {
-			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "User not found.");
-			return new ResponseEntity<>(apiError, apiError.getCode());			
 		} catch (UserNotFoundException e) {
 			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "User not found.");
-			return new ResponseEntity<>(apiError, apiError.getCode());
-		} catch (EssayNotExistsException e) {
-			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "User not exist.");
 			return new ResponseEntity<>(apiError, apiError.getCode());
 		}
 	}

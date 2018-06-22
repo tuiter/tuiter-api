@@ -43,50 +43,30 @@ public class ReviewController {
 	}
 	
 	@RequestMapping(method = RequestMethod.POST) 
-	public ResponseEntity<Object> create(@RequestBody ReviewBean body) {
+	public ResponseEntity<Object> create(@RequestBody ReviewBean body) throws UserNotExistsException, EssayNotExistsException {
 		try {
 			Review review = reviewService.create(body);
 			return new ResponseEntity<>(review, HttpStatus.OK);
 		} catch(UserNotFoundException e) {
 			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "User not found.");
 			return new ResponseEntity<>(apiError, apiError.getCode());
-		} catch (UserNotExistsException e) {
-			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "User not found.");
-			return new ResponseEntity<>(apiError, apiError.getCode());
-		} catch(EssayNotExistsException e) {
-			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "Essay not found.");
-			return new ResponseEntity<>(apiError, apiError.getCode());
 		}
 	}
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET) 
-	public ResponseEntity<Object> getById(@PathVariable String id) {
-		try {
-			Review review = reviewService.findById(id);
-			return new ResponseEntity<>(review, HttpStatus.OK);
-		} catch(ReviewNotExistsException e) {
-			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "Review not found.");
-			return new ResponseEntity<>(apiError, apiError.getCode());
-		}
+	public ResponseEntity<Object> getById(@PathVariable String id) throws ReviewNotExistsException {
+		Review review = reviewService.findById(id);
+		return new ResponseEntity<>(review, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value="/{id}", method = RequestMethod.PUT) 
-	public ResponseEntity<Object> update(@PathVariable String id, @RequestBody EditReviewBean body) {
+	public ResponseEntity<Object> update(@PathVariable String id, @RequestBody EditReviewBean body) throws ReviewNotExistsException, EmptyFieldsException, EssayNotExistsException {
 		try {
 			Review review = reviewService.update(id, body);
 			notificationService.createOnReviewDone(review.getEssayId(), review.getUserId());
 			return new ResponseEntity<>(review, HttpStatus.OK);
 		} catch(UserNotFoundException e) {
 			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "User not found.");
-			return new ResponseEntity<>(apiError, apiError.getCode());
-		} catch(EmptyFieldsException e) {
-			ApiError apiError = new ApiError(HttpStatus.NOT_ACCEPTABLE, "Fields cannot be empty.");
-			return new ResponseEntity<>(apiError, apiError.getCode());
-		} catch (ReviewNotExistsException e) {
-			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "Review not found.");
-			return new ResponseEntity<>(apiError, apiError.getCode());
-		} catch(EssayNotExistsException e) {
-			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "Essay not found.");
 			return new ResponseEntity<>(apiError, apiError.getCode());
 		}
 	}
