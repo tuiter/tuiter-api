@@ -3,13 +3,13 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>org.tuiter</groupId>
-	<artifactId>tuiter-api</artifactId>
+	<groupId>org.corrige.ai</groupId>
+	<artifactId>corrige-ai-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>tuiter-api</name>
-	<description>Spring boot server for tuiter application.</description>
+	<name>corrige-ai-api</name>
+	<description>Spring boot server for CorrigeAi application.</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
