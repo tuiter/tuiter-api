@@ -2,31 +2,16 @@ package org.corrige.ai.models.review;
 
 import org.corrige.ai.models.essay.Essay;
 
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class EssayToReviewResponse {
     private String reviewId;
     private Essay essay;
-
-    public EssayToReviewResponse() {}
-
-    public EssayToReviewResponse(String reviewId, Essay essay) {
-        this.reviewId = reviewId;
-        this.essay = essay;
-    }
-
-    public String getReviewId() {
-        return this.reviewId;
-    }
-
-    public void setReviewId(String reviewId) {
-        this.reviewId = reviewId;
-    }
-
-    public Essay getEssay() {
-        return this.essay;
-    }
-
-    public void setEssay(Essay essay) {
-        this.essay = essay;
-    }
-    
 }
