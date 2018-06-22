@@ -16,12 +16,12 @@ public interface UserService {
 	Optional<User> findByEmail(String email);
 	Optional<User> findById(String id) throws UserNotFoundException;
 	Optional<User> findByUsername(String username);
-	Optional<User> findByIdentifier(String identifier);
-	Optional<User> save(User user);
-	Optional<User> delete(String username) throws UserNotFoundException;
-	Optional<User> deleteById(String username) throws UserNotFoundException;
-	Optional<User> create(SignupBean body) throws UserAlreadyExistsException;
-	Optional<User> update(String id, User body) throws UserNotFoundException;
-	Optional<User> resetPassword(String id, ResetPasswordBean body) throws UserNotFoundException, IncorretPasswordException, EmptyFieldsException;
+	User findByIdentifier(String identifier);
+	User save(User user);
+	Boolean delete(String username) throws UserNotFoundException;
+	User deleteById(String username) throws UserNotFoundException;
+	User create(SignupBean body) throws UserAlreadyExistsException;
+	User update(String id, User body) throws UserNotFoundException;
+	User resetPassword(String id, ResetPasswordBean body) throws UserNotFoundException, IncorretPasswordException, EmptyFieldsException;
 }
 

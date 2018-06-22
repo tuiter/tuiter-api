@@ -54,12 +54,13 @@ public class EssayServiceImpl implements EssayService{
 			   bean.getTheme() != null && !bean.getTheme().isEmpty() && 
 			   bean.getContent() != null && !bean.getContent().isEmpty() &&
 			   bean.getType() != null) {
+				
 				essay.setTitle(bean.getTitle());
 				essay.setTheme(bean.getTheme());
 				essay.setContent(bean.getContent());
 				essay.setType(bean.getType());
-				essayRepository.save(essay);
-				return essay;
+				
+				return essayRepository.save(essay);
 			} else {
 				throw new EmptyFieldsException();
 			}
@@ -81,7 +82,7 @@ public class EssayServiceImpl implements EssayService{
 	}
 
 	@Override
-	public Iterable<Essay> findAllByUserUsername(String username) throws UserNotExistsException{
+	public Collection<Essay> findAllByUserUsername(String username) throws UserNotExistsException{
 		Optional<User> user = userService.findByUsername(username);
 		if (user.isPresent()) 
 			return essayRepository.findAllByUserId(user.get().getId());
@@ -90,33 +91,32 @@ public class EssayServiceImpl implements EssayService{
 	}
 
 	@Override
-	public Iterable<Essay> findAllByUserId(String id) throws UserNotExistsException, UserNotFoundException{
-		User user = userService.findById(id);
+	public Collection<Essay> findAllByUserId(String id) throws UserNotExistsException, UserNotFoundException{
+		Optional<User> user = userService.findById(id);
 		
-		if (user != null) {
+		if (user.isPresent()) 
 			return essayRepository.findAllByUserId(id);
-		} else {
+		else
 			throw new UserNotExistsException();
-		}
 	}
+	
 	@Override
-	public Iterable<Essay> findAll() {
+	public Collection<Essay> findAll() {
 		return essayRepository.findAll();
 	}
 
 	@Override
-	public Essay findByTitleAndUserId(String id, String userId) {
+	public Optional<Essay> findByTitleAndUserId(String id, String userId) {
 		return essayRepository.findByTitleAndUserId(id, userId);
 	}
 
 	@Override
 	public Essay findById(String id) throws EssayNotExistsException {
 		Optional<Essay> essay = essayRepository.findById(id);
-		if(essay.isPresent()) {
+		if(essay.isPresent())
 			return essay.get();
-		} else {
+		else
 			throw new EssayNotExistsException();
-		}
 	}
 
 	@Override

@@ -31,11 +31,10 @@ public class AuthenticationService {
     private UserService userService;
 
     public User authenticate(LoginBean loginBean) {
-        User user = userService.findByIdentifier(loginBean.getIdentifier());
+    	User user = userService.findByIdentifier(loginBean.getIdentifier());
 
-        if (user != null && user.authenticate(loginBean.getPassword())) {
+        if (user != null && user.authenticate(loginBean.getPassword()))
             return user;
-        }
 
         throw new FailedAuthenticationException();
     }

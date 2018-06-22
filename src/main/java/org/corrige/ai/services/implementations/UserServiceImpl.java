@@ -18,12 +18,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserServiceImpl implements UserService {
-	private UserRepository userRepository;
-	
 	@Autowired
-	public void setUserRepository(UserRepository repository){
-		this.userRepository = repository;
-	}
+	private UserRepository userRepository;
 
 	@Override
 	public Collection<User> findAll() {
@@ -35,14 +31,9 @@ public class UserServiceImpl implements UserService {
 		return userRepository.findByEmail(email);
 	}
 
-	@Override
-	public User findById(String id) throws UserNotFoundException {
+	private Boolean existsById(String id) {
 		Optional <User> user = userRepository.findById(id);
-		if (user.isPresent()) {
-			return user.get();
-		} else {
-			throw new UserNotFoundException();
-		}
+		return user.isPresent();
 	}
 
 	@Override
@@ -65,17 +56,16 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User delete(String id) throws UserNotFoundException {
-		User deletedUser = findById(id);
-		if (deletedUser != null) {
+	public Boolean delete(String id) throws UserNotFoundException {
+		if (existsById(id)) {
 			userRepository.deleteById(id);
-			return deletedUser;
+			return true;
 		}
 		throw new UserNotFoundException();
 	}
 
-	private boolean exists(String email) {
-		return userRepository.findByEmail(email) != null;
+	private boolean existsByEmail(String email) {
+		return userRepository.findByEmail(email).isPresent();
 	}
 
 	@Override
@@ -98,10 +88,10 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User deleteById(String id) throws UserNotFoundException {
-		User deletedUser = findById(id);
+		Optional<User> deletedUser = this.userRepository.findById(id);
 		if (deletedUser != null) {
-			userRepository.deleteById(deletedUser.getId());
-			return deletedUser;
+			userRepository.deleteById(deletedUser.get().getId());
+			return deletedUser.get();
 		}
 		throw new UserNotFoundException();
 	}
@@ -109,11 +99,11 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User resetPassword(String id, ResetPasswordBean body) throws UserNotFoundException, 
 	IncorretPasswordException, EmptyFieldsException {
-		User user = findById(id);
-		if (user == null) {
+		Optional<User> user = this.userRepository.findById(id);
+		if (user.isPresent()) {
 			throw new UserNotFoundException();			
 		}
-		if (!user.getPassword().equals(body.getOldPassword())) {
+		if (!user.get().getPassword().equals(body.getOldPassword())) {
 			throw new IncorretPasswordException();
 		}
 		
@@ -121,18 +111,22 @@ public class UserServiceImpl implements UserService {
 			throw new EmptyFieldsException("Password is empty!");
 		}
 		
-		user.setPassword(body.getNewPassword());
-		userRepository.save(user);
-		return user;
+		user.get().setPassword(body.getNewPassword());
+		return userRepository.save(user.get());
 	}
 
 	@Override
 	public User create(SignupBean body) throws UserAlreadyExistsException {
 		User user = UserBean2ModelFactory.createUser(body);
-		if (!exists(user.getEmail()) && userRepository.findByUsername(user.getUsername()) == null) {
+		if (!existsByEmail(user.getEmail()) && userRepository.findByUsername(user.getUsername()) == null) {
 			return save(user);
 		} else {
 			throw new UserAlreadyExistsException();
 		}
+	}
+
+	@Override
+	public Optional<User> findById(String id) throws UserNotFoundException {
+		return this.userRepository.findById(id);
 	}
 }

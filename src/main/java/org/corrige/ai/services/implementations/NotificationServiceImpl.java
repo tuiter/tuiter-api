@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Collection;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,41 +27,33 @@ import org.corrige.ai.validations.exceptions.UserNotFoundException;
 public class NotificationServiceImpl implements NotificationService {
 	@Autowired
 	private SimpMessagingTemplate messagingTemplate;
+	@Autowired
 	private NotificationRepository notificationRepository;
+	@Autowired
 	private UserService userService;
+	@Autowired
 	private EssayService essayService;
-	
-	@Autowired
-	public void setNotificationRepository(NotificationRepository notificationRepository) {
-		this.notificationRepository = notificationRepository;
-	}
-
-	@Autowired
-	public void setUserService(UserServiceImpl userService) {
-		this.userService = userService;
-	}
-	
-	@Autowired
-	public void setEssayService(EssayServiceImpl essayService) {
-		this.essayService = essayService;
-	}
 	
 	@Override
 	public Notification createOnReviewDone(String essayId, String senderId) throws UserNotFoundException, ReviewNotExistsException, EssayNotExistsException {
-		User sender = userService.findById(senderId);
+		Optional<User> sender = userService.findById(senderId);
 		
-		if(sender != null) {
+		if(sender.isPresent()) {
 			String timeStamp = generateTimeStamp(); 			
 			Essay essay = essayService.findById(essayId);
-			User receiver = userService.findById(essay.getUserId());
-			String description = "O usuário '" + sender.getUsername() + "' fez uma revisão na sua redação " + "'" + essay.getTitle() + "'.";
+			Optional<User> receiver = userService.findById(essay.getUserId());
 			
-			Notification notification = new Notification(receiver.getId(), timeStamp, description, true);
-			messagingTemplate.convertAndSend("/notification_ch/" + notification.getUserId(), notification);
-			return notificationRepository.save(notification);
+			if(receiver.isPresent()) {				
+				String description = "O usuário '" + sender.get().getUsername() + "' fez uma revisão na sua redação " + "'" + essay.getTitle() + "'.";
+				
+				Notification notification = new Notification(receiver.get().getId(), timeStamp, description, true);
+				messagingTemplate.convertAndSend("/notification_ch/" + notification.getUserId(), notification);
+				return notificationRepository.save(notification);
+			}
 		} else {
 			throw new UserNotFoundException();
 		}
+		throw new UserNotFoundException();
 	}
 	
 	private String generateTimeStamp() {
@@ -83,18 +76,17 @@ public class NotificationServiceImpl implements NotificationService {
 	}
 
 	@Override
-	public Iterable<Notification> findAllByUserId(String id) throws UserNotExistsException, UserNotFoundException {
-		User user = userService.findById(id);
+	public Collection<Notification> findAllByUserId(String id) throws UserNotExistsException, UserNotFoundException {
+		Optional<User> user = userService.findById(id);
 		
-		if (user != null) {
-			return notificationRepository.findAllByUserId(user.getId());
-		} else {
+		if (user.isPresent())
+			return notificationRepository.findAllByUserId(user.get().getId());
+		else 
 			throw new UserNotExistsException();
-		}
 	}
 
 	@Override
-	public Iterable<Notification> findAll() {
+	public Collection<Notification> findAll() {
 		return notificationRepository.findAll();
 	}
 
@@ -102,32 +94,29 @@ public class NotificationServiceImpl implements NotificationService {
 	public Notification findById(String id) throws NotificationNotExistsException {
 		Optional<Notification> notification = notificationRepository.findById(id);
 		
-		if (notification.isPresent()) {
+		if (notification.isPresent())
 			return notification.get(); 
-		} else {
+		else
 			throw new NotificationNotExistsException();
-		}
 	}
 	
 	@Override
-	public Iterable<Notification> deleteAllByUserId(String userId) throws UserNotFoundException {
-		Optional<User> user = Optional.of(userService.findById(userId));
+	public Collection<Notification> deleteAllByUserId(String userId) throws UserNotFoundException {
+		Optional<User> user = userService.findById(userId);
 		
-		if (user.isPresent()) {
+		if (user.isPresent())
 			return notificationRepository.deleteAllByUserId(userId);
-		} else {
+		else
 			throw new UserNotFoundException();
-		}
 	}
 
 	@Override
-	public Iterable<Notification> setAllAsViewedByUser(String userId) throws UserNotFoundException, UserNotExistsException {
-		Iterable<Notification> notifications = findAllByUserId(userId);
+	public Collection<Notification> setAllAsViewedByUser(String userId) throws UserNotFoundException, UserNotExistsException {
+		Collection<Notification> notifications = findAllByUserId(userId);
 		
 		for (Notification n : notifications) {
-			if (n.isNew()) {
+			if (n.isNew())
 				n.setNew(false);
-			}
 		}
 		
 		notificationRepository.saveAll(notifications);

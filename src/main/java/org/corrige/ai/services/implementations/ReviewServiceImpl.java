@@ -1,6 +1,7 @@
 package org.corrige.ai.services.implementations;
 
 import java.util.Optional;
+import java.util.Collection;
 import java.util.LinkedList;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,38 +24,22 @@ import org.corrige.ai.services.interfaces.ReviewService;
 import org.corrige.ai.services.interfaces.UserService;
 @Service
 public class ReviewServiceImpl implements ReviewService {
+	@Autowired
 	private ReviewRepository reviewRepository;
+	@Autowired
 	private EssayService essayService;
+	@Autowired
 	private UserService userService;
+	@Autowired
 	private EssayRepository essayRepository;
-		
-	@Autowired
-	public void setReviewRepository(ReviewRepository reviewRepository) {
-		this.reviewRepository = reviewRepository;
-	}
-
-	@Autowired
-	public void setEssayRepository(EssayRepository essayRepository) {
-		this.essayRepository = essayRepository;
-	}
-	
-	@Autowired
-	public void setEssayService(EssayService essayService) {
-		this.essayService = essayService;
-	}
-
-	@Autowired
-	public void setUserService(UserServiceImpl userService) {
-		this.userService = userService;
-	}
 
 	@Override
 	public Review create(ReviewBean bean) throws UserNotExistsException, UserNotFoundException, EssayNotExistsException {
-		User user = userService.findById(bean.getReviewingUserId());
+		Optional<User> user = userService.findById(bean.getReviewingUserId());
 		Essay essay = essayService.findById(bean.getEssayId());
 		
-		if(user != null && essay != null) {
-			Review review = new Review(essay.getId(), user.getId(), bean.getComments(), bean.getRatings());
+		if(user.isPresent() && essay != null) {
+			Review review = new Review(essay.getId(), user.get().getId(), bean.getComments(), bean.getRatings());
 			return reviewRepository.save(review);
 		} else {
 			throw new UserNotExistsException();
@@ -103,18 +88,17 @@ public class ReviewServiceImpl implements ReviewService {
 	}
 
 	@Override
-	public Iterable<Review> findAllByUserId(String id) throws UserNotExistsException, UserNotFoundException{
-		User user = userService.findById(id);
+	public Collection<Review> findAllByUserId(String id) throws UserNotExistsException, UserNotFoundException{
+		Optional<User> user = userService.findById(id);
 		
-		if (user != null) {
+		if (user.isPresent())
 			return reviewRepository.findAllByUserId(id);
-		} else {
+		else
 			throw new UserNotExistsException();
-		}
 	}
 	
 	@Override
-	public Iterable<Review> findAllByEssayId(String id) throws EssayNotExistsException {
+	public Collection<Review> findAllByEssayId(String id) throws EssayNotExistsException {
 		Essay essay = essayService.findById(id);
 		
 		if (essay != null) {
@@ -125,17 +109,16 @@ public class ReviewServiceImpl implements ReviewService {
 	}
 	
 	@Override
-	public Iterable<Review> findAll() {
+	public Collection<Review> findAll() {
 		return reviewRepository.findAll();
 	}
 
 	@Override
 	public Review findById(String id) throws ReviewNotExistsException {
 		Optional<Review> review = reviewRepository.findById(id);
-		if(review.isPresent()) {
+		if(review.isPresent())
 			return review.get();
-		} else {
+		else 
 			throw new ReviewNotExistsException();
-		}
 	}
 }

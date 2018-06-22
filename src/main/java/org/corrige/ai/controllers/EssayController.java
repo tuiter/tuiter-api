@@ -1,5 +1,16 @@
 package org.corrige.ai.controllers;
 
+import org.corrige.ai.models.essay.EditEssayBean;
+import org.corrige.ai.models.essay.Essay;
+import org.corrige.ai.models.essay.EssayBean;
+import org.corrige.ai.models.review.Review;
+import org.corrige.ai.services.interfaces.EssayService;
+import org.corrige.ai.services.interfaces.ReviewService;
+import org.corrige.ai.util.ServerConstants;
+import org.corrige.ai.validations.ApiError;
+import org.corrige.ai.validations.exceptions.EmptyFieldsException;
+import org.corrige.ai.validations.exceptions.EssayNotExistsException;
+import org.corrige.ai.validations.exceptions.UserNotExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,37 +20,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.corrige.ai.models.essay.EditEssayBean;
-import org.corrige.ai.models.essay.Essay;
-import org.corrige.ai.models.essay.EssayBean;
-import org.corrige.ai.models.review.Review;
-import org.corrige.ai.services.implementations.EssayServiceImpl;
-import org.corrige.ai.services.implementations.ReviewServiceImpl;
-import org.corrige.ai.services.interfaces.EssayService;
-import org.corrige.ai.services.interfaces.ReviewService;
-import org.corrige.ai.util.ServerConstants;
-import org.corrige.ai.validations.ApiError;
-import org.corrige.ai.validations.exceptions.EmptyFieldsException;
-import org.corrige.ai.validations.exceptions.EssayNotExistsException;
-import org.corrige.ai.validations.exceptions.UserNotExistsException;
 
 @RestController
 @CrossOrigin
 @RequestMapping(ServerConstants.SERVER_REQUEST 
 				+ ServerConstants.ESSAY_REQUEST)
 public class EssayController {
+	@Autowired
 	private EssayService essayService;
+	@Autowired
 	private ReviewService reviewService;
-	
-	@Autowired
-	public void setEssayService(EssayServiceImpl essayService) {
-		this.essayService = essayService;
-	}
-	
-	@Autowired
-	public void setReviewService(ReviewServiceImpl reviewService) {
-		this.reviewService = reviewService;
-	}
 	
 	@RequestMapping(method = RequestMethod.POST) 
 	public ResponseEntity<Object> create(@RequestBody EssayBean body) {

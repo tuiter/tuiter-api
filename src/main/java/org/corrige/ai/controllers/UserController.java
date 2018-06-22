@@ -1,5 +1,7 @@
 package org.corrige.ai.controllers;
 
+import java.util.Optional;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,10 +69,15 @@ public class UserController {
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public ResponseEntity<Object> getUserById(@PathVariable String id) {
-		User user;
+		Optional<User> user;
 		try {
 			user = userService.findById(id);
-			return new ResponseEntity<>(user, HttpStatus.OK);
+			if(user.isPresent()) {
+				return new ResponseEntity<>(user, HttpStatus.OK);				
+			} else {
+				ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "User not found.");
+				return new ResponseEntity<>(apiError, apiError.getCode());				
+			}
 		} catch (UserNotFoundException e) {
 			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "User not found.");
 			return new ResponseEntity<>(apiError, apiError.getCode());

@@ -11,11 +11,11 @@ import org.corrige.ai.validations.exceptions.UserNotExistsException;
 import org.corrige.ai.validations.exceptions.UserNotFoundException;
 
 public interface NotificationService {
-	Optional<Notification> createOnReviewDone(String essayId, String senderId) throws UserNotFoundException, ReviewNotExistsException, EssayNotExistsException;
-	Optional<Notification> delete(String id) throws NotificationNotExistsException;
+	Notification createOnReviewDone(String essayId, String senderId) throws UserNotFoundException, ReviewNotExistsException, EssayNotExistsException;
+	Notification delete(String id) throws NotificationNotExistsException;
 	Collection<Notification> findAllByUserId(String id) throws UserNotExistsException, UserNotFoundException;
 	Collection<Notification> findAll();
-	Optional<Notification> findById(String id) throws NotificationNotExistsException;
+	Notification findById(String id) throws NotificationNotExistsException;
 	Collection<Notification> setAllAsViewedByUser(String userId) throws UserNotFoundException, UserNotExistsException;
 	Collection<Notification> deleteAllByUserId(String userId) throws UserNotFoundException;
 }
