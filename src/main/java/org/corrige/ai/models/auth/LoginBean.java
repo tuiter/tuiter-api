@@ -1,28 +1,14 @@
 package org.corrige.ai.models.auth;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class LoginBean {
 	private String identifier;
-	private String password;
-	
-	public LoginBean() {}
-	
-	public LoginBean(String identifier, String password) {
-		this.password = password;
-	}
-	
-	public String getIdentifier() {
-		return identifier;
-	}
-
-	public void setIdentifier(String identifier) {
-		this.identifier = identifier;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}	
+	private String password;	
 }

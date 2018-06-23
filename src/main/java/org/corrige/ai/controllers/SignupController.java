@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin
 @RequestMapping(ServerConstants.SERVER_REQUEST +
 				ServerConstants.AUTHENTICATION_REQUEST)
-public class LoginController {
+public class SignupController {
 	@Autowired
     private AuthenticationService authenticationService;
 	
@@ -28,10 +28,8 @@ public class LoginController {
 	public ResponseEntity<AuthenticationResponse> login(@RequestBody LoginBean requestBody) throws ServletException {
 		User user = authenticationService.authenticate(requestBody);
 		
-		String token;
-
         try {
-            token = authenticationService.tokenFor(user);
+        	String token = authenticationService.tokenFor(user);
             AuthenticationResponse authBean = new AuthenticationResponse(token, user);
             return new ResponseEntity<>(authBean, HttpStatus.OK);
         } catch (Exception e) {
