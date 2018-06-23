@@ -6,6 +6,7 @@ import org.corrige.ai.validations.ValidationError;
 import org.corrige.ai.validations.exceptions.EmptyFieldsException;
 import org.corrige.ai.validations.exceptions.EssayNotExistsException;
 import org.corrige.ai.validations.exceptions.IncorretPasswordException;
+import org.corrige.ai.validations.exceptions.NotificationNotExistsException;
 import org.corrige.ai.validations.exceptions.ReviewNotExistsException;
 import org.corrige.ai.validations.exceptions.UserAlreadyExistsException;
 import org.corrige.ai.validations.exceptions.UserNotExistsException;
@@ -19,7 +20,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @ControllerAdvice
-public class ResponseEntityErrorAdvicer extends ResponseEntityExceptionHandler {
+public class ExceptionTranslater extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException exception, HttpHeaders headers, HttpStatus status, WebRequest request) {
@@ -60,6 +61,12 @@ public class ResponseEntityErrorAdvicer extends ResponseEntityExceptionHandler {
     @ExceptionHandler(IncorretPasswordException.class)
     public final ResponseEntity<ApiError> handleIncorretPasswordException(IncorretPasswordException exception, WebRequest request) {
 		ApiError apiError = new ApiError(HttpStatus.UNAUTHORIZED, "Incorrect password.");
+		return new ResponseEntity<>(apiError, apiError.getCode());
+    }
+    
+    @ExceptionHandler(NotificationNotExistsException.class)
+    public final ResponseEntity<ApiError> handleNotificationNotExistsException(NotificationNotExistsException exception, WebRequest request) {
+		ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "Notification not exists!");
 		return new ResponseEntity<>(apiError, apiError.getCode());
     }
 }	
