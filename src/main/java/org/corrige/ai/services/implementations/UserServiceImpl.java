@@ -31,7 +31,8 @@ public class UserServiceImpl implements UserService {
 		return userRepository.findByEmail(email);
 	}
 
-	private Boolean existsById(String id) {
+	@Override
+	public Boolean existsById(String id) {
 		Optional <User> user = userRepository.findById(id);
 		return user.isPresent();
 	}

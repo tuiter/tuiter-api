@@ -17,6 +17,7 @@ public interface UserService {
 	User findById(String id) throws UserNotExistsException;
 	Optional<User> findByUsername(String username);
 	User findByIdentifier(String identifier);
+	Boolean existsById(String id);
 	User save(User user);
 	Boolean delete(String username) throws UserNotExistsException;
 	User deleteById(String username) throws UserNotExistsException;

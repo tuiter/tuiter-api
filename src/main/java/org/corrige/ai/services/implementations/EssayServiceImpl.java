@@ -91,12 +91,9 @@ public class EssayServiceImpl implements EssayService{
 
 	@Override
 	public Collection<Essay> findAllByUserId(String id) throws UserNotExistsException{
-		Optional<User> user = userService.findById(id);
-		
-		if (user.isPresent()) 
+		if (this.userService.existsById(id)) 
 			return essayRepository.findAllByUserId(id);
-		else
-			throw new UserNotExistsException();
+		throw new UserNotExistsException();
 	}
 	
 	@Override

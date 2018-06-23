@@ -35,24 +35,17 @@ public class NotificationServiceImpl implements NotificationService {
 	
 	@Override
 	public Notification createOnReviewDone(String essayId, String senderId) throws UserNotExistsException, ReviewNotExistsException, EssayNotExistsException {
-		Optional<User> sender = userService.findById(senderId);
+		User sender = userService.findById(senderId);
 		
-		if(sender.isPresent()) {
-			String timeStamp = generateTimeStamp(); 			
-			Essay essay = essayService.findById(essayId);
-			Optional<User> receiver = userService.findById(essay.getUserId());
-			
-			if(receiver.isPresent()) {				
-				String description = "O usuário '" + sender.get().getUsername() + "' fez uma revisão na sua redação " + "'" + essay.getTitle() + "'.";
-				
-				Notification notification = new Notification(receiver.get().getId(), timeStamp, description, true);
-				messagingTemplate.convertAndSend("/notification_ch/" + notification.getUserId(), notification);
-				return notificationRepository.save(notification);
-			}
-		} else {
-			throw new UserNotExistsException();
-		}
-		throw new UserNotExistsException();
+		String timeStamp = generateTimeStamp(); 			
+		Essay essay = essayService.findById(essayId);
+		User receiver = userService.findById(essay.getUserId());
+		
+		String description = "O usuário '" + sender.getUsername() + "' fez uma revisão na sua redação " + "'" + essay.getTitle() + "'.";
+		
+		Notification notification = new Notification(receiver.getId(), timeStamp, description, true);
+		messagingTemplate.convertAndSend("/notification_ch/" + notification.getUserId(), notification);
+		return notificationRepository.save(notification);
 	}
 	
 	private String generateTimeStamp() {
@@ -76,12 +69,9 @@ public class NotificationServiceImpl implements NotificationService {
 
 	@Override
 	public Collection<Notification> findAllByUserId(String id) throws UserNotExistsException {
-		Optional<User> user = userService.findById(id);
-		
-		if (user.isPresent())
-			return notificationRepository.findAllByUserId(user.get().getId());
-		else 
-			throw new UserNotExistsException();
+		if (this.userService.existsById(id))
+			return notificationRepository.findAllByUserId(id);
+		throw new UserNotExistsException();
 	}
 
 	@Override
@@ -101,12 +91,9 @@ public class NotificationServiceImpl implements NotificationService {
 	
 	@Override
 	public Collection<Notification> deleteAllByUserId(String userId) throws UserNotExistsException {
-		Optional<User> user = userService.findById(userId);
-		
-		if (user.isPresent())
+		if (this.userService.existsById(userId))
 			return notificationRepository.deleteAllByUserId(userId);
-		else
-			throw new UserNotExistsException();
+		throw new UserNotExistsException();
 	}
 
 	@Override

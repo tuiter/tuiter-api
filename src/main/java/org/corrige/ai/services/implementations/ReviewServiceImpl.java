@@ -70,12 +70,9 @@ public class ReviewServiceImpl implements ReviewService {
 
 	@Override
 	public Collection<Review> findAllByUserId(String id) throws UserNotExistsException {
-		Optional<User> user = userService.findById(id);
-		
-		if (user.isPresent())
+		if (this.userService.existsById(id))
 			return reviewRepository.findAllByUserId(id);
-		else
-			throw new UserNotExistsException();
+		throw new UserNotExistsException();
 	}
 	
 	@Override
