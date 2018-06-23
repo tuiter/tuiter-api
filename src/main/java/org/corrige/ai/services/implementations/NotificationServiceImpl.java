@@ -7,9 +7,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Service;
 import org.corrige.ai.models.essay.Essay;
 import org.corrige.ai.models.notification.Notification;
 import org.corrige.ai.models.user.User;
@@ -21,7 +18,9 @@ import org.corrige.ai.validations.exceptions.EssayNotExistsException;
 import org.corrige.ai.validations.exceptions.NotificationNotExistsException;
 import org.corrige.ai.validations.exceptions.ReviewNotExistsException;
 import org.corrige.ai.validations.exceptions.UserNotExistsException;
-import org.corrige.ai.validations.exceptions.UserNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.stereotype.Service;
 
 @Service
 public class NotificationServiceImpl implements NotificationService {
@@ -35,7 +34,7 @@ public class NotificationServiceImpl implements NotificationService {
 	private EssayService essayService;
 	
 	@Override
-	public Notification createOnReviewDone(String essayId, String senderId) throws UserNotFoundException, ReviewNotExistsException, EssayNotExistsException {
+	public Notification createOnReviewDone(String essayId, String senderId) throws UserNotExistsException, ReviewNotExistsException, EssayNotExistsException {
 		Optional<User> sender = userService.findById(senderId);
 		
 		if(sender.isPresent()) {
@@ -51,9 +50,9 @@ public class NotificationServiceImpl implements NotificationService {
 				return notificationRepository.save(notification);
 			}
 		} else {
-			throw new UserNotFoundException();
+			throw new UserNotExistsException();
 		}
-		throw new UserNotFoundException();
+		throw new UserNotExistsException();
 	}
 	
 	private String generateTimeStamp() {
@@ -76,7 +75,7 @@ public class NotificationServiceImpl implements NotificationService {
 	}
 
 	@Override
-	public Collection<Notification> findAllByUserId(String id) throws UserNotExistsException, UserNotFoundException {
+	public Collection<Notification> findAllByUserId(String id) throws UserNotExistsException {
 		Optional<User> user = userService.findById(id);
 		
 		if (user.isPresent())
@@ -101,17 +100,17 @@ public class NotificationServiceImpl implements NotificationService {
 	}
 	
 	@Override
-	public Collection<Notification> deleteAllByUserId(String userId) throws UserNotFoundException {
+	public Collection<Notification> deleteAllByUserId(String userId) throws UserNotExistsException {
 		Optional<User> user = userService.findById(userId);
 		
 		if (user.isPresent())
 			return notificationRepository.deleteAllByUserId(userId);
 		else
-			throw new UserNotFoundException();
+			throw new UserNotExistsException();
 	}
 
 	@Override
-	public Collection<Notification> setAllAsViewedByUser(String userId) throws UserNotFoundException, UserNotExistsException {
+	public Collection<Notification> setAllAsViewedByUser(String userId) throws UserNotExistsException {
 		Collection<Notification> notifications = findAllByUserId(userId);
 		
 		for (Notification n : notifications) {

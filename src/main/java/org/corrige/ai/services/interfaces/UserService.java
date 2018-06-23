@@ -9,19 +9,19 @@ import org.corrige.ai.models.user.User;
 import org.corrige.ai.validations.exceptions.EmptyFieldsException;
 import org.corrige.ai.validations.exceptions.IncorretPasswordException;
 import org.corrige.ai.validations.exceptions.UserAlreadyExistsException;
-import org.corrige.ai.validations.exceptions.UserNotFoundException;
+import org.corrige.ai.validations.exceptions.UserNotExistsException;
 
 public interface UserService {
 	Collection<User> findAll();
 	Optional<User> findByEmail(String email);
-	Optional<User> findById(String id) throws UserNotFoundException;
+	Optional<User> findById(String id);
 	Optional<User> findByUsername(String username);
 	User findByIdentifier(String identifier);
 	User save(User user);
-	Boolean delete(String username) throws UserNotFoundException;
-	User deleteById(String username) throws UserNotFoundException;
+	Boolean delete(String username) throws UserNotExistsException;
+	User deleteById(String username) throws UserNotExistsException;
 	User create(SignupBean body) throws UserAlreadyExistsException;
-	User update(String id, User body) throws UserNotFoundException;
-	User resetPassword(String id, ResetPasswordBean body) throws UserNotFoundException, IncorretPasswordException, EmptyFieldsException;
+	User update(String id, User body) throws UserNotExistsException;
+	User resetPassword(String id, ResetPasswordBean body) throws IncorretPasswordException, EmptyFieldsException, UserNotExistsException;
 }
 

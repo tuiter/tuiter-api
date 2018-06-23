@@ -8,12 +8,10 @@ import org.corrige.ai.services.implementations.ReviewServiceImpl;
 import org.corrige.ai.services.interfaces.NotificationService;
 import org.corrige.ai.services.interfaces.ReviewService;
 import org.corrige.ai.util.ServerConstants;
-import org.corrige.ai.validations.ApiError;
 import org.corrige.ai.validations.exceptions.EmptyFieldsException;
 import org.corrige.ai.validations.exceptions.EssayNotExistsException;
 import org.corrige.ai.validations.exceptions.ReviewNotExistsException;
 import org.corrige.ai.validations.exceptions.UserNotExistsException;
-import org.corrige.ai.validations.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,13 +42,8 @@ public class ReviewController {
 	
 	@RequestMapping(method = RequestMethod.POST) 
 	public ResponseEntity<Object> create(@RequestBody ReviewBean body) throws UserNotExistsException, EssayNotExistsException {
-		try {
-			Review review = reviewService.create(body);
-			return new ResponseEntity<>(review, HttpStatus.OK);
-		} catch(UserNotFoundException e) {
-			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "User not found.");
-			return new ResponseEntity<>(apiError, apiError.getCode());
-		}
+		Review review = reviewService.create(body);
+		return new ResponseEntity<>(review, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET) 
@@ -60,14 +53,9 @@ public class ReviewController {
 	}
 	
 	@RequestMapping(value="/{id}", method = RequestMethod.PUT) 
-	public ResponseEntity<Object> update(@PathVariable String id, @RequestBody EditReviewBean body) throws ReviewNotExistsException, EmptyFieldsException, EssayNotExistsException {
-		try {
-			Review review = reviewService.update(id, body);
-			notificationService.createOnReviewDone(review.getEssayId(), review.getUserId());
-			return new ResponseEntity<>(review, HttpStatus.OK);
-		} catch(UserNotFoundException e) {
-			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "User not found.");
-			return new ResponseEntity<>(apiError, apiError.getCode());
-		}
+	public ResponseEntity<Object> update(@PathVariable String id, @RequestBody EditReviewBean body) throws ReviewNotExistsException, EmptyFieldsException, EssayNotExistsException, UserNotExistsException {
+		Review review = reviewService.update(id, body);
+		notificationService.createOnReviewDone(review.getEssayId(), review.getUserId());
+		return new ResponseEntity<>(review, HttpStatus.OK);
 	}
 }

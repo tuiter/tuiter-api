@@ -12,7 +12,7 @@ import org.corrige.ai.util.UserBean2ModelFactory;
 import org.corrige.ai.validations.exceptions.EmptyFieldsException;
 import org.corrige.ai.validations.exceptions.IncorretPasswordException;
 import org.corrige.ai.validations.exceptions.UserAlreadyExistsException;
-import org.corrige.ai.validations.exceptions.UserNotFoundException;
+import org.corrige.ai.validations.exceptions.UserNotExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -56,12 +56,12 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Boolean delete(String id) throws UserNotFoundException {
+	public Boolean delete(String id) throws UserNotExistsException {
 		if (existsById(id)) {
 			userRepository.deleteById(id);
 			return true;
 		}
-		throw new UserNotFoundException();
+		throw new UserNotExistsException();
 	}
 
 	private boolean existsByEmail(String email) {
@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User update(String id, User body) throws UserNotFoundException {
+	public User update(String id, User body) throws UserNotExistsException {
 		User user = userRepository.findById(id).orElse(null);
 		
 		if(user != null){
@@ -83,25 +83,25 @@ public class UserServiceImpl implements UserService {
 			user = userRepository.save(user);
 			return user;
 		}
-		throw new UserNotFoundException();
+		throw new UserNotExistsException();
 	}
 
 	@Override
-	public User deleteById(String id) throws UserNotFoundException {
+	public User deleteById(String id) throws UserNotExistsException {
 		Optional<User> deletedUser = this.userRepository.findById(id);
 		if (deletedUser != null) {
 			userRepository.deleteById(deletedUser.get().getId());
 			return deletedUser.get();
 		}
-		throw new UserNotFoundException();
+		throw new UserNotExistsException();
 	}
 
 	@Override
-	public User resetPassword(String id, ResetPasswordBean body) throws UserNotFoundException, 
+	public User resetPassword(String id, ResetPasswordBean body) throws UserNotExistsException, 
 	IncorretPasswordException, EmptyFieldsException {
 		Optional<User> user = this.userRepository.findById(id);
 		if (user.isPresent()) {
-			throw new UserNotFoundException();			
+			throw new UserNotExistsException();			
 		}
 		if (!user.get().getPassword().equals(body.getOldPassword())) {
 			throw new IncorretPasswordException();
@@ -126,7 +126,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Optional<User> findById(String id) throws UserNotFoundException {
+	public Optional<User> findById(String id) {
 		return this.userRepository.findById(id);
 	}
 }

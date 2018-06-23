@@ -12,7 +12,7 @@ import org.corrige.ai.models.user.User;
 import org.corrige.ai.services.interfaces.UserService;
 import org.corrige.ai.util.SecurityConstants;
 import org.corrige.ai.validations.exceptions.FailedAuthenticationException;
-import org.corrige.ai.validations.exceptions.UserNotFoundException;
+import org.corrige.ai.validations.exceptions.UserNotExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,14 +50,14 @@ public class AuthenticationService {
                 .compact();
     }
 
-    public User getUserFromToken(String token) throws IOException, URISyntaxException, UserNotFoundException {
+    public User getUserFromToken(String token) throws IOException, URISyntaxException, UserNotExistsException {
         Jws<Claims> claims = Jwts.parser().setSigningKey(SecurityConstants.SECRET).parseClaimsJws(token);
         Optional<User> user = userService.findByUsername(claims.getBody().getSubject().toString());
 
         if (user.isPresent())
             return user.get();
         else
-            throw new UserNotFoundException();
+            throw new UserNotExistsException();
     }
 
 }

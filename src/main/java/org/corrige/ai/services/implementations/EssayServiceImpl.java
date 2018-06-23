@@ -21,7 +21,6 @@ import org.corrige.ai.services.interfaces.UserService;
 import org.corrige.ai.validations.exceptions.EmptyFieldsException;
 import org.corrige.ai.validations.exceptions.EssayNotExistsException;
 import org.corrige.ai.validations.exceptions.UserNotExistsException;
-import org.corrige.ai.validations.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -91,7 +90,7 @@ public class EssayServiceImpl implements EssayService{
 	}
 
 	@Override
-	public Collection<Essay> findAllByUserId(String id) throws UserNotExistsException, UserNotFoundException{
+	public Collection<Essay> findAllByUserId(String id) throws UserNotExistsException{
 		Optional<User> user = userService.findById(id);
 		
 		if (user.isPresent()) 
@@ -120,7 +119,7 @@ public class EssayServiceImpl implements EssayService{
 	}
 
 	@Override
-	public EssayToReviewResponse getEssayToReview(String id) throws EssayNotExistsException, UserNotFoundException, UserNotExistsException {
+	public EssayToReviewResponse getEssayToReview(String id) throws EssayNotExistsException, UserNotExistsException {
 		for (Review review : reviewService.findAllByUserId(id)) {
 			if (review.getStatus().equals(ReviewStatus.PENDING) && essayRepository.findById(review.getEssayId()).isPresent()) {
 				return new EssayToReviewResponse(review.getId(), essayRepository.findById(review.getEssayId()).get());
@@ -162,7 +161,7 @@ public class EssayServiceImpl implements EssayService{
 	}
 
 	@Override
-	public List<EssaysReviews> getEssaysReviews(String userId) throws EssayNotExistsException, UserNotFoundException, UserNotExistsException {
+	public List<EssaysReviews> getEssaysReviews(String userId) throws EssayNotExistsException, UserNotExistsException {
 		Iterable<Essay> essays = findAllByUserId(userId);
 		List<EssaysReviews> reviews_list = new ArrayList<>();
 		for (Essay essay : essays) {

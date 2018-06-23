@@ -12,10 +12,6 @@ import org.corrige.ai.models.review.EssaysReviews;
 import org.corrige.ai.models.review.Review;
 import org.corrige.ai.models.user.SignupBean;
 import org.corrige.ai.models.user.User;
-import org.corrige.ai.services.implementations.EssayServiceImpl;
-import org.corrige.ai.services.implementations.NotificationServiceImpl;
-import org.corrige.ai.services.implementations.ReviewServiceImpl;
-import org.corrige.ai.services.implementations.UserServiceImpl;
 import org.corrige.ai.services.interfaces.EssayService;
 import org.corrige.ai.services.interfaces.NotificationService;
 import org.corrige.ai.services.interfaces.ReviewService;
@@ -27,7 +23,6 @@ import org.corrige.ai.validations.exceptions.EssayNotExistsException;
 import org.corrige.ai.validations.exceptions.IncorretPasswordException;
 import org.corrige.ai.validations.exceptions.UserAlreadyExistsException;
 import org.corrige.ai.validations.exceptions.UserNotExistsException;
-import org.corrige.ai.validations.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,45 +38,23 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(ServerConstants.SERVER_REQUEST 
 				+ ServerConstants.USER_REQUEST)
 public class UserController {
+	@Autowired
 	private UserService userService;
+	@Autowired
 	private EssayService essayService;
+	@Autowired
 	private ReviewService reviewService;
+	@Autowired
 	private NotificationService notificationService;
-	
-	@Autowired
-	public void setUserService(UserServiceImpl userService) {
-		this.userService = userService;
-	}
-	
-	@Autowired
-	public void setEssayService(EssayServiceImpl essayService) {
-		this.essayService = essayService;
-	}
-	
-	@Autowired
-	public void setReviewService(ReviewServiceImpl reviewService) {
-		this.reviewService = reviewService;
-	}
-	
-	@Autowired
-	public void setNotificationService(NotificationServiceImpl notificationService) {
-		this.notificationService = notificationService;
-	}
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public ResponseEntity<Object> getUserById(@PathVariable String id) {
-		Optional<User> user;
-		try {
-			user = userService.findById(id);
-			if(user.isPresent()) {
-				return new ResponseEntity<>(user, HttpStatus.OK);				
-			} else {
-				ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "User not found.");
-				return new ResponseEntity<>(apiError, apiError.getCode());				
-			}
-		} catch (UserNotFoundException e) {
+		Optional<User> user = userService.findById(id);
+		if(user.isPresent()) {
+			return new ResponseEntity<>(user, HttpStatus.OK);				
+		} else {
 			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "User not found.");
-			return new ResponseEntity<>(apiError, apiError.getCode());
+			return new ResponseEntity<>(apiError, apiError.getCode());				
 		}
 	}
 	
@@ -97,52 +70,31 @@ public class UserController {
 	}
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT) 
-	public ResponseEntity<Object> edit(@PathVariable String id, @Valid @RequestBody User body) {	
-		User user;
-		try {
-			user = userService.update(id, body);
-			return new ResponseEntity<>(user, HttpStatus.OK);
-		} catch (UserNotFoundException e) {
-			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "User not found.");
-			return new ResponseEntity<>(apiError, apiError.getCode());
-		}
+	public ResponseEntity<Object> edit(@PathVariable String id, @Valid @RequestBody User body) throws UserNotExistsException {	
+		User user = userService.update(id, body);
+		return new ResponseEntity<>(user, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE) 
-	public ResponseEntity<Object> delete(@PathVariable String id) {
-		try {
-			userService.delete(id);
-			return new ResponseEntity<>(HttpStatus.OK);
-		} catch (UserNotFoundException e) {
-			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "User not found.");
-			return new ResponseEntity<>(apiError, apiError.getCode());
-		}
+	public ResponseEntity<Object> delete(@PathVariable String id) throws UserNotExistsException {
+		userService.delete(id);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/{id}/pass",
 			method = RequestMethod.PATCH
 			) 
-	public ResponseEntity<Object> resetPassword(@PathVariable String id, @Valid @RequestBody ResetPasswordBean body) throws EmptyFieldsException, IncorretPasswordException {
-		try {
-			userService.resetPassword(id, body);
-			return new ResponseEntity<>(HttpStatus.OK);
-		} catch (UserNotFoundException e) {
-			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "User not found.");
-			return new ResponseEntity<>(apiError, apiError.getCode());
-		}
+	public ResponseEntity<Object> resetPassword(@PathVariable String id, @Valid @RequestBody ResetPasswordBean body) throws EmptyFieldsException, IncorretPasswordException, UserNotExistsException {
+		userService.resetPassword(id, body);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/{id}/essays",
 			method = RequestMethod.GET
 			) 
 	public ResponseEntity<Object> getEssaysByUser(@PathVariable String id) throws UserNotExistsException {
-		try {
-			Iterable<Essay> essays = essayService.findAllByUserId(id);
-			return new ResponseEntity<>(essays, HttpStatus.OK);
-		} catch (UserNotFoundException e) {
-			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "User not found.");
-			return new ResponseEntity<>(apiError, apiError.getCode());
-		}
+		Collection<Essay> essays = essayService.findAllByUserId(id);
+		return new ResponseEntity<>(essays, HttpStatus.OK);
 		
 	}
 	
@@ -150,73 +102,38 @@ public class UserController {
 			method = RequestMethod.GET
 			) 
 	public ResponseEntity<Object> getReviewsByUser(@PathVariable String id) throws UserNotExistsException {
-		try {
-			Collection<Review> reviews = reviewService.findAllByUserId(id);
-			return new ResponseEntity<>(reviews, HttpStatus.OK);
-		} catch (UserNotFoundException e) {
-			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "User not found.");
-			return new ResponseEntity<>(apiError, apiError.getCode());
-		}
-		
+		Collection<Review> reviews = reviewService.findAllByUserId(id);
+		return new ResponseEntity<>(reviews, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value="/{id}/evaluate", method = RequestMethod.GET)
 	public ResponseEntity<Object> getEssay(@PathVariable String id) throws UserNotExistsException, EssayNotExistsException {
-		try {
-			EssayToReviewResponse essayToReviewResponse = essayService.getEssayToReview(id);
-			return new ResponseEntity<>(essayToReviewResponse, HttpStatus.OK);
-		} catch (UserNotFoundException e) {
-			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "User not found.");
-			return new ResponseEntity<>(apiError, apiError.getCode());
-		}
+		EssayToReviewResponse essayToReviewResponse = essayService.getEssayToReview(id);
+		return new ResponseEntity<>(essayToReviewResponse, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/{userId}/notifications", method = RequestMethod.GET)
-	public ResponseEntity<Object> getNotificationsByUser(@PathVariable String userId) {
-		try {
-			return new ResponseEntity<>(notificationService.findAllByUserId(userId), HttpStatus.OK);
-		} catch(UserNotExistsException e) {
-			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "User not found.");
-			return new ResponseEntity<>(apiError, apiError.getCode());
-		} catch(UserNotFoundException e) {
-			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "User not found.");
-			return new ResponseEntity<>(apiError, apiError.getCode());
-		}
+	public ResponseEntity<Object> getNotificationsByUser(@PathVariable String userId) throws UserNotExistsException {
+		return new ResponseEntity<>(notificationService.findAllByUserId(userId), HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/{userId}/notifications", method = RequestMethod.PATCH)
 	public ResponseEntity<Object> viewAllNotifications(@PathVariable String userId) throws UserNotExistsException {
-		try {
-			return new ResponseEntity<>(notificationService.setAllAsViewedByUser(userId), HttpStatus.OK);
-		} catch(UserNotFoundException e) {
-			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "User not found.");
-			return new ResponseEntity<>(apiError, apiError.getCode());
-		}
+		return new ResponseEntity<>(notificationService.setAllAsViewedByUser(userId), HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/{userId}/notifications/all", method = RequestMethod.DELETE)
-	public ResponseEntity<Object> deleteAll(@PathVariable String userId) {
-		try {
-			notificationService.deleteAllByUserId(userId);
-			return new ResponseEntity<>(HttpStatus.OK);
-		} catch(UserNotFoundException e) {
-			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "User not found.");
-			return new ResponseEntity<>(apiError, apiError.getCode());
-		}
+	public ResponseEntity<Object> deleteAll(@PathVariable String userId) throws UserNotExistsException {
+		notificationService.deleteAllByUserId(userId);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/{id}/essaysReviews",
 			method = RequestMethod.GET
 			) 
 	public ResponseEntity<Object> getEssaysStatusByUser(@PathVariable String id) throws EssayNotExistsException, UserNotExistsException {
-		try {
-			Collection<EssaysReviews> reviews;
-			reviews = essayService.getEssaysReviews(id);
-			return new ResponseEntity<>(reviews, HttpStatus.OK);
-		} catch (UserNotFoundException e) {
-			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "User not found.");
-			return new ResponseEntity<>(apiError, apiError.getCode());
-		}
+		Collection<EssaysReviews> reviews = essayService.getEssaysReviews(id);
+		return new ResponseEntity<>(reviews, HttpStatus.OK);
 	}
 }
 
