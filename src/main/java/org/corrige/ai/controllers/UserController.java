@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import org.corrige.ai.models.auth.ResetPasswordBean;
 import org.corrige.ai.models.essay.Essay;
+import org.corrige.ai.models.notification.Notification;
 import org.corrige.ai.models.review.EssayToReviewResponse;
 import org.corrige.ai.models.review.EssaysReviews;
 import org.corrige.ai.models.review.Review;
@@ -27,10 +28,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -47,93 +52,72 @@ public class UserController {
 	@Autowired
 	private NotificationService notificationService;
 	
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public ResponseEntity<Object> getUserById(@PathVariable String id) {
-		Optional<User> user = userService.findById(id);
-		if(user.isPresent()) {
-			return new ResponseEntity<>(user, HttpStatus.OK);				
-		} else {
-			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "User not found.");
-			return new ResponseEntity<>(apiError, apiError.getCode());				
-		}
+	@GetMapping(value = "/{id}")
+	public ResponseEntity<Object> getUserById(@PathVariable String id) throws UserNotExistsException {
+		return new ResponseEntity<>(userService.findById(id), HttpStatus.OK);				
 	}
 	
-	@RequestMapping(method = RequestMethod.GET) 
-	public ResponseEntity<Iterable<User>> getUsers() {
+	@GetMapping
+	public ResponseEntity<Collection<User>> getUsers() {
 		return new ResponseEntity<>(userService.findAll(), HttpStatus.OK); 
 	}
 	
-	@RequestMapping(method = RequestMethod.POST) 
-	public ResponseEntity<Object> signup(@Valid @RequestBody SignupBean body) throws UserAlreadyExistsException {
-		User user = userService.create(body);
-		return new ResponseEntity<>(user, HttpStatus.OK);
+	@PostMapping
+	public ResponseEntity<User> signup(@Valid @RequestBody SignupBean body) throws UserAlreadyExistsException {
+		return new ResponseEntity<>(userService.create(body), HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/{id}", method = RequestMethod.PUT) 
+	@PutMapping(value = "/{id}")
 	public ResponseEntity<Object> edit(@PathVariable String id, @Valid @RequestBody User body) throws UserNotExistsException {	
-		User user = userService.update(id, body);
-		return new ResponseEntity<>(user, HttpStatus.OK);
+		return new ResponseEntity<>(userService.update(id, body), HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE) 
-	public ResponseEntity<Object> delete(@PathVariable String id) throws UserNotExistsException {
+	@DeleteMapping(value = "/{id}") 
+	public ResponseEntity<HttpStatus> delete(@PathVariable String id) throws UserNotExistsException {
 		userService.delete(id);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/{id}/pass",
-			method = RequestMethod.PATCH
-			) 
-	public ResponseEntity<Object> resetPassword(@PathVariable String id, @Valid @RequestBody ResetPasswordBean body) throws EmptyFieldsException, IncorretPasswordException, UserNotExistsException {
+	@PatchMapping(value = "/{id}/pass") 
+	public ResponseEntity<HttpStatus> resetPassword(@PathVariable String id, @Valid @RequestBody ResetPasswordBean body) throws EmptyFieldsException, IncorretPasswordException, UserNotExistsException {
 		userService.resetPassword(id, body);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/{id}/essays",
-			method = RequestMethod.GET
-			) 
-	public ResponseEntity<Object> getEssaysByUser(@PathVariable String id) throws UserNotExistsException {
-		Collection<Essay> essays = essayService.findAllByUserId(id);
-		return new ResponseEntity<>(essays, HttpStatus.OK);
-		
+	@GetMapping(value = "/{id}/essays") 
+	public ResponseEntity<Collection<Essay>> getEssaysByUser(@PathVariable String id) throws UserNotExistsException {
+		return new ResponseEntity<>(essayService.findAllByUserId(id), HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/{id}/reviews",
-			method = RequestMethod.GET
-			) 
-	public ResponseEntity<Object> getReviewsByUser(@PathVariable String id) throws UserNotExistsException {
-		Collection<Review> reviews = reviewService.findAllByUserId(id);
-		return new ResponseEntity<>(reviews, HttpStatus.OK);
+	@GetMapping(value = "/{id}/reviews") 
+	public ResponseEntity<Collection<Review>> getReviewsByUser(@PathVariable String id) throws UserNotExistsException {
+		return new ResponseEntity<>(reviewService.findAllByUserId(id), HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/{id}/evaluate", method = RequestMethod.GET)
-	public ResponseEntity<Object> getEssay(@PathVariable String id) throws UserNotExistsException, EssayNotExistsException {
-		EssayToReviewResponse essayToReviewResponse = essayService.getEssayToReview(id);
-		return new ResponseEntity<>(essayToReviewResponse, HttpStatus.OK);
+	@GetMapping(value="/{id}/evaluate")
+	public ResponseEntity<EssayToReviewResponse> getEssay(@PathVariable String id) throws UserNotExistsException, EssayNotExistsException {
+		return new ResponseEntity<>(essayService.getEssayToReview(id), HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/{userId}/notifications", method = RequestMethod.GET)
-	public ResponseEntity<Object> getNotificationsByUser(@PathVariable String userId) throws UserNotExistsException {
+	@GetMapping(value = "/{userId}/notifications")
+	public ResponseEntity<Collection<Notification>> getNotificationsByUser(@PathVariable String userId) throws UserNotExistsException {
 		return new ResponseEntity<>(notificationService.findAllByUserId(userId), HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/{userId}/notifications", method = RequestMethod.PATCH)
-	public ResponseEntity<Object> viewAllNotifications(@PathVariable String userId) throws UserNotExistsException {
+	@PatchMapping(value = "/{userId}/notifications")
+	public ResponseEntity<Collection<Notification>> viewAllNotifications(@PathVariable String userId) throws UserNotExistsException {
 		return new ResponseEntity<>(notificationService.setAllAsViewedByUser(userId), HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/{userId}/notifications/all", method = RequestMethod.DELETE)
-	public ResponseEntity<Object> deleteAll(@PathVariable String userId) throws UserNotExistsException {
+	@DeleteMapping(value = "/{userId}/notifications/all")
+	public ResponseEntity<HttpStatus> deleteAll(@PathVariable String userId) throws UserNotExistsException {
 		notificationService.deleteAllByUserId(userId);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/{id}/essaysReviews",
-			method = RequestMethod.GET
-			) 
-	public ResponseEntity<Object> getEssaysStatusByUser(@PathVariable String id) throws EssayNotExistsException, UserNotExistsException {
-		Collection<EssaysReviews> reviews = essayService.getEssaysReviews(id);
-		return new ResponseEntity<>(reviews, HttpStatus.OK);
+	@GetMapping(value = "/{id}/essaysReviews") 
+	public ResponseEntity<Collection<EssaysReviews>> getEssaysStatusByUser(@PathVariable String id) throws EssayNotExistsException, UserNotExistsException {
+		return new ResponseEntity<>(essayService.getEssaysReviews(id), HttpStatus.OK);
 	}
 }
 

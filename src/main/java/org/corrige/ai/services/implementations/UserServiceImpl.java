@@ -126,7 +126,10 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Optional<User> findById(String id) {
-		return this.userRepository.findById(id);
+	public User findById(String id) throws UserNotExistsException {
+		Optional<User> user = this.userRepository.findById(id);
+		if(user.isPresent())
+			return user.get();
+		throw new UserNotExistsException();
 	}
 }

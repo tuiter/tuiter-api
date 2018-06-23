@@ -14,7 +14,7 @@ import org.corrige.ai.validations.exceptions.UserNotExistsException;
 public interface UserService {
 	Collection<User> findAll();
 	Optional<User> findByEmail(String email);
-	Optional<User> findById(String id);
+	User findById(String id) throws UserNotExistsException;
 	Optional<User> findByUsername(String username);
 	User findByIdentifier(String identifier);
 	User save(User user);
