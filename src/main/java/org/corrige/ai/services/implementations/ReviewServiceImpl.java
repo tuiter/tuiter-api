@@ -33,24 +33,6 @@ public class ReviewServiceImpl implements ReviewService {
 	private EssayRepository essayRepository;
 
 	@Override
-	public Review create(ReviewBean bean) throws UserNotExistsException, EssayNotExistsException {
-		Optional<User> user = userService.findById(bean.getReviewingUserId());
-		Essay essay = essayService.findById(bean.getEssayId());
-		
-		if(user.isPresent() && essay != null) {
-			Review review = new Review(essay.getId(), user.get().getId(), bean.getComments(), bean.getRatings());
-			return reviewRepository.save(review);
-		} else {
-			throw new UserNotExistsException();
-		}
-	}
-
-	public Review create(String userId, String essayId) throws UserNotExistsException, EssayNotExistsException {
-		ReviewBean bean = new ReviewBean(essayId, userId, new LinkedList<String>(), new LinkedList<Double>());
-		return this.create(bean);
-	}
-
-	@Override
 	public Review update(String id, EditReviewBean bean) throws ReviewNotExistsException, EmptyFieldsException, EssayNotExistsException {
 		Optional<Review> reviewOpt = reviewRepository.findById(id);
 		if(reviewOpt.isPresent()) {
@@ -119,5 +101,10 @@ public class ReviewServiceImpl implements ReviewService {
 			return review.get();
 		else 
 			throw new ReviewNotExistsException();
+	}
+
+	@Override
+	public Review create(String userId, String essayId) {
+		return this.reviewRepository.save(new Review(userId, essayId));
 	}
 }

@@ -40,12 +40,6 @@ public class ReviewController {
 		this.notificationService = notificationService;
 	}
 	
-	@RequestMapping(method = RequestMethod.POST) 
-	public ResponseEntity<Object> create(@RequestBody ReviewBean body) throws UserNotExistsException, EssayNotExistsException {
-		Review review = reviewService.create(body);
-		return new ResponseEntity<>(review, HttpStatus.OK);
-	}
-	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET) 
 	public ResponseEntity<Object> getById(@PathVariable String id) throws ReviewNotExistsException {
 		Review review = reviewService.findById(id);

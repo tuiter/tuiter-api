@@ -162,7 +162,7 @@ public class EssayServiceImpl implements EssayService{
 
 	@Override
 	public List<EssaysReviews> getEssaysReviews(String userId) throws EssayNotExistsException, UserNotExistsException {
-		Iterable<Essay> essays = findAllByUserId(userId);
+		Collection<Essay> essays = findAllByUserId(userId);
 		List<EssaysReviews> reviews_list = new ArrayList<>();
 		for (Essay essay : essays) {
 			Iterable<Review> reviews = reviewService.findAllByEssayId(essay.getId());

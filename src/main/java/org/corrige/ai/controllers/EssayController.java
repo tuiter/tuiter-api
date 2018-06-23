@@ -16,10 +16,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -32,39 +35,35 @@ public class EssayController {
 	@Autowired
 	private ReviewService reviewService;
 	
-	@RequestMapping(method = RequestMethod.POST) 
-	public ResponseEntity<Object> create(@RequestBody EssayBean body) throws UserNotExistsException {
-		Essay essay = essayService.create(body);
-		return new ResponseEntity<>(essay, HttpStatus.OK);
+	@PostMapping
+	public ResponseEntity<Essay> create(@RequestBody EssayBean body) throws UserNotExistsException {
+		return new ResponseEntity<>(essayService.create(body), HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/{id}", method = RequestMethod.GET) 
-	public ResponseEntity<Object> get(@PathVariable String id) throws EssayNotExistsException {
-		Essay essay = essayService.findById(id);
-		return new ResponseEntity<>(essay, HttpStatus.OK);
+	@GetMapping(value="/{id}") 
+	public ResponseEntity<Essay> get(@PathVariable String id) throws EssayNotExistsException {
+		return new ResponseEntity<>(essayService.findById(id), HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/{id}", method = RequestMethod.PUT) 
-	public ResponseEntity<Object> update(@PathVariable String id, @RequestBody EditEssayBean body) throws EssayNotExistsException, EmptyFieldsException {
-		Essay essay = essayService.update(id, body);
-		return new ResponseEntity<>(essay, HttpStatus.OK);
+	@PutMapping(value="/{id}") 
+	public ResponseEntity<Essay> update(@PathVariable String id, @RequestBody EditEssayBean body)
+			throws EssayNotExistsException, EmptyFieldsException {
+		return new ResponseEntity<>(essayService.update(id, body), HttpStatus.OK);
 	}
 	
-	@RequestMapping(method = RequestMethod.GET) 
-	public ResponseEntity<Iterable<Essay>> getAll() {
-		Iterable<Essay> essay = essayService.findAll();
-		return new ResponseEntity<>(essay, HttpStatus.OK);
+	@GetMapping
+	public ResponseEntity<Collection<Essay>> getAll() {
+		return new ResponseEntity<>(essayService.findAll(), HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE) 
+	@DeleteMapping(value = "/{id") 
 	public ResponseEntity<Object> delete(@PathVariable String id) throws EssayNotExistsException {
 		essayService.delete(id);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/{id}/reviews", method = RequestMethod.GET) 
-	public ResponseEntity<Object> getReviewsByEssayId(@PathVariable String id) throws EssayNotExistsException {
-		Collection<Review> reviews = reviewService.findAllByEssayId(id);
-		return new ResponseEntity<>(reviews, HttpStatus.OK);
+	@GetMapping(value = "/{id}/reviews") 
+	public ResponseEntity<Collection<Review>> getEssayReviews(@PathVariable String id) throws EssayNotExistsException {
+		return new ResponseEntity<>(reviewService.findAllByEssayId(id), HttpStatus.OK);
 	}
 }
