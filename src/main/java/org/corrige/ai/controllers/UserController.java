@@ -19,7 +19,6 @@ import org.corrige.ai.services.interfaces.RatingService;
 import org.corrige.ai.services.interfaces.ReviewService;
 import org.corrige.ai.services.interfaces.UserService;
 import org.corrige.ai.util.ServerConstants;
-import org.corrige.ai.validations.ApiError;
 import org.corrige.ai.validations.exceptions.EmptyFieldsException;
 import org.corrige.ai.validations.exceptions.EssayNotExistsException;
 import org.corrige.ai.validations.exceptions.IncorretPasswordException;
@@ -40,7 +39,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.tuiter.controllers.UserNotFoundException;
 
 @RestController
 @CrossOrigin
@@ -130,8 +128,8 @@ public class UserController {
 	@RequestMapping(value = "/{id}/ratings",
 			method = RequestMethod.GET
 			) 
-	public ResponseEntity<Object> getRatingsByUser(@PathVariable String id) {
-		Iterable<Rating> ratings = ratingService.findAllUsersRatings(id);
+	public ResponseEntity<Iterable<Rating>> getRatingsByUser(@PathVariable String id) throws ReviewNotExistsException, UserNotExistsException {
+		return ResponseEntity.ok(ratingService.findAllUsersRatings(id));
 	}
 }
 

@@ -7,18 +7,17 @@ import java.util.Optional;
 import org.corrige.ai.models.rating.EditRatingBean;
 import org.corrige.ai.models.rating.Rating;
 import org.corrige.ai.models.rating.RatingBean;
+import org.corrige.ai.models.review.Review;
 import org.corrige.ai.repositories.RatingRepository;
 import org.corrige.ai.services.interfaces.RatingService;
+import org.corrige.ai.services.interfaces.ReviewService;
+import org.corrige.ai.services.interfaces.UserService;
+import org.corrige.ai.validations.exceptions.EmptyFieldsException;
 import org.corrige.ai.validations.exceptions.RatingNotExistsException;
+import org.corrige.ai.validations.exceptions.ReviewNotExistsException;
+import org.corrige.ai.validations.exceptions.UserNotExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.tuiter.errors.exceptions.EmptyFieldsException;
-import org.tuiter.errors.exceptions.ReviewNotExistsException;
-import org.tuiter.errors.exceptions.UserNotExistsException;
-import org.tuiter.errors.exceptions.UserNotFoundException;
-import org.tuiter.models.Review;
-import org.tuiter.services.interfaces.ReviewService;
-import org.tuiter.services.interfaces.UserService;
 
 @Service
 public class RatingServiceImpl implements RatingService {
@@ -42,7 +41,7 @@ public class RatingServiceImpl implements RatingService {
 	}
 
 	@Override
-	public Rating create(RatingBean rating) throws UserNotFoundException, 
+	public Rating create(RatingBean rating) throws UserNotExistsException, 
 	ReviewNotExistsException, EmptyFieldsException {
 		if (userService.findById(rating.getUserId()) != null) {
 			if (reviewService.findById(rating.getReviewId()) != null) {
@@ -57,7 +56,7 @@ public class RatingServiceImpl implements RatingService {
 				throw new ReviewNotExistsException();
 			}
 		}
-		throw new UserNotFoundException();
+		throw new UserNotExistsException();
 	}
 
 	@Override
@@ -87,8 +86,7 @@ public class RatingServiceImpl implements RatingService {
 	}
 
 	@Override
-	public List<Rating> findAllUsersRatings(String userId) throws ReviewNotExistsException, 
-	UserNotExistsException, UserNotFoundException {
+	public List<Rating> findAllUsersRatings(String userId) throws ReviewNotExistsException, UserNotExistsException {
 		List<Rating> ratings = new ArrayList<>();
 		if (userService.findById(userId) != null) {
 			Iterable<Review> reviews = reviewService.findAllByUserId(userId);
@@ -100,7 +98,7 @@ public class RatingServiceImpl implements RatingService {
 			}
 			return ratings;
 		}
-		throw new UserNotFoundException();
+		throw new UserNotExistsException();
 	}
 
 	@Override
