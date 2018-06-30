@@ -1,13 +1,13 @@
 package org.corrige.ai.controllers;
 
 import java.util.Collection;
-import java.util.Optional;
 
 import javax.validation.Valid;
 
 import org.corrige.ai.models.auth.ResetPasswordBean;
 import org.corrige.ai.models.essay.Essay;
 import org.corrige.ai.models.notification.Notification;
+import org.corrige.ai.models.rating.Rating;
 import org.corrige.ai.models.review.EssayToReviewResponse;
 import org.corrige.ai.models.review.EssaysReviews;
 import org.corrige.ai.models.review.Review;
@@ -15,6 +15,7 @@ import org.corrige.ai.models.user.SignupBean;
 import org.corrige.ai.models.user.User;
 import org.corrige.ai.services.interfaces.EssayService;
 import org.corrige.ai.services.interfaces.NotificationService;
+import org.corrige.ai.services.interfaces.RatingService;
 import org.corrige.ai.services.interfaces.ReviewService;
 import org.corrige.ai.services.interfaces.UserService;
 import org.corrige.ai.util.ServerConstants;
@@ -22,6 +23,7 @@ import org.corrige.ai.validations.ApiError;
 import org.corrige.ai.validations.exceptions.EmptyFieldsException;
 import org.corrige.ai.validations.exceptions.EssayNotExistsException;
 import org.corrige.ai.validations.exceptions.IncorretPasswordException;
+import org.corrige.ai.validations.exceptions.ReviewNotExistsException;
 import org.corrige.ai.validations.exceptions.UserAlreadyExistsException;
 import org.corrige.ai.validations.exceptions.UserNotExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +38,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.tuiter.controllers.UserNotFoundException;
 
 @RestController
 @CrossOrigin
@@ -51,6 +55,9 @@ public class UserController {
 	private ReviewService reviewService;
 	@Autowired
 	private NotificationService notificationService;
+	
+	@Autowired
+	private RatingService ratingService;
 	
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<Object> getUserById(@PathVariable String id) throws UserNotExistsException {
@@ -118,6 +125,13 @@ public class UserController {
 	@GetMapping(value = "/{id}/essaysReviews") 
 	public ResponseEntity<Collection<EssaysReviews>> getEssaysStatusByUser(@PathVariable String id) throws EssayNotExistsException, UserNotExistsException {
 		return new ResponseEntity<>(essayService.getEssaysReviews(id), HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/{id}/ratings",
+			method = RequestMethod.GET
+			) 
+	public ResponseEntity<Object> getRatingsByUser(@PathVariable String id) {
+		Iterable<Rating> ratings = ratingService.findAllUsersRatings(id);
 	}
 }
 
