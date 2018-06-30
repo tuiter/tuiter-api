@@ -119,10 +119,10 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User create(SignupBean body) throws UserAlreadyExistsException {
 		User user = UserBean2ModelFactory.createUser(body);
-		if (!existsByEmail(user.getEmail()) && userRepository.findByUsername(user.getUsername()) == null) {
-			return save(user);
-		} else {
+		if (existsByEmail(user.getEmail()) || userRepository.findByUsername(user.getUsername()).isPresent()) {
 			throw new UserAlreadyExistsException();
+		} else {
+			return save(user);
 		}
 	}
 
