@@ -7,6 +7,7 @@ import org.corrige.ai.validations.exceptions.EmptyFieldsException;
 import org.corrige.ai.validations.exceptions.EssayNotExistsException;
 import org.corrige.ai.validations.exceptions.IncorretPasswordException;
 import org.corrige.ai.validations.exceptions.NotificationNotExistsException;
+import org.corrige.ai.validations.exceptions.RatingNotExistsException;
 import org.corrige.ai.validations.exceptions.ReviewNotExistsException;
 import org.corrige.ai.validations.exceptions.UserAlreadyExistsException;
 import org.corrige.ai.validations.exceptions.UserNotExistsException;
@@ -67,6 +68,12 @@ public class ExceptionTranslater extends ResponseEntityExceptionHandler {
     @ExceptionHandler(NotificationNotExistsException.class)
     public final ResponseEntity<ApiError> handleNotificationNotExistsException(NotificationNotExistsException exception, WebRequest request) {
 		ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "Notification not exists!");
+		return new ResponseEntity<>(apiError, apiError.getCode());
+    }
+    
+    @ExceptionHandler(RatingNotExistsException.class)
+    public final ResponseEntity<ApiError> handleRatingNotExistsException(RatingNotExistsException exception, WebRequest request) {
+		ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "Rating not found.");
 		return new ResponseEntity<>(apiError, apiError.getCode());
     }
 }	
