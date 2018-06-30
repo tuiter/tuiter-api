@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.corrige.ai.security.jwt.JwtAuthenticationEntryPoint;
 import org.corrige.ai.security.jwt.JwtAuthenticationFilter;
+import org.corrige.ai.util.ServerConstants;
 
 @Configuration
 @EnableWebSecurity
@@ -25,11 +26,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
 
         http.authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/tuiterapi/auth/login").permitAll()
+                .antMatchers(HttpMethod.POST, ServerConstants.SERVER_REQUEST + ServerConstants.AUTHENTICATION_REQUEST + "/login").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "**").permitAll()
-                .antMatchers(HttpMethod.POST, "/tuiterapi/users").permitAll()
-                .antMatchers("/tuiterapi/notifications/**").permitAll()
-                .antMatchers("/tuiterapi/notifications").permitAll()
+                .antMatchers(HttpMethod.POST, ServerConstants.SERVER_REQUEST + ServerConstants.USER_REQUEST).permitAll()
+                .antMatchers(ServerConstants.SERVER_REQUEST + ServerConstants.NOTIFICATION_REQUEST + "/**").permitAll()
+                .antMatchers(ServerConstants.SERVER_REQUEST + ServerConstants.NOTIFICATION_REQUEST).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(new JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
