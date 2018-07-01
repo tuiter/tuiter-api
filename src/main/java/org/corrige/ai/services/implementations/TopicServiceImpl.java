@@ -6,15 +6,17 @@ import java.util.List;
 import java.util.Optional;
 
 import org.corrige.ai.models.essay.Essay;
-import org.corrige.ai.models.topic.EditTopicBean;
 import org.corrige.ai.models.topic.Topic;
+import org.corrige.ai.models.topic.TopicBean;
 import org.corrige.ai.repositories.TopicRepository;
 import org.corrige.ai.services.interfaces.TopicService;
 import org.corrige.ai.validations.exceptions.EmptyFieldsException;
+import org.corrige.ai.validations.exceptions.InvalidDataException;
 import org.corrige.ai.validations.exceptions.TopicNotExistsException;
 import org.corrige.ai.validations.exceptions.TopicNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 
 @Service
 public class TopicServiceImpl implements TopicService{
@@ -22,19 +24,24 @@ public class TopicServiceImpl implements TopicService{
 	private TopicRepository topicRepository;
 
 	@Override
-	public Topic create(Topic topic) throws EmptyFieldsException{
-		if(topic.getTheme().equals("")) {
+	public Topic create(TopicBean topic) throws EmptyFieldsException, InvalidDataException {
+		Topic newTopic = new Topic(topic.getTheme(), topic.getBeginDate(), topic.getEndDate());		
+		if(topic.getTheme().equals("") || topic.getBeginDate() == null || topic.getEndDate() == null) {
 			throw new EmptyFieldsException();
 		}
-		return topicRepository.save(topic);
+		
+		if (topic.getBeginDate().after(topic.getEndDate())) {
+			throw new InvalidDataException("Begin date must be before end date!");
+		}
+		return topicRepository.save(newTopic);
 	}
 
 	@Override
-	public Topic update(String id, EditTopicBean bean) throws TopicNotExistsException, EmptyFieldsException {
+	public Topic update(String id, TopicBean bean) throws TopicNotExistsException, EmptyFieldsException {
 		Topic topic = getById(id);
 		
 		if(topic != null) {
-			if(bean.getTheme().equals("")) {
+			if(bean.getTheme().equals("") || bean.getBeginDate() == null || bean.getEndDate() == null) {
 				throw new EmptyFieldsException();
 			}
 			topic.setBeginDate(bean.getBeginDate());
@@ -100,6 +107,5 @@ public class TopicServiceImpl implements TopicService{
 	public Collection<Topic> findAll() {
 		return topicRepository.findAll();
 	}
-	
 
 }
