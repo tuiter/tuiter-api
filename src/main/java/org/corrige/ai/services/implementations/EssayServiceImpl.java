@@ -13,13 +13,16 @@ import org.corrige.ai.models.essay.EssayBean;
 import org.corrige.ai.models.review.EssayToReviewResponse;
 import org.corrige.ai.models.review.EssaysReviews;
 import org.corrige.ai.models.review.Review;
+import org.corrige.ai.models.topic.Topic;
 import org.corrige.ai.models.user.User;
 import org.corrige.ai.repositories.EssayRepository;
 import org.corrige.ai.services.interfaces.EssayService;
 import org.corrige.ai.services.interfaces.ReviewService;
+import org.corrige.ai.services.interfaces.TopicService;
 import org.corrige.ai.services.interfaces.UserService;
 import org.corrige.ai.validations.exceptions.EmptyFieldsException;
 import org.corrige.ai.validations.exceptions.EssayNotExistsException;
+import org.corrige.ai.validations.exceptions.TopicNotExistsException;
 import org.corrige.ai.validations.exceptions.UserNotExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,22 +35,29 @@ public class EssayServiceImpl implements EssayService{
 	private UserService userService;
 	@Autowired
 	private ReviewService reviewService;
+	@Autowired
+	private TopicService topicService;
 
 	@Override
-	public Essay create(EssayBean bean) throws UserNotExistsException{
+	public Essay create(EssayBean bean) throws UserNotExistsException, TopicNotExistsException{
 		Optional<User> user = userService.findByUsername(bean.getUserUsername());
-		if(user.isPresent()) {
-			Essay essay = new Essay(user.get().getId(), bean.getTitle(), bean.getTheme(), bean.getContent(), bean.getType());
-			return essayRepository.save(essay);
-		} else {
+		if(! user.isPresent()) {
 			throw new UserNotExistsException();
-		}
+		} 
+		if(bean.getTopicId() != null && topicService.findById(bean.getTopicId()) == null) {
+			throw new TopicNotExistsException();
+		} 
+		Essay essay = new Essay(user.get().getId(), bean.getTitle(), bean.getTheme(), bean.getContent(), bean.getType(), bean.getTopicId());
+		return essayRepository.save(essay);
 	}
 
 	@Override
-	public Essay update(String id, EditEssayBean bean) throws EssayNotExistsException, EmptyFieldsException{
+	public Essay update(String id, EditEssayBean bean) throws EssayNotExistsException, EmptyFieldsException, TopicNotExistsException{
 		Optional<Essay> essay_opt = essayRepository.findById(id);
 		if(essay_opt.isPresent()) {
+			if(bean.getTopicId() != null && topicService.findById(bean.getTopicId()) == null) {
+				throw new TopicNotExistsException();
+			}
 			Essay essay = essay_opt.get();
 			if(bean.getTitle() != null && !bean.getTitle().isEmpty() && 
 			   bean.getTheme() != null && !bean.getTheme().isEmpty() && 
@@ -58,6 +68,7 @@ public class EssayServiceImpl implements EssayService{
 				essay.setTheme(bean.getTheme());
 				essay.setContent(bean.getContent());
 				essay.setType(bean.getType());
+				essay.setTopicId(bean.getTopicId());
 				
 				return essayRepository.save(essay);
 			} else {
@@ -168,5 +179,16 @@ public class EssayServiceImpl implements EssayService{
 			}
 		}
 		return reviews_list;
+	}
+
+	@Override
+	public Collection<Essay> getEssaysByTopic(String topicId) throws TopicNotExistsException {
+		Collection<Essay> essays = new ArrayList<>();
+		for (Essay essay : essayRepository.findAll()) {
+			if (essay.getTopicId() != null && essay.getTopicId().equals(topicId)) {
+				essays.add(essay);
+			}
+		}
+		return essays;
 	}
 }

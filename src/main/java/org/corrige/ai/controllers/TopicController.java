@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import org.corrige.ai.models.topic.Topic;
 import org.corrige.ai.models.topic.TopicBean;
+import org.corrige.ai.services.interfaces.EssayService;
 import org.corrige.ai.services.interfaces.TopicService;
 import org.corrige.ai.util.ServerConstants;
 import org.corrige.ai.validations.exceptions.EmptyFieldsException;
@@ -30,6 +31,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class TopicController {
 	@Autowired
 	private TopicService topicService;
+	@Autowired
+	private EssayService essayService;
 	
 	@PostMapping
 	public ResponseEntity<Topic> create(@RequestBody TopicBean body) throws EmptyFieldsException, InvalidDataException {
@@ -61,6 +64,11 @@ public class TopicController {
 	public ResponseEntity<Object> delete(@PathVariable String id) throws TopicNotExistsException {
 		topicService.delete(id);
 		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/{id}/essays")
+	public ResponseEntity<Object> getEssaysByTopic(@PathVariable String id) throws TopicNotExistsException {
+		return new ResponseEntity<>(essayService.getEssaysByTopic(id), HttpStatus.OK);
 	}
 
 }

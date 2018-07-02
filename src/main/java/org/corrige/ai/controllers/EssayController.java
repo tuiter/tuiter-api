@@ -11,6 +11,7 @@ import org.corrige.ai.services.interfaces.ReviewService;
 import org.corrige.ai.util.ServerConstants;
 import org.corrige.ai.validations.exceptions.EmptyFieldsException;
 import org.corrige.ai.validations.exceptions.EssayNotExistsException;
+import org.corrige.ai.validations.exceptions.TopicNotExistsException;
 import org.corrige.ai.validations.exceptions.UserNotExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,7 +37,7 @@ public class EssayController {
 	private ReviewService reviewService;
 	
 	@PostMapping
-	public ResponseEntity<Essay> create(@RequestBody EssayBean body) throws UserNotExistsException {
+	public ResponseEntity<Essay> create(@RequestBody EssayBean body) throws UserNotExistsException, TopicNotExistsException {
 		return new ResponseEntity<>(essayService.create(body), HttpStatus.OK);
 	}
 	
@@ -47,7 +48,7 @@ public class EssayController {
 	
 	@PutMapping(value="/{id}") 
 	public ResponseEntity<Essay> update(@PathVariable String id, @RequestBody EditEssayBean body)
-			throws EssayNotExistsException, EmptyFieldsException {
+			throws EssayNotExistsException, EmptyFieldsException, TopicNotExistsException {
 		return new ResponseEntity<>(essayService.update(id, body), HttpStatus.OK);
 	}
 	
@@ -66,4 +67,5 @@ public class EssayController {
 	public ResponseEntity<Collection<Review>> getEssayReviews(@PathVariable String id) throws EssayNotExistsException {
 		return new ResponseEntity<>(reviewService.findAllByEssayId(id), HttpStatus.OK);
 	}
+	
 }

@@ -1,10 +1,6 @@
 package org.corrige.ai.models.topic;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-
-import org.corrige.ai.models.essay.Essay;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -32,14 +28,11 @@ public class Topic {
 	
 	@JsonFormat(pattern="dd/MM/yyyy HH:mm")
 	private Date endDate;
-
-	private List<Essay> essays;
 	
 	public Topic(String theme, Date beginDate, Date endDate) {
 		this.theme = theme;
 		this.beginDate = beginDate;
 		this.endDate = endDate;
-		this.essays = new ArrayList<Essay>();
 	}
 }
 
