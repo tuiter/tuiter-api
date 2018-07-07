@@ -18,9 +18,9 @@ public class EssayTest {
 		user1 = "1";
 		user2 = "2";
 		
-		essay1 = new Essay("1", "Hoje e ontem", "Tempo", "Texto aqui", Type.IMAGE);
-		essay2 = new Essay("2", "Hoje e amanhã", "Tempo", "Outro texto aqui", Type.TEXT);
-		essay3 = new Essay("1", "Pera e uva", "Comida", "Texto terceiro aqui", Type.TEXT);
+		essay1 = new Essay("1", "Hoje e ontem", "Tempo", "Texto aqui", Type.IMAGE, "1");
+		essay2 = new Essay("2", "Hoje e amanhã", "Tempo", "Outro texto aqui", Type.TEXT, "3");
+		essay3 = new Essay("1", "Pera e uva", "Comida", "Texto terceiro aqui", Type.TEXT, "3");
 	}
 	
 	@Test
@@ -54,9 +54,9 @@ public class EssayTest {
 	
 	@Test
 	public void equalsTest() {
-		Assert.assertEquals(essay1, new Essay(user1, "Hoje e ontem", "Tempo", "Texto aqui", Type.IMAGE));
-		Assert.assertEquals(essay2, new Essay(user2, "Hoje e amanhã", "Tempo", "Outro texto aqui", Type.TEXT));
-		Assert.assertEquals(essay3, new Essay(user1, "Pera e uva", "Comida", "Texto terceiro aqui", Type.TEXT));
+		Assert.assertEquals(essay1, new Essay(user1, "Hoje e ontem", "Tempo", "Texto aqui", Type.IMAGE, "1"));
+		Assert.assertEquals(essay2, new Essay(user2, "Hoje e amanhã", "Tempo", "Outro texto aqui", Type.TEXT, "3"));
+		Assert.assertEquals(essay3, new Essay(user1, "Pera e uva", "Comida", "Texto terceiro aqui", Type.TEXT, "3"));
 		Assert.assertNotEquals(essay1, essay3);
 	}
 

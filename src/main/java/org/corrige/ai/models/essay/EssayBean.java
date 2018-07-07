@@ -16,4 +16,5 @@ public class EssayBean {
 	private String theme;
 	private String content;
 	private Type type;
+	private String topicId;
 }

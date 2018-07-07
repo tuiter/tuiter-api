@@ -14,5 +14,6 @@ public class EditEssayBean {
 	private String title;
 	private String theme;
 	private String content;
-	private Type type;		
+	private Type type;	
+	private String topicId;
 }

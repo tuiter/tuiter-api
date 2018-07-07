@@ -10,17 +10,19 @@ import org.corrige.ai.models.review.EssayToReviewResponse;
 import org.corrige.ai.models.review.EssaysReviews;
 import org.corrige.ai.validations.exceptions.EmptyFieldsException;
 import org.corrige.ai.validations.exceptions.EssayNotExistsException;
+import org.corrige.ai.validations.exceptions.TopicNotExistsException;
 import org.corrige.ai.validations.exceptions.UserNotExistsException;
 
 public interface EssayService {
-	Essay create(EssayBean bean) throws UserNotExistsException;
+	Essay create(EssayBean bean) throws UserNotExistsException, TopicNotExistsException;
 	Essay delete(String id) throws EssayNotExistsException;
 	Collection<Essay> findAllByUserUsername(String username) throws UserNotExistsException;
 	Collection<Essay> findAllByUserId(String id) throws UserNotExistsException;
 	Collection<Essay> findAll();
 	Optional<Essay> findByTitleAndUserId(String title, String userId);
 	Essay findById(String id) throws EssayNotExistsException;
-	Essay update(String id, EditEssayBean bean) throws EssayNotExistsException, EmptyFieldsException;
+	Essay update(String id, EditEssayBean bean) throws EssayNotExistsException, EmptyFieldsException, TopicNotExistsException;
 	EssayToReviewResponse getEssayToReview(String id) throws EssayNotExistsException, UserNotExistsException;
 	Collection<EssaysReviews> getEssaysReviews(String id) throws EssayNotExistsException, UserNotExistsException;
+	Collection<Essay> getEssaysByTopic(String topicId) throws TopicNotExistsException;
 }

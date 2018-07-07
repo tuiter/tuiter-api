@@ -10,6 +10,7 @@ public class ServerConstants {
 	public static final String ESSAY_REQUEST = "/essays";
 	public static final String REVIEW_REQUEST = "/reviews";
 	public static final String NOTIFICATION_REQUEST = "/notifications";
+	public static final String TOPIC_REQUEST = "/topics";
 	public static final String RATING_REQUEST = "/ratings";
 	
 }

@@ -6,9 +6,11 @@ import org.corrige.ai.validations.ValidationError;
 import org.corrige.ai.validations.exceptions.EmptyFieldsException;
 import org.corrige.ai.validations.exceptions.EssayNotExistsException;
 import org.corrige.ai.validations.exceptions.IncorretPasswordException;
+import org.corrige.ai.validations.exceptions.InvalidDataException;
 import org.corrige.ai.validations.exceptions.NotificationNotExistsException;
 import org.corrige.ai.validations.exceptions.RatingNotExistsException;
 import org.corrige.ai.validations.exceptions.ReviewNotExistsException;
+import org.corrige.ai.validations.exceptions.TopicNotExistsException;
 import org.corrige.ai.validations.exceptions.UserAlreadyExistsException;
 import org.corrige.ai.validations.exceptions.UserNotExistsException;
 import org.springframework.http.HttpHeaders;
@@ -74,6 +76,18 @@ public class ExceptionTranslater extends ResponseEntityExceptionHandler {
     @ExceptionHandler(RatingNotExistsException.class)
     public final ResponseEntity<ApiError> handleRatingNotExistsException(RatingNotExistsException exception, WebRequest request) {
 		ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "Rating not found.");
+		return new ResponseEntity<>(apiError, apiError.getCode());
+    }
+    
+    @ExceptionHandler(InvalidDataException.class)
+    public final ResponseEntity<ApiError> handleInvalidDataException(InvalidDataException exception, WebRequest request) {
+		ApiError apiError = new ApiError(HttpStatus.NOT_ACCEPTABLE, "Invalid Data");
+		return new ResponseEntity<>(apiError, apiError.getCode());
+    }
+    
+    @ExceptionHandler(TopicNotExistsException.class)
+    public final ResponseEntity<ApiError> handleTopicNotExistsException(TopicNotExistsException exception, WebRequest request) {
+		ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "Topic not exists.");
 		return new ResponseEntity<>(apiError, apiError.getCode());
     }
 }	

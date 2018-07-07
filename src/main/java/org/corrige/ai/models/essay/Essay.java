@@ -27,25 +27,28 @@ public class Essay {
 	private String theme;
 	private String content;
 	private Type type;
+	private String topicId;
 	
 	@JsonIgnore
 	private ReviewStatus status;
 	
-	public Essay(String userId, String title, String theme, String content, Type type) {
+	public Essay(String userId, String title, String theme, String content, Type type, String topicId) {
 		this.userId = userId;
 		this.title = title;
 		this.theme = theme;
 		this.content = content;
 		this.type = type;
 		this.status = ReviewStatus.PENDING;
+		this.topicId = topicId;
 	}
 	
-	public Essay(String userId, String title, String content, Type type) {
+	public Essay(String userId, String title, String content, Type type, String topicId) {
 		this.userId = userId;
 		this.title = title;
 		this.content = content;
 		this.type = type;
 		this.status = ReviewStatus.PENDING;
+		this.topicId = topicId;
 	}
 
 	@Override
