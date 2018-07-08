@@ -101,7 +101,7 @@ public class UserServiceImpl implements UserService {
 	public User resetPassword(String id, ResetPasswordBean body) throws UserNotExistsException, 
 	IncorretPasswordException, EmptyFieldsException {
 		Optional<User> user = this.userRepository.findById(id);
-		if (user.isPresent()) {
+		if (!user.isPresent()) {
 			throw new UserNotExistsException();			
 		}
 		if (!user.get().getPassword().equals(body.getOldPassword())) {
