@@ -56,7 +56,7 @@ public class EssayController {
 		return new ResponseEntity<>(essayService.findAll(), HttpStatus.OK);
 	}
 	
-	@DeleteMapping(value = "/{id") 
+	@DeleteMapping(value = "/{id}") 
 	public ResponseEntity<Object> delete(@PathVariable String id) throws EssayNotExistsException {
 		essayService.delete(id);
 		return new ResponseEntity<>(HttpStatus.OK);
