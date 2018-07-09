@@ -23,6 +23,8 @@ import org.corrige.ai.validations.exceptions.EmptyFieldsException;
 import org.corrige.ai.validations.exceptions.EssayNotExistsException;
 import org.corrige.ai.validations.exceptions.IncorretPasswordException;
 import org.corrige.ai.validations.exceptions.ReviewNotExistsException;
+import org.corrige.ai.validations.exceptions.TopicNotExistsException;
+import org.corrige.ai.validations.exceptions.TopicNotFoundException;
 import org.corrige.ai.validations.exceptions.UserAlreadyExistsException;
 import org.corrige.ai.validations.exceptions.UserNotExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,7 +102,7 @@ public class UserController {
 	}
 	
 	@GetMapping(value="/{id}/evaluate")
-	public ResponseEntity<EssayToReviewResponse> getEssay(@PathVariable String id) throws UserNotExistsException, EssayNotExistsException {
+	public ResponseEntity<EssayToReviewResponse> getEssay(@PathVariable String id) throws UserNotExistsException, EssayNotExistsException, TopicNotExistsException, TopicNotFoundException {
 		return new ResponseEntity<>(essayService.getEssayToReview(id), HttpStatus.OK);
 	}
 	

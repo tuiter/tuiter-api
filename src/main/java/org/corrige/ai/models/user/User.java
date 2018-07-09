@@ -2,10 +2,10 @@ package org.corrige.ai.models.user;
 
 
 import org.corrige.ai.enums.Gender;
-import org.corrige.ai.models.notification.Notification;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -35,14 +35,17 @@ public class User {
 	private String password;
 	private String photoUrl;
 	
-	public User(String email, String username, Gender gender, String name, String password, String photo_url) {
+	@Field
+	private Boolean usingWeekelyTopic = false;
+	
+	public User(String email, String username, Gender gender, String name, String password, String photoUrl) {
 		this.email = email;
 		this.username = username;
 		
 		this.gender = gender;
 		this.name = name;
 		this.password = password;
-		this.photoUrl = photo_url;
+		this.photoUrl = photoUrl;
 	}
 	
 	public User(String email, String username, Gender gender,  String name, String password) {

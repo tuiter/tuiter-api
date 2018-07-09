@@ -2,7 +2,6 @@ package org.corrige.ai.models.review;
 
 import org.corrige.ai.models.essay.SimpleEssayBean;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
