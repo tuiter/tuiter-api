@@ -41,8 +41,8 @@ public class Review {
 	public Review(String userId, String essayId) {
 		this.userId = userId;
 		this.essayId = essayId;
-		this.comments = new ArrayList();
-		this.ratings = new ArrayList();
+		this.comments = new ArrayList<>();
+		this.ratings = new ArrayList<>();
 		this.status = ReviewStatus.PENDING;
 	}
 

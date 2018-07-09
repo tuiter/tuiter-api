@@ -13,7 +13,6 @@ import org.corrige.ai.models.essay.EssayBean;
 import org.corrige.ai.models.review.EssayToReviewResponse;
 import org.corrige.ai.models.review.EssaysReviews;
 import org.corrige.ai.models.review.Review;
-import org.corrige.ai.models.topic.Topic;
 import org.corrige.ai.models.user.User;
 import org.corrige.ai.repositories.EssayRepository;
 import org.corrige.ai.services.interfaces.EssayService;
@@ -23,6 +22,7 @@ import org.corrige.ai.services.interfaces.UserService;
 import org.corrige.ai.validations.exceptions.EmptyFieldsException;
 import org.corrige.ai.validations.exceptions.EssayNotExistsException;
 import org.corrige.ai.validations.exceptions.TopicNotExistsException;
+import org.corrige.ai.validations.exceptions.TopicNotFoundException;
 import org.corrige.ai.validations.exceptions.UserNotExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -127,18 +127,26 @@ public class EssayServiceImpl implements EssayService{
 	}
 
 	@Override
-	public EssayToReviewResponse getEssayToReview(String id) throws EssayNotExistsException, UserNotExistsException {
+	public EssayToReviewResponse getEssayToReview(String id) throws EssayNotExistsException, UserNotExistsException, TopicNotExistsException, TopicNotFoundException {
 		for (Review review : reviewService.findAllByUserId(id)) {
 			if (review.getStatus().equals(ReviewStatus.PENDING) && essayRepository.findById(review.getEssayId()).isPresent()) {
 				return new EssayToReviewResponse(review.getId(), essayRepository.findById(review.getEssayId()).get());
 			}
 		}
 		
-		List<Essay> essays = essayRepository.findAll();
+		Collection<Essay> essays = essayRepository.findAll();
 		if (!essays.isEmpty()) {
-			List<Essay> notReviewedEssays = essays.stream().filter(
-					essay -> essay.getStatus().equals(ReviewStatus.PENDING))
-					.collect(Collectors.toList());
+			Collection<Essay> notReviewedEssays;
+			
+			if(this.userService.findById(id).getUsingWeekelyTopic()) {
+				notReviewedEssays = this.getEssaysByTopic(this.topicService.getOpenTopic().getId())
+										.stream().filter(essay -> essay.getStatus().equals(ReviewStatus.PENDING))
+										.collect(Collectors.toList());
+			} else {
+				notReviewedEssays = essays.stream().filter(
+						essay -> essay.getStatus().equals(ReviewStatus.PENDING))
+						.collect(Collectors.toList());
+			}
 			
 			if(!notReviewedEssays.isEmpty())
 				essays = notReviewedEssays;

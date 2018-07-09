@@ -5,10 +5,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import org.corrige.ai.models.essay.Essay;
 import org.corrige.ai.models.topic.Topic;
 import org.corrige.ai.models.topic.TopicBean;
-import org.corrige.ai.repositories.EssayRepository;
 import org.corrige.ai.repositories.TopicRepository;
 import org.corrige.ai.services.interfaces.TopicService;
 import org.corrige.ai.validations.exceptions.EmptyFieldsException;
@@ -23,9 +21,6 @@ import org.springframework.stereotype.Service;
 public class TopicServiceImpl implements TopicService{
 	@Autowired
 	private TopicRepository topicRepository;
-	
-	@Autowired
-	private EssayRepository essayRepository;
 
 	@Override
 	public Topic create(TopicBean topic) throws EmptyFieldsException, InvalidDataException {
