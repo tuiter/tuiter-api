@@ -6,6 +6,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.Optional;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import org.corrige.ai.models.auth.LoginBean;
 import org.corrige.ai.models.user.User;
@@ -33,7 +35,7 @@ public class AuthenticationService {
     public User authenticate(LoginBean loginBean) {
     	User user = userService.findByIdentifier(loginBean.getIdentifier());
 
-        if (user != null && user.authenticate(loginBean.getPassword()))
+        if (user != null && BCrypt.checkpw(loginBean.getPassword(), user.getPassword()))
             return user;
 
         throw new FailedAuthenticationException();

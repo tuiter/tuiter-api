@@ -2,6 +2,7 @@ package org.corrige.ai.services.implementations;
 
 import java.util.Collection;
 import java.util.Optional;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import org.corrige.ai.models.auth.ResetPasswordBean;
 import org.corrige.ai.models.user.SignupBean;
@@ -104,7 +105,7 @@ public class UserServiceImpl implements UserService {
 		if (!user.isPresent()) {
 			throw new UserNotExistsException();			
 		}
-		if (!user.get().getPassword().equals(body.getOldPassword())) {
+		if (!BCrypt.checkpw(body.getOldPassword(), user.get().getPassword())) {
 			throw new IncorretPasswordException();
 		}
 		
@@ -112,13 +113,14 @@ public class UserServiceImpl implements UserService {
 			throw new EmptyFieldsException("Password is empty!");
 		}
 		
-		user.get().setPassword(body.getNewPassword());
+		user.get().setPassword(BCrypt.hashpw(body.getNewPassword(), BCrypt.gensalt()));
 		return userRepository.save(user.get());
 	}
 
 	@Override
 	public User create(SignupBean body) throws UserAlreadyExistsException {
 		User user = UserBean2ModelFactory.createUser(body);
+		user.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
 		if (existsByEmail(user.getEmail()) || userRepository.findByUsername(user.getUsername()).isPresent()) {
 			throw new UserAlreadyExistsException();
 		} else {
