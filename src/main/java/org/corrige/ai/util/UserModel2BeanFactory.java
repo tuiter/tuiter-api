@@ -8,7 +8,6 @@ public class UserModel2BeanFactory {
 		return new UserBean(user.getUsername(), 
 							user.getEmail(),
 							user.getName(),
-							user.getPhotoUrl(),
-							user.getGender());
+							user.getPhotoUrl());
 	}
 }

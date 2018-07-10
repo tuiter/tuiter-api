@@ -1,10 +1,9 @@
 package org.corrige.ai.models;
 
+import org.corrige.ai.models.user.User;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.corrige.ai.enums.Gender;
-import org.corrige.ai.models.user.User;
 
 public class UserTest {
 	User user1;
@@ -13,9 +12,9 @@ public class UserTest {
 	
 	@Before
 	public void createUsers () {
-		user1 = new User("joaoc@email.com", "joaoc", Gender.M, "João Clóvis", "123456");
-		user2 = new User("mariaa@email.com", "mariaa", Gender.F, "Maria Araújo", "543543543");
-		user3 = new User("alex@email.com", "alex", Gender.UNKNOWN, "Alex Garibaldi", "dilma123");
+		user1 = new User("joaoc@email.com", "joaoc", "João Clóvis", "123456");
+		user2 = new User("mariaa@email.com", "mariaa", "Maria Araújo", "543543543");
+		user3 = new User("alex@email.com", "alex", "Alex Garibaldi", "dilma123");
 	}
 	
 	@Test
@@ -54,11 +53,11 @@ public class UserTest {
 	
 	@Test
 	public void equalsTest() {
-		Assert.assertEquals(user1, new User("joaoc@email.com", "joaoc", Gender.M,  "João Clóvis", "123456"));
-		Assert.assertEquals(user1, new User("joaoc@email.com", "joaoc", Gender.M, "João Clóvis", "123456"));
-		Assert.assertEquals(user2, new User("mariaa@email.com", "mariaa", Gender.F, "Maria Araújo", "543543543"));
+		Assert.assertEquals(user1, new User("joaoc@email.com", "joaoc",  "João Clóvis", "123456"));
+		Assert.assertEquals(user1, new User("joaoc@email.com", "joaoc", "João Clóvis", "123456"));
+		Assert.assertEquals(user2, new User("mariaa@email.com", "mariaa", "Maria Araújo", "543543543"));
 		Assert.assertNotEquals(user1, user2);
-		Assert.assertNotEquals(user1, new User("jojo", "jojo@email.com", Gender.F, "123456", "Josefina"));
-		Assert.assertNotEquals(user2, new User("auaua", "auaua@email.com", Gender.F, "090909", "Auricele"));
+		Assert.assertNotEquals(user1, new User("jojo", "jojo@email.com", "123456", "Josefina"));
+		Assert.assertNotEquals(user2, new User("auaua", "auaua@email.com", "090909", "Auricele"));
 	}
 }
