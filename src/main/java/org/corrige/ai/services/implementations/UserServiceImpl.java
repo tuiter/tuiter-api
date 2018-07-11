@@ -81,7 +81,6 @@ public class UserServiceImpl implements UserService {
 			if (body.getPhotoUrl() != null && !body.getPhotoUrl().isEmpty()) {
 				user.setPhotoUrl(body.getPhotoUrl());
 			}
-			user.setGender(body.getGender());
 			user = userRepository.save(user);
 			return user;
 		}
