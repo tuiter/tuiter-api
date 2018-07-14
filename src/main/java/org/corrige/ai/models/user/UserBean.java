@@ -1,7 +1,5 @@
 package org.corrige.ai.models.user;
 
-import org.corrige.ai.enums.Gender;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,5 +13,4 @@ public class UserBean {
 	private String email;
 	private String name;
 	private String photo_url;
-	private Gender gender;
 }

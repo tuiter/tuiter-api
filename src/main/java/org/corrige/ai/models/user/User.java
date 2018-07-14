@@ -1,11 +1,10 @@
 package org.corrige.ai.models.user;
 
 
-import org.corrige.ai.enums.Gender;
-import org.corrige.ai.models.notification.Notification;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -29,28 +28,25 @@ public class User {
 	@Indexed(unique = true)
 	private String username;
 	
-	private Gender gender;
 	private String name;
 	@JsonIgnore
 	private String password;
 	private String photoUrl;
 	
-	public User(String email, String username, Gender gender, String name, String password, String photo_url) {
+	@Field
+	private Boolean usingWeekelyTopic = false;
+	
+	public User(String email, String username, String name, String password, String photoUrl) {
 		this.email = email;
 		this.username = username;
 		
-		this.gender = gender;
 		this.name = name;
 		this.password = password;
-		this.photoUrl = photo_url;
+		this.photoUrl = photoUrl;
 	}
 	
-	public User(String email, String username, Gender gender,  String name, String password) {
-		this(email, username, gender, name, password, "");
-	}
-	
-	public User(String email, String username, String name, String password) {
-		this(email, username, Gender.UNKNOWN, name, password, "");
+	public User(String email, String username,  String name, String password) {
+		this(email, username, name, password, "");
 	}
 	
 	public Boolean authenticate(String password) {
@@ -59,7 +55,7 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", email=" + email + ", username=" + username + ", gender=" + gender + ", name="
+		return "User [id=" + id + ", email=" + email + ", username=" + username +  ", name="
 				+ name + ", password=" + password + ", photoUrl=" + photoUrl + "]";
 	}
 

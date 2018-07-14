@@ -3,7 +3,6 @@ package org.corrige.ai.models.review;
 import org.corrige.ai.models.essay.Essay;
 
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

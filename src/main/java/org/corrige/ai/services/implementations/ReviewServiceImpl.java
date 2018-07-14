@@ -1,15 +1,12 @@
 package org.corrige.ai.services.implementations;
 
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.Optional;
 
 import org.corrige.ai.enums.ReviewStatus;
 import org.corrige.ai.models.essay.Essay;
 import org.corrige.ai.models.review.EditReviewBean;
 import org.corrige.ai.models.review.Review;
-import org.corrige.ai.models.review.ReviewBean;
-import org.corrige.ai.models.user.User;
 import org.corrige.ai.repositories.EssayRepository;
 import org.corrige.ai.repositories.ReviewRepository;
 import org.corrige.ai.services.interfaces.EssayService;

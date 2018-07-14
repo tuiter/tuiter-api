@@ -14,6 +14,7 @@ import org.corrige.ai.util.SecurityConstants;
 import org.corrige.ai.validations.exceptions.FailedAuthenticationException;
 import org.corrige.ai.validations.exceptions.UserNotExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,7 +34,7 @@ public class AuthenticationService {
     public User authenticate(LoginBean loginBean) {
     	User user = userService.findByIdentifier(loginBean.getIdentifier());
 
-        if (user != null && user.authenticate(loginBean.getPassword()))
+        if (user != null && BCrypt.checkpw(loginBean.getPassword(), user.getPassword()))
             return user;
 
         throw new FailedAuthenticationException();
