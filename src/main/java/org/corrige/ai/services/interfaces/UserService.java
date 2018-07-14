@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.corrige.ai.models.auth.ResetPasswordBean;
 import org.corrige.ai.models.user.SignupBean;
 import org.corrige.ai.models.user.User;
+import org.corrige.ai.models.user.UserBadges;
 import org.corrige.ai.validations.exceptions.EmptyFieldsException;
 import org.corrige.ai.validations.exceptions.IncorretPasswordException;
 import org.corrige.ai.validations.exceptions.UserAlreadyExistsException;
@@ -24,5 +25,6 @@ public interface UserService {
 	User create(SignupBean body) throws UserAlreadyExistsException;
 	User update(String id, User body) throws UserNotExistsException;
 	User resetPassword(String id, ResetPasswordBean body) throws IncorretPasswordException, EmptyFieldsException, UserNotExistsException;
+	UserBadges getBadges(String userId) throws UserNotExistsException;
 }
 
