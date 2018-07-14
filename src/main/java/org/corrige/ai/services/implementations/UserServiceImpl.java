@@ -7,6 +7,9 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.corrige.ai.models.auth.ResetPasswordBean;
 import org.corrige.ai.models.user.SignupBean;
 import org.corrige.ai.models.user.User;
+import org.corrige.ai.models.user.UserBadges;
+import org.corrige.ai.repositories.EssayRepository;
+import org.corrige.ai.repositories.ReviewRepository;
 import org.corrige.ai.repositories.UserRepository;
 import org.corrige.ai.services.interfaces.UserService;
 import org.corrige.ai.util.UserBean2ModelFactory;
@@ -21,6 +24,10 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
 	@Autowired
 	private UserRepository userRepository;
+	@Autowired
+	private EssayRepository essayRepository;
+	@Autowired
+	private ReviewRepository reviewRepository;
 
 	@Override
 	public Collection<User> findAll() {
@@ -133,5 +140,14 @@ public class UserServiceImpl implements UserService {
 		if(user.isPresent())
 			return user.get();
 		throw new UserNotExistsException();
+	}
+
+	@Override
+	public UserBadges getBadges(String userId) throws UserNotExistsException {
+		findById(userId);
+		Integer createdEssays = essayRepository.findAllByUserId(userId).size();
+		Integer reviewedEssays = reviewRepository.findAllByUserId(userId).size();
+		UserBadges userBadges = new UserBadges(userId, createdEssays, reviewedEssays);
+		return userBadges;
 	}
 }

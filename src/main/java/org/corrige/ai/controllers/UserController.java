@@ -13,6 +13,7 @@ import org.corrige.ai.models.review.EssaysReviews;
 import org.corrige.ai.models.review.Review;
 import org.corrige.ai.models.user.SignupBean;
 import org.corrige.ai.models.user.User;
+import org.corrige.ai.models.user.UserBadges;
 import org.corrige.ai.services.interfaces.EssayService;
 import org.corrige.ai.services.interfaces.NotificationService;
 import org.corrige.ai.services.interfaces.RatingService;
@@ -132,6 +133,13 @@ public class UserController {
 			) 
 	public ResponseEntity<Iterable<Rating>> getRatingsByUser(@PathVariable String id) throws ReviewNotExistsException, UserNotExistsException {
 		return ResponseEntity.ok(ratingService.findAllUsersRatings(id));
+	}
+	
+	@RequestMapping(value = "/badges/{id}",
+			method = RequestMethod.GET
+			)
+	public ResponseEntity<UserBadges> getBadges(@PathVariable String id) throws UserNotExistsException {
+		return new ResponseEntity<>(userService.getBadges(id), HttpStatus.OK);
 	}
 }
 
