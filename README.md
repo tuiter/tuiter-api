@@ -1,15 +1,12 @@
 [![Build Status](https://travis-ci.org/corrigeai/corrigeai-api.svg?branch=master)](https://travis-ci.org/corrigeai/corrigeai-api)
-# tuiter-api
+# corrigeai-api
 
-To run:
+To run this application as a simple docker container you just need to have
+docker installed in your machine an follow two simple steps:
 
-1. Start application 
-2. Start mongo server
-2.1 Create a db named tuiter
-```
-use tuiter
-```
-2.2. Create a collection (users)
-```
-db.createCollection("users")
-```
+1 - `docker pull gmonteiro/corrigeai`
+
+2 - `docker container run -d --name qma-test -p 3000:3000 corrigeai`
+
+After that, you only have to wait a few minutes for the application to go up 
+inside the container and it's ready, it will be available on your host's port 3000.
