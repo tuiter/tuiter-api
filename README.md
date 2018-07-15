@@ -10,3 +10,7 @@ docker installed in your machine an follow two simple steps:
 
 After that, you only have to wait a few minutes for the application to go up 
 inside the container and it's ready, it will be available on your host's port 3000.
+
+Notes: For this release the Corrigeai team wants to maintain refined control over 
+a database, in this way, the application will always be connecting to our 
+database when using that docker image.
