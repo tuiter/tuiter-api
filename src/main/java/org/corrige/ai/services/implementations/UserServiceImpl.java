@@ -88,6 +88,9 @@ public class UserServiceImpl implements UserService {
 			if (body.getPhotoUrl() != null && !body.getPhotoUrl().isEmpty()) {
 				user.setPhotoUrl(body.getPhotoUrl());
 			}
+			
+			user.setUsingWeekelyTopic(body.getUsingWeekelyTopic());
+			
 			user = userRepository.save(user);
 			return user;
 		}
@@ -150,4 +153,5 @@ public class UserServiceImpl implements UserService {
 		UserBadges userBadges = new UserBadges(userId, createdEssays, reviewedEssays);
 		return userBadges;
 	}
+
 }
