@@ -1,5 +1,6 @@
 package org.corrige.ai.controllers;
 
+import org.corrige.ai.models.essay.MinimalEssay;
 import org.corrige.ai.models.review.EditReviewBean;
 import org.corrige.ai.models.review.Review;
 import org.corrige.ai.services.interfaces.NotificationService;
@@ -37,9 +38,16 @@ public class ReviewController {
 	}
 	
 	@PutMapping(value="/{id}") 
-	public ResponseEntity<Review> update(@PathVariable String id, @RequestBody EditReviewBean body) throws ReviewNotExistsException, EmptyFieldsException, EssayNotExistsException, UserNotExistsException {
+	public ResponseEntity<Review> update(@PathVariable String id, @RequestBody EditReviewBean body) 
+			throws ReviewNotExistsException, EmptyFieldsException, EssayNotExistsException, UserNotExistsException {
 		Review review = reviewService.update(id, body);
 		notificationService.createOnReviewDone(review.getEssayId(), review.getUserId());
 		return new ResponseEntity<>(review, HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/{id}/essay") 
+	public ResponseEntity<MinimalEssay> getEssayByReviewId(@PathVariable String id) 
+			throws ReviewNotExistsException, EssayNotExistsException {
+		return ResponseEntity.ok(this.reviewService.getEssayByReviewId(id));
 	}
 }
