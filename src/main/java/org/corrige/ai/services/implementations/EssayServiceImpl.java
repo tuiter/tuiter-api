@@ -134,7 +134,15 @@ public class EssayServiceImpl implements EssayService{
 			}
 		}
 		
+		User user = userService.findById(id);
 		Collection<Essay> essays = essayRepository.findAll();
+		
+		if (user.getUsingWeekelyTopic()) {
+			String theme = topicService.getOpenTopic().getTheme();
+			essays = essays.stream().filter(essay -> essay.getTheme().equals(theme)).collect(Collectors.toList());
+ 		}
+		
+		
 		if (!essays.isEmpty()) {
 			Collection<Essay> notReviewedEssays;
 			
