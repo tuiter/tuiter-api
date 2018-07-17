@@ -88,9 +88,9 @@ public class UserServiceImpl implements UserService {
 			if (body.getPhotoUrl() != null && !body.getPhotoUrl().isEmpty()) {
 				user.setPhotoUrl(body.getPhotoUrl());
 			}
-			if(body.getUsingWeekelyTopic()) {
-				user.setUsingWeekelyTopic(true);
-			}
+			
+			user.setUsingWeekelyTopic(body.getUsingWeekelyTopic());
+			
 			user = userRepository.save(user);
 			return user;
 		}
