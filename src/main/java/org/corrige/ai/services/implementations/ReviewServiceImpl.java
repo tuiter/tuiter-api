@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.corrige.ai.enums.ReviewStatus;
 import org.corrige.ai.models.essay.Essay;
+import org.corrige.ai.models.essay.MinimalEssay;
 import org.corrige.ai.models.review.EditReviewBean;
 import org.corrige.ai.models.review.Review;
 import org.corrige.ai.repositories.EssayRepository;
@@ -100,5 +101,13 @@ public class ReviewServiceImpl implements ReviewService {
 	@Override
 	public Review create(String userId, String essayId) {
 		return this.reviewRepository.save(new Review(userId, essayId));
+	}
+
+	@Override
+	public MinimalEssay getEssayByReviewId(String id) throws ReviewNotExistsException, EssayNotExistsException {
+		Review review = this.findById(id);
+		Essay essay = this.essayService.findById(review.getEssayId());
+		return new MinimalEssay(essay.getId(), essay.getTitle());
+		
 	}
 }
