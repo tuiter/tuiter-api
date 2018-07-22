@@ -168,9 +168,9 @@ public class EssayServiceImpl implements EssayService{
 					return new EssayToReviewResponse(review.getId(), essay);
 				}
 			}
-			throw new EssayNotExistsException();
+			throw new EssayNotExistsException("There are no essays available for review at this time.");
 		} else {
-			throw new EssayNotExistsException();
+			throw new EssayNotExistsException("There are no essays available for review at this time.");
 		}
 	}
 	
