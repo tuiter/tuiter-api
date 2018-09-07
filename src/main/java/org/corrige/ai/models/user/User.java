@@ -1,6 +1,7 @@
 package org.corrige.ai.models.user;
 
 
+import org.corrige.ai.enums.Role;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -33,20 +34,23 @@ public class User {
 	private String password;
 	private String photoUrl;
 	
+	private Role role;
+	
 	@Field
 	private Boolean usingWeekelyTopic = false;
 	
-	public User(String email, String username, String name, String password, String photoUrl) {
+	public User(String email, String username, String name, String password, String photoUrl, Role role) {
 		this.email = email;
 		this.username = username;
+		this.role = role;
 		
 		this.name = name;
 		this.password = password;
 		this.photoUrl = photoUrl;
 	}
 	
-	public User(String email, String username,  String name, String password) {
-		this(email, username, name, password, "");
+	public User(String email, String username,  String name, String password, Role role) {
+		this(email, username, name, password, "", role);
 	}
 	
 	public Boolean authenticate(String password) {

@@ -1,5 +1,6 @@
 package org.corrige.ai.models.user;
 
+import org.corrige.ai.enums.Role;
 import org.corrige.ai.validations.annotations.ValidEmail;
 import org.corrige.ai.validations.annotations.ValidName;
 import org.corrige.ai.validations.annotations.ValidPassword;
@@ -18,6 +19,7 @@ public class SignupBean {
 	@Setter private String password;
 	@Getter @Setter private String photoUrl;
 	@Setter private String username;
+	@Getter private Role role;
 
 	@ValidEmail
 	public String getEmail() {
