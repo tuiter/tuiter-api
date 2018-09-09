@@ -13,6 +13,7 @@ import org.corrige.ai.models.essay.EssayBean;
 import org.corrige.ai.models.review.EssayToReviewResponse;
 import org.corrige.ai.models.review.EssaysReviews;
 import org.corrige.ai.models.review.Review;
+import org.corrige.ai.models.topic.Topic;
 import org.corrige.ai.models.user.User;
 import org.corrige.ai.repositories.EssayRepository;
 import org.corrige.ai.services.interfaces.EssayService;
@@ -127,61 +128,83 @@ public class EssayServiceImpl implements EssayService{
 	}
 
 	@Override
-	public EssayToReviewResponse getEssayToReview(String id) throws EssayNotExistsException, UserNotExistsException, TopicNotExistsException, TopicNotFoundException {
-		for (Review review : reviewService.findAllByUserId(id)) {
-			if (review.getStatus().equals(ReviewStatus.PENDING) && essayRepository.findById(review.getEssayId()).isPresent()) {
-				return new EssayToReviewResponse(review.getId(), essayRepository.findById(review.getEssayId()).get());
-			}
-		}
+	public EssayToReviewResponse getEssayToReview(String id) 
+				throws EssayNotExistsException, UserNotExistsException, TopicNotExistsException, TopicNotFoundException {
+		
+		Optional<Review> previousReview = getPreviousReview(id);		
+		if(previousReview.isPresent())
+			return new EssayToReviewResponse(previousReview.get().getId(), 
+						essayRepository.findById(previousReview.get().getEssayId()).get());
 		
 		User user = userService.findById(id);
 		Collection<Essay> essays = essayRepository.findAll();
+		Optional<Topic> topic = null;
 		
 		if (user.getUsingWeekelyTopic()) {
-			String theme = topicService.getOpenTopic().getTheme();
-			essays = essays.stream().filter(essay -> essay.getTheme().equals(theme)).collect(Collectors.toList());
+			topic = topicService.getOpenTopic();
+			essays = filterEssaysByWeeklyTopic(essays, topic);		
  		}
 		
+		Collection<Essay> notReviewedEssays;
 		
-		if (!essays.isEmpty()) {
-			Collection<Essay> notReviewedEssays;
-			
-			if(this.userService.findById(id).getUsingWeekelyTopic()) {
-				notReviewedEssays = this.getEssaysByTopic(this.topicService.getOpenTopic().getId())
-										.stream().filter(essay -> essay.getStatus().equals(ReviewStatus.PENDING))
-										.collect(Collectors.toList());
-			} else {
-				notReviewedEssays = essays.stream().filter(
-						essay -> essay.getStatus().equals(ReviewStatus.PENDING))
-						.collect(Collectors.toList());
-			}
-			
-			if(!notReviewedEssays.isEmpty())
-				essays = notReviewedEssays;
-			
-			if (essays.size() == 0)
-				throw new EssayNotExistsException();
-			
-			for (Essay essay : essays) {
-				if (!essay.getUserId().equals(id) && !userAlreadyReview(reviewService.findAllByUserId(id), essay.getId())) {
-					Review review = reviewService.create(id, essay.getId());
-					return new EssayToReviewResponse(review.getId(), essay);
-				}
-			}
-			throw new EssayNotExistsException("There are no essays available for review at this time.");
-		} else {
-			throw new EssayNotExistsException("There are no essays available for review at this time.");
-		}
+		if(topic == null)
+			topic = topicService.getOpenTopic();
+		
+		if(this.userService.findById(id).getUsingWeekelyTopic() && topic.isPresent())
+			notReviewedEssays = filterPendingEssays(getEssaysByTopic(this.topicService.getOpenTopic().get().getId()));
+		else
+			notReviewedEssays = filterPendingEssays(essays);
+		
+		EssayToReviewResponse response = filterEssaysAndCreateReview(notReviewedEssays, id);
+		
+		if(response == null)
+			response = filterEssaysAndCreateReview(essays, id);
+		
+		if(response != null)
+			return response;
+		
+		throw new EssayNotExistsException("There are no essays available for review at this time.");
 	}
 	
-	private Boolean userAlreadyReview(Iterable<Review> essays, String essayId) {
-		Collection<Review> listOfReviews = new ArrayList<>();
-		essays.forEach(listOfReviews::add);
-		for(Review review : listOfReviews) {
-			if (review.getEssayId().equals(essayId))
-				return true;
+	private Optional<Review> getPreviousReview(String userId) throws UserNotExistsException {
+		return reviewService.findAllByUserId(userId).stream()
+			.filter(review -> review.getStatus().equals(ReviewStatus.PENDING))
+			.filter(review -> essayRepository.findById(review.getEssayId()).isPresent())
+			.findFirst();
+	}
+	
+	private Collection<Essay> filterEssaysByWeeklyTopic(Collection<Essay> essays, Optional<Topic> theme) {
+		if(theme.isPresent()) {
+			String themeName = theme.get().getTheme();
+			return essays.stream()
+						.filter(essay -> essay.getTheme().equals(themeName))
+						.collect(Collectors.toList());
 		}
-		return false;
+		return essays;
+	}
+	
+	private EssayToReviewResponse filterEssaysAndCreateReview(Collection<Essay> essays, String userId) throws UserNotExistsException {
+		for (Essay essay : essays) {
+			if (!essay.getUserId().equals(userId) 
+						&& !userAlreadyReview(reviewService.findAllByUserId(userId), essay.getId())) {
+				
+				Review review = reviewService.create(userId, essay.getId());
+				return new EssayToReviewResponse(review.getId(), essay);
+			}
+		}
+		return null;
+	}
+	
+	private Boolean userAlreadyReview(Collection<Review> reviews, String essayId) {
+		return reviews.stream()
+				.filter(review -> review.getEssayId().equals(essayId))
+				.findFirst()
+				.isPresent();
+	}
+	
+	private List<Essay> filterPendingEssays(Collection<Essay> essays) {
+		return essays.stream().filter(essay -> essay.getStatus().equals(ReviewStatus.PENDING))
+				.collect(Collectors.toList());
 	}
 
 	@Override
@@ -199,12 +222,9 @@ public class EssayServiceImpl implements EssayService{
 
 	@Override
 	public Collection<Essay> getEssaysByTopic(String topicId) throws TopicNotExistsException {
-		Collection<Essay> essays = new ArrayList<>();
-		for (Essay essay : essayRepository.findAll()) {
-			if (essay.getTopicId() != null && essay.getTopicId().equals(topicId)) {
-				essays.add(essay);
-			}
-		}
-		return essays;
+		return essayRepository.findAll()
+			.stream()
+			.filter(essay -> essay.getTopicId() != null && essay.getTopicId().equals(topicId))
+			.collect(Collectors.toList());
 	}
 }

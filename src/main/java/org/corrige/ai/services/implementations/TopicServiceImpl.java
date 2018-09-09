@@ -62,15 +62,13 @@ public class TopicServiceImpl implements TopicService{
 	}
 
 	@Override
-	public Topic getOpenTopic() throws TopicNotFoundException {
-		List<Topic> topics = topicRepository.findAll();
+	public Optional<Topic> getOpenTopic() {
 		Date now = new Date();
-		for (Topic topic : topics) {
-			if (topic.getEndDate().after(now)) {
-				return topic;
-			}
-		}
-		throw new TopicNotFoundException();
+		return topicRepository
+			.findAll()
+			.stream()
+			.filter(topic -> topic.getEndDate().after(now))
+			.findFirst();
 	}
 	
 	public Topic getById(String id){
