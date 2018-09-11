@@ -2,6 +2,7 @@ package org.corrige.ai.services;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +16,9 @@ import org.corrige.ai.enums.Type;
 import org.corrige.ai.models.essay.EditEssayBean;
 import org.corrige.ai.models.essay.Essay;
 import org.corrige.ai.models.essay.EssayBean;
+import org.corrige.ai.models.essay.SimpleEssayBean;
+import org.corrige.ai.models.review.EssayToReviewResponse;
+import org.corrige.ai.models.review.EssaysReviews;
 import org.corrige.ai.models.review.Review;
 import org.corrige.ai.models.topic.Topic;
 import org.corrige.ai.models.user.User;
@@ -28,6 +32,7 @@ import org.corrige.ai.services.implementations.UserServiceImpl;
 import org.corrige.ai.validations.exceptions.EmptyFieldsException;
 import org.corrige.ai.validations.exceptions.EssayNotExistsException;
 import org.corrige.ai.validations.exceptions.TopicNotExistsException;
+import org.corrige.ai.validations.exceptions.TopicNotFoundException;
 import org.corrige.ai.validations.exceptions.UserNotExistsException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -74,6 +79,8 @@ public class EssayServiceTest {
 	
 	EssayBean bean1 = new EssayBean("user1", "Title1", "Theme1",  "Content1", Type.IMAGE, "1");
 	EssayBean bean2 = new EssayBean("user2", "Title2", "Theme2", "Content2", Type.TEXT, "1");
+	
+	List<Essay> essays = new ArrayList<>();
 	
 	@Test
 	public void createEssayTest() {
@@ -285,26 +292,34 @@ public class EssayServiceTest {
 		
 		Review review1 = new Review("1", "2", comments_1, ratings_1);
 		review1.setStatus(ReviewStatus.CORRECTED);
+		review1.setId("1");
 		
 		Essay essay3 = new Essay("2", "Title3", "Theme3", "Content3", Type.TEXT, "1");
 		essay3.setId("3");
+		essay1.setStatus(ReviewStatus.CORRECTED);
+		essay3.setStatus(ReviewStatus.PENDING);
+		
+		essays.add(essay1);
+		essays.add(essay2);
+		essays.add(essay3);
 		
 		List<String> comments_2 = new ArrayList<>();
-		comments_1.add("ok");
-		comments_1.add("ok2");
-		comments_1.add("ok3");
-		comments_1.add("ok4");
-		comments_1.add("ok5");
+		comments_2.add("ok");
+		comments_2.add("ok2");
+		comments_2.add("ok3");
+		comments_2.add("ok4");
+		comments_2.add("ok5");
 		
 		List<Double> ratings_2 = new ArrayList<>();
-		ratings_1.add(new Double(5));
-		ratings_1.add(new Double(4));
-		ratings_1.add(new Double(3));
-		ratings_1.add(new Double(2));
-		ratings_1.add(new Double(1));
+		ratings_2.add(new Double(5));
+		ratings_2.add(new Double(4));
+		ratings_2.add(new Double(3));
+		ratings_2.add(new Double(2));
+		ratings_2.add(new Double(1));
 		
 		Review review2 = new Review("1", "3", comments_2, ratings_2);
 		review2.setStatus(ReviewStatus.PENDING);
+		review2.setId("2");
 		
 		List<Review> reviews1 = new ArrayList<>();
 		reviews1.add(review1);
@@ -312,16 +327,25 @@ public class EssayServiceTest {
 		
 		Optional<Essay> opt_essay1 = Optional.of(essay1);
 		Optional<Essay> opt_essay2 = Optional.of(essay2);
+		Optional<Essay> opt_essay3 = Optional.of(essay3);
 		
 		try {
 			when(userService.findById("1")).thenReturn(user1);
 			when(userService.findById("2")).thenReturn(user2);
+			when(reviewService.findAllByUserId("1")).thenReturn(reviews1);
+			when(reviewService.findAllByUserId("2")).thenReturn(new ArrayList<Review>());
 		} catch (UserNotExistsException e) {
 			e.printStackTrace();
 		}
-		
+		when(essayRepository.findAll()).thenReturn(essays);
 		when(essayRepository.findById("1")).thenReturn(opt_essay1);
 		when(essayRepository.findById("2")).thenReturn(opt_essay2);
+		when(essayRepository.findById("3")).thenReturn(opt_essay3);
+		try {
+			when(topicService.getOpenTopic()).thenReturn(topic1);
+		} catch (TopicNotFoundException e) {
+			e.printStackTrace();
+		}
 		
 		try {
 			when(reviewService.findAllByUserId("1")).thenReturn(reviews1);
@@ -329,8 +353,154 @@ public class EssayServiceTest {
 		} catch (UserNotExistsException e1) {
 			e1.printStackTrace();
 		}
-
 		
+		EssayToReviewResponse essaToReview1 = new EssayToReviewResponse("2", essay3);
+
+		try {
+			Assert.assertEquals(essaToReview1.getReviewId(), this.service.getEssayToReview("1").getReviewId());
+			Assert.assertEquals(essaToReview1.getEssay(), this.service.getEssayToReview("1").getEssay());
+			this.service.getEssayToReview("2");
+		} catch (EssayNotExistsException e) {
+			System.out.println("Testing EssayNotExistsException");
+		} catch (UserNotExistsException e) {
+			e.printStackTrace();
+		} catch (TopicNotExistsException e) {
+			e.printStackTrace();
+		} catch (TopicNotFoundException e) {
+			e.printStackTrace();
+		}
+				
+	}
+	
+	@Test
+	public void getEssaysReviewsTest() {
+		essay1.setId("1");
+		essay2.setId("2");
+		
+		user1.setId("1");
+		user2.setId("2");
+		
+		essay1.setUserId("1");
+		essay2.setUserId("2");
+		
+		List<String> comments_1 = new ArrayList<>();
+		comments_1.add("top");
+		comments_1.add("top2");
+		comments_1.add("top3");
+		comments_1.add("top4");
+		comments_1.add("top5");
+		
+		List<Double> ratings_1 = new ArrayList<>();
+		ratings_1.add(new Double(5));
+		ratings_1.add(new Double(6));
+		ratings_1.add(new Double(7));
+		ratings_1.add(new Double(8));
+		ratings_1.add(new Double(9));
+		
+		Review review1 = new Review("1", "2", comments_1, ratings_1);
+		review1.setStatus(ReviewStatus.CORRECTED);
+		review1.setId("1");
+		
+		Essay essay3 = new Essay("2", "Title3", "Theme3", "Content3", Type.TEXT, "1");
+		essay3.setId("3");
+		essay3.setUserId("2");
+		essay1.setStatus(ReviewStatus.CORRECTED);
+		essay3.setStatus(ReviewStatus.PENDING);
+		
+		essays.add(essay1);
+		essays.add(essay2);
+		essays.add(essay3);
+		
+		List<String> comments_2 = new ArrayList<>();
+		comments_2.add("ok");
+		comments_2.add("ok2");
+		comments_2.add("ok3");
+		comments_2.add("ok4");
+		comments_2.add("ok5");
+		
+		List<Double> ratings_2 = new ArrayList<>();
+		ratings_2.add(new Double(5));
+		ratings_2.add(new Double(4));
+		ratings_2.add(new Double(3));
+		ratings_2.add(new Double(2));
+		ratings_2.add(new Double(1));
+		
+		Review review2 = new Review("1", "3", comments_2, ratings_2);
+		review2.setStatus(ReviewStatus.PENDING);
+		review2.setId("2");
+		
+		List<Review> reviews1 = new ArrayList<>();
+		reviews1.add(review1);
+		reviews1.add(review2);
+		
+		Optional<Essay> opt_essay1 = Optional.of(essay1);
+		Optional<Essay> opt_essay2 = Optional.of(essay2);
+		Optional<Essay> opt_essay3 = Optional.of(essay3);
+		
+		List<Essay> essaysuser1 = new ArrayList<>();
+		essaysuser1.add(essay1);
+		
+		List<Essay> essaysuser2 = new ArrayList<>();
+		essaysuser2.add(essay2);
+		essaysuser2.add(essay3);
+		
+		List<Review> essayreviews2 = new ArrayList<>();
+		essayreviews2.add(review1);
+		
+		List<Review> essayreviews3 = new ArrayList<>();
+		essayreviews3.add(review2);
+		
+		
+		try {
+			when(userService.existsById("1")).thenReturn(true);
+			when(userService.existsById("2")).thenReturn(true);
+			when(reviewService.findAllByUserId("1")).thenReturn(reviews1);
+			when(reviewService.findAllByUserId("2")).thenReturn(new ArrayList<Review>());
+			when(essayRepository.findAllByUserId("1")).thenReturn(essaysuser1);
+			when(essayRepository.findAllByUserId("2")).thenReturn(essaysuser2);
+		} catch (UserNotExistsException e) {
+			e.printStackTrace();
+		}
+		when(essayRepository.findAll()).thenReturn(essays);
+		when(essayRepository.findById("1")).thenReturn(opt_essay1);
+		when(essayRepository.findById("2")).thenReturn(opt_essay2);
+		when(essayRepository.findById("3")).thenReturn(opt_essay3);
+		
+		
+		try {
+			when(reviewService.findAllByEssayId("1")).thenReturn(Collections.emptyList());
+			when(reviewService.findAllByEssayId("2")).thenReturn(essayreviews2);
+			when(reviewService.findAllByEssayId("3")).thenReturn(essayreviews3);
+		} catch (EssayNotExistsException e) {
+			e.printStackTrace();
+		}
+		
+		SimpleEssayBean seb1 = new SimpleEssayBean(essay2.getTitle(), essay2.getTheme());
+		SimpleEssayBean seb2 = new SimpleEssayBean(essay3.getTitle(), essay3.getTheme());
+		
+		EssaysReviews er1 = new EssaysReviews(review1, seb1.getTitle(), seb1.getTheme());
+		EssaysReviews er2 = new EssaysReviews(review2, seb2.getTitle(), seb2.getTheme());
+		
+		List<EssaysReviews> essaysReviews = new ArrayList<>();
+		essaysReviews.add(er1);
+		essaysReviews.add(er2);
+		
+		
+		try {
+			Assert.assertEquals(Collections.emptyList(), this.service.getEssaysReviews("1"));
+			Assert.assertEquals(essaysReviews.get(0).getReview(), this.service.getEssaysReviews("2").get(0).getReview());
+			Assert.assertEquals(essaysReviews.get(0).getEssay().getTheme(), this.service.getEssaysReviews("2").get(0).getEssay().getTheme());
+			Assert.assertEquals(essaysReviews.get(0).getEssay().getTitle(), this.service.getEssaysReviews("2").get(0).getEssay().getTitle());
+
+			Assert.assertEquals(essaysReviews.get(1).getReview(), this.service.getEssaysReviews("2").get(1).getReview());
+			Assert.assertEquals(essaysReviews.get(1).getEssay().getTheme(), this.service.getEssaysReviews("2").get(1).getEssay().getTheme());
+			Assert.assertEquals(essaysReviews.get(1).getEssay().getTitle(), this.service.getEssaysReviews("2").get(1).getEssay().getTitle());
+		} catch (EssayNotExistsException e2) {
+			e2.printStackTrace();
+		} catch (UserNotExistsException e2) {
+			e2.printStackTrace();
+		}
+				
 	}
 	
 	
