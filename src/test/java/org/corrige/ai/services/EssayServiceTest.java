@@ -65,13 +65,11 @@ public class EssayServiceTest {
 	Topic topic1 = new Topic("Theme1", new Date("12/12/2010"), new Date("21/12/2010"));
 	Topic topic2 = new Topic("Theme2", new Date("12/12/2010"), new Date("21/12/2010"));
 
-	Essay essay1 = new Essay("user1", "Title1", "Theme1", "Content1", Type.IMAGE, "1");
-	Essay essay2 = new Essay("user2", "Title2", "Theme2", "Content2", Type.TEXT, "1");
-	Essay essay3 = new Essay("user2", "Title3",  "Theme1","Content3", Type.IMAGE, "2");
+	Essay essay1 = new Essay(null, "Title1", "Theme1", "Content1", Type.IMAGE, "1");
+	Essay essay2 = new Essay(null, "Title2", "Theme2", "Content2", Type.TEXT, "1");
 	
 	EssayBean bean1 = new EssayBean("user1", "Title1", "Theme1",  "Content1", Type.IMAGE, "1");
 	EssayBean bean2 = new EssayBean("user2", "Title2", "Theme2", "Content2", Type.TEXT, "1");
-	EssayBean bean3 = new EssayBean("user2", "Title3",  "Theme1","Content3", Type.IMAGE, "2");
 	
 	@Test
 	public void createEssayTest() {
@@ -90,7 +88,29 @@ public class EssayServiceTest {
 		try {
 			Assert.assertEquals(essay1, this.service.create(bean1));
 			Assert.assertEquals(essay2, this.service.create(bean2));
-			Assert.assertEquals(essay3, this.service.create(bean3));
+		} catch (UserNotExistsException | TopicNotExistsException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	@Test
+	public void updateEssayTest() {
+		when(userService.findByUsername("user1")).thenReturn(opt_user1);
+		when(userService.findByUsername("user2")).thenReturn(opt_user2);
+		
+		try {
+			when(topicService.findById("1")).thenReturn(topic1);
+			when(topicService.findById("2")).thenReturn(topic2);
+		} catch (TopicNotExistsException e) {
+		}
+		
+		when(essayRepository.save(essay1)).thenReturn(essay1);
+		when(essayRepository.save(essay2)).thenReturn(essay2);
+		
+		try {
+			Assert.assertEquals(essay1, this.service.create(bean1));
+			Assert.assertEquals(essay2, this.service.create(bean2));
 		} catch (UserNotExistsException | TopicNotExistsException e) {
 			e.printStackTrace();
 		}
