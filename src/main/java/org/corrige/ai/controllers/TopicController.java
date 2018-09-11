@@ -52,7 +52,7 @@ public class TopicController {
 	
 	@GetMapping
 	public ResponseEntity<Topic> getOpenTopic() throws TopicNotFoundException {
-		return new ResponseEntity<>(topicService.getOpenTopic(), HttpStatus.OK);
+		return new ResponseEntity<>(topicService.getOpenTopic().get(), HttpStatus.OK);
 	}
 	
 	@GetMapping(value = "/all")

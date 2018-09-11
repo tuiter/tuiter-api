@@ -9,6 +9,7 @@ public class UserBean2ModelFactory {
 						bean.getUsername(), 
 						bean.getName(), 
 						bean.getPassword(), 
-						bean.getPhotoUrl());
+						bean.getPhotoUrl(),
+						bean.getRole());
 	}
 }
