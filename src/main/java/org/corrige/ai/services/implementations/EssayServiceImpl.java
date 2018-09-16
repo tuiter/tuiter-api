@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.corrige.ai.enums.ReviewStatus;
+import org.corrige.ai.enums.Role;
 import org.corrige.ai.models.essay.EditEssayBean;
 import org.corrige.ai.models.essay.Essay;
 import org.corrige.ai.models.essay.EssayBean;
@@ -48,7 +49,10 @@ public class EssayServiceImpl implements EssayService{
 		if(bean.getTopicId() != null && topicService.findById(bean.getTopicId()) == null) {
 			throw new TopicNotExistsException();
 		} 
-		Essay essay = new Essay(user.get().getId(), bean.getTitle(), bean.getTheme(), bean.getContent(), bean.getType(), bean.getTopicId());
+		Essay essay = new Essay(user.get().getId(), bean.getTitle(), 
+					bean.getTheme(), bean.getContent(), bean.getType(), 
+					bean.getTopicId(), bean.getPremium());
+		
 		return essayRepository.save(essay);
 	}
 
@@ -137,7 +141,8 @@ public class EssayServiceImpl implements EssayService{
 						essayRepository.findById(previousReview.get().getEssayId()).get());
 		
 		User user = userService.findById(id);
-		Collection<Essay> essays = essayRepository.findAll();
+		
+		Collection<Essay> essays = this.getEssays(user.getRole());
 		Optional<Topic> topic = null;
 		
 		if (user.getUsingWeekelyTopic()) {
@@ -164,6 +169,13 @@ public class EssayServiceImpl implements EssayService{
 			return response;
 		
 		throw new EssayNotExistsException("There are no essays available for review at this time.");
+	}
+	
+	private Collection<Essay> getEssays(Role role) {
+		if (role.equals(Role.TEACHER)) {
+			return this.essayRepository.findByPremium(true);
+		}
+		return this.essayRepository.findAll();
 	}
 	
 	private Optional<Review> getPreviousReview(String userId) throws UserNotExistsException {
