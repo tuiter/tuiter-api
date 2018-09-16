@@ -2,7 +2,6 @@ package org.corrige.ai.services.implementations;
 
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 import org.corrige.ai.models.topic.Topic;
@@ -12,7 +11,6 @@ import org.corrige.ai.services.interfaces.TopicService;
 import org.corrige.ai.validations.exceptions.EmptyFieldsException;
 import org.corrige.ai.validations.exceptions.InvalidDataException;
 import org.corrige.ai.validations.exceptions.TopicNotExistsException;
-import org.corrige.ai.validations.exceptions.TopicNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

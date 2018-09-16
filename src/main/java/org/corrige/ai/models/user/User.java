@@ -36,6 +36,9 @@ public class User {
 	
 	private Role role;
 	
+	@JsonIgnore
+	private float cash;
+	
 	@Field
 	private Boolean usingWeekelyTopic = false;
 	
@@ -47,6 +50,7 @@ public class User {
 		this.name = name;
 		this.password = password;
 		this.photoUrl = photoUrl;
+		this.cash = 0;
 	}
 	
 	public User(String email, String username,  String name, String password, Role role) {

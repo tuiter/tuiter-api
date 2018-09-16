@@ -18,6 +18,10 @@ public class RecordService {
 		return this.recordRepository.save(newRecord);
 	}
 	
+	public void update(Record record) {
+		this.recordRepository.save(record);
+	}
+	
 	public Optional<Record> getByEssayId(String id) {
 		return this.recordRepository.findByEssayId(id);
 	}
