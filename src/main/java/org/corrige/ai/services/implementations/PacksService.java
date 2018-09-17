@@ -14,8 +14,8 @@ public class PacksService {
 	@Autowired
 	private PackRepository packRepository;
 
-	public Pack add(String userId, PackageType packageId) {
-		Pack pack = new Pack(userId, packageId, getCounterForPack(packageId), new Date());
+	public Pack add(String userId, PackageType packagetype) {
+		Pack pack = new Pack(userId, packagetype, getCounterForPack(packagetype), new Date());
 		return this.packRepository.save(pack);
 	}
 	

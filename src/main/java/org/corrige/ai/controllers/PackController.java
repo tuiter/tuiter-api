@@ -23,14 +23,21 @@ public class PackController {
 	@Autowired
 	private PacksService packsService;
 	
-	@PostMapping("{userId}/{packageId}")
-	public ResponseEntity<Pack> addPack(@RequestParam("userId") String userId, @RequestParam("packageId") PackageType packageId) {
-		return ResponseEntity.ok(this.packsService.add(userId, packageId));
+	@PostMapping("/{userId}/{packagetype}")
+	public ResponseEntity<Pack> addPack(
+			@RequestParam("userId") String userId, 
+			@RequestParam("packagetype") PackageType packagetype) {
+		return ResponseEntity.ok(this.packsService.add(userId, packagetype));
 	}
 	
-	@GetMapping("{userId}")
+	@GetMapping("/{userId}")
 	public ResponseEntity<Collection<Pack>> getByUser(@RequestParam("userId") String userId) {
 		return ResponseEntity.ok(this.packsService.getByUser(userId));
+	}
+	
+	@PostMapping("/{userId}/actual")
+	public void getMostRecentPack() {
+		
 	}
 	
 }
