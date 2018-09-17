@@ -13,5 +13,5 @@ public class ServerConstants {
 	public static final String TOPIC_REQUEST = "/topics";
 	public static final String RATING_REQUEST = "/ratings";
 	public static final String PAYMENT_REQUEST = "/payments";
-	
+	public static final String PACKS_REQUESTS = "/packs";
 }
