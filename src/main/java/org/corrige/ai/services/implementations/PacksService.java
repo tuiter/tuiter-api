@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Date;
 
 import org.corrige.ai.enums.PackageType;
+import org.corrige.ai.models.pack.CreatePackBean;
 import org.corrige.ai.models.pack.Pack;
 import org.corrige.ai.repositories.PackRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +15,12 @@ public class PacksService {
 	@Autowired
 	private PackRepository packRepository;
 
-	public Pack add(String userId, PackageType packagetype) {
-		Pack pack = new Pack(userId, packagetype, getCounterForPack(packagetype), new Date());
+	public Pack add(CreatePackBean packData) {
+		Pack pack = new Pack(packData.getUserId(),
+				packData.getPackageType(),
+				getCounterForPack(packData.getPackageType()),
+				new Date());
+		
 		return this.packRepository.save(pack);
 	}
 	

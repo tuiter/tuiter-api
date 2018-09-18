@@ -2,7 +2,7 @@ package org.corrige.ai.controllers;
 
 import java.util.Collection;
 
-import org.corrige.ai.enums.PackageType;
+import org.corrige.ai.models.pack.CreatePackBean;
 import org.corrige.ai.models.pack.Pack;
 import org.corrige.ai.services.implementations.PacksService;
 import org.corrige.ai.util.ServerConstants;
@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,11 +24,9 @@ public class PackController {
 	@Autowired
 	private PacksService packsService;
 	
-	@PostMapping("/{userId}/{packagetype}")
-	public ResponseEntity<Pack> addPack(
-			@RequestParam("userId") String userId, 
-			@RequestParam("packagetype") PackageType packagetype) {
-		return ResponseEntity.ok(this.packsService.add(userId, packagetype));
+	@PostMapping
+	public ResponseEntity<Pack> addPack(@RequestBody CreatePackBean pack) {
+		return ResponseEntity.ok(this.packsService.add(pack));
 	}
 	
 	@GetMapping("/{userId}")
