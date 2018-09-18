@@ -160,7 +160,7 @@ public class EssayServiceTest {
 			Assert.assertEquals(essay2, this.service.update("2", bean2));
 			
 			bean1.setContent("");
-			this.service.update("1", bean1);
+			this.service.update("1", bean1); 
 		} catch (EssayNotExistsException e) {
 			e.printStackTrace();
 		

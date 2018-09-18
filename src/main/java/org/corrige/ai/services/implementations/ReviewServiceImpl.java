@@ -35,7 +35,7 @@ public class ReviewServiceImpl implements ReviewService {
 		Optional<Review> reviewOpt = reviewRepository.findById(id);
 		if(reviewOpt.isPresent()) {
 			Review review = reviewOpt.get();
-			if(!bean.getComments().isEmpty()) {
+			if(!bean.getComments().isEmpty()) { 
 				review.setComments(bean.getComments());
 				review.setRatings(bean.getRatings());
 				review.setStatus(ReviewStatus.CORRECTED);

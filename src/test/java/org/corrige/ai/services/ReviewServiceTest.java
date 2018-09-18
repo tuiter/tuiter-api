@@ -61,7 +61,7 @@ public class ReviewServiceTest {
 	private UserServiceImpl userService;
 	
 	@MockBean
-	private ReviewServiceImpl reviewService;
+	private ReviewServiceImpl reviewService; 
 	
 	@Autowired
 	private EssayServiceImpl service;
@@ -80,15 +80,18 @@ public class ReviewServiceTest {
 	Review review1 = new Review(user1.getId(), essay1.getId(), comments, ratings);
 	
 	ReviewBean bean1 = new ReviewBean(essay1.getId(), user2.getId(), comments, ratings);
+	
 	EditReviewBean bean2 = new EditReviewBean(comments, ratings);
+	
 	
 	@Test
 	public void createReviewTest() {
 		Assert.assertEquals(user1.getId(), review1.getUserId());
-		Assert.assertEquals(essay1.getId(), review1.getEssayId());
-		Assert.assertEquals(comments, review1.getComments());
+		Assert.assertEquals(essay1.getId(), review1.getEssayId()); 
+		Assert.assertEquals(comments, review1.getComments()); 
 		Assert.assertEquals(ratings, review1.getRatings());
-		
+		Assert.assertEquals("Review [id=null, essayId=null, userId=null, content=[], rating=[]]", review1.toString());
+
 		Assert.assertEquals(user1.getId(), bean1.getReviewingUserId());
 		Assert.assertEquals(essay1.getId(), bean1.getEssayId());
 		Assert.assertEquals(comments, bean1.getComments());
@@ -123,7 +126,7 @@ public class ReviewServiceTest {
 	}
 	
 	@Test
-	public void updateReviewTest() {
+	public void updateReviewTest() throws EmptyFieldsException, EssayNotExistsException, ReviewNotExistsException {
 		Review review2 = new Review(user1.getId(), essay1.getId(), comments, ratings);
 		
 		Assert.assertTrue(review1.equals(review2));
@@ -155,6 +158,7 @@ public class ReviewServiceTest {
 		Assert.assertEquals(ratings, review2.getRatings());
 		Assert.assertEquals("1", review2.getUserId());
 		Assert.assertEquals(ReviewStatus.CORRECTED, review2.getStatus());
-		
+				
 	}
+	
 }
