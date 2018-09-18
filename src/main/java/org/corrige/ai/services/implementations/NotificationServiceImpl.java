@@ -10,6 +10,7 @@ import java.util.Optional;
 import org.corrige.ai.enums.Role;
 import org.corrige.ai.models.essay.Essay;
 import org.corrige.ai.models.notification.Notification;
+import org.corrige.ai.models.pack.Pack;
 import org.corrige.ai.models.record.Record;
 import org.corrige.ai.models.user.User;
 import org.corrige.ai.repositories.NotificationRepository;
@@ -36,6 +37,8 @@ public class NotificationServiceImpl implements NotificationService {
 	private EssayService essayService;
 	@Autowired
 	private RecordService recordService;
+	@Autowired
+	private PacksService packService;
 	
 	@Override
 	public Notification createOnReviewDone(String essayId, String senderId) 
@@ -56,9 +59,16 @@ public class NotificationServiceImpl implements NotificationService {
 	}
 	
 	private void commitPayment(User receiver, User sender, String essayId) throws UserNotExistsException {
-		if(receiver.getRole().equals(Role.PREMIUM_STUDENT)) {
+		if(receiver.getRole().equals(Role.PREMIUM_STUDENT)) {			
+			Pack pack = this.packService.getMostRecentPack(receiver.getId());
 			Optional<Record> record = this.recordService.getByEssayId(essayId);
+			
 			if(record.isPresent() && sender.getRole().equals(Role.TEACHER)) {
+				if(pack.getCounter().equals(1))
+					this.packService.remove(pack.getId());
+				else
+					pack.setCounter(pack.getCounter() - 1);
+				
 				record.get().setCommited(true);
 				sender.setCash(sender.getCash() + record.get().getValue());
 				

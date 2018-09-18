@@ -48,4 +48,8 @@ public class PacksService {
 		return packs.stream().sorted().findFirst().get();
 	}
 
+	public void remove(String id) {
+		this.packRepository.deleteById(id);
+	}
+
 }
