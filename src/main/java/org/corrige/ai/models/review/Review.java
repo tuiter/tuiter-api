@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.corrige.ai.enums.ReviewStatus;
+import org.corrige.ai.models.essay.Essay;
 import org.springframework.data.annotation.Id;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
