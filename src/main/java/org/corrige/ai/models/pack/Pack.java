@@ -19,9 +19,16 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Pack {
+public class Pack implements Comparable<Pack>{
 	private String userId;
 	private PackageType type;
 	private Integer counter;
 	private Date createdAt;
+	
+	@Override
+	public int compareTo(Pack other) {
+		if (this.createdAt.before(other.getCreatedAt()))
+			return -1;
+		return 1;
+	}
 }

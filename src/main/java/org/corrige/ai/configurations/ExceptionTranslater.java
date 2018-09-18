@@ -8,6 +8,7 @@ import org.corrige.ai.validations.exceptions.EssayNotExistsException;
 import org.corrige.ai.validations.exceptions.IncorretPasswordException;
 import org.corrige.ai.validations.exceptions.InvalidDataException;
 import org.corrige.ai.validations.exceptions.NotificationNotExistsException;
+import org.corrige.ai.validations.exceptions.PackNotFoundException;
 import org.corrige.ai.validations.exceptions.RatingNotExistsException;
 import org.corrige.ai.validations.exceptions.ReviewNotExistsException;
 import org.corrige.ai.validations.exceptions.TopicNotExistsException;
@@ -88,6 +89,12 @@ public class ExceptionTranslater extends ResponseEntityExceptionHandler {
     @ExceptionHandler(TopicNotExistsException.class)
     public final ResponseEntity<ApiError> handleTopicNotExistsException(TopicNotExistsException exception, WebRequest request) {
 		ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "Topic not exists.");
+		return new ResponseEntity<>(apiError, apiError.getCode());
+    }
+    
+    @ExceptionHandler(PackNotFoundException.class)
+    public final ResponseEntity<ApiError> handlePackNotExistsException(PackNotFoundException exception, WebRequest request) {
+		ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "Pack not found.");
 		return new ResponseEntity<>(apiError, apiError.getCode());
     }
 }	
