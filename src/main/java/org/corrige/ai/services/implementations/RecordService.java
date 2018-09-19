@@ -8,5 +8,5 @@ import org.corrige.ai.models.record.RecordBean;
 public interface RecordService {
 	Record register(RecordBean record);
 	void update(Record record);
-	Optional<Record> getByEssayId(String id)
+	Optional<Record> getByEssayId(String id);
 }

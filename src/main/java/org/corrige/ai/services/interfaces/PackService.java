@@ -2,7 +2,6 @@ package org.corrige.ai.services.interfaces;
 
 import java.util.Collection;
 
-import org.corrige.ai.enums.PackageType;
 import org.corrige.ai.models.pack.CreatePackBean;
 import org.corrige.ai.models.pack.Pack;
 
