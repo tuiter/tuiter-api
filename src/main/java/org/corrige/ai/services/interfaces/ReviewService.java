@@ -2,7 +2,6 @@ package org.corrige.ai.services.interfaces;
 
 import java.util.Collection;
 
-import org.corrige.ai.models.essay.Essay;
 import org.corrige.ai.models.essay.MinimalEssay;
 import org.corrige.ai.models.review.EditReviewBean;
 import org.corrige.ai.models.review.Review;

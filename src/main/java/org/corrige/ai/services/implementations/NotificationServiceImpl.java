@@ -7,8 +7,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.Optional;
 
+import org.corrige.ai.enums.Role;
 import org.corrige.ai.models.essay.Essay;
 import org.corrige.ai.models.notification.Notification;
+import org.corrige.ai.models.record.Record;
 import org.corrige.ai.models.user.User;
 import org.corrige.ai.repositories.NotificationRepository;
 import org.corrige.ai.services.interfaces.EssayService;
@@ -32,20 +34,43 @@ public class NotificationServiceImpl implements NotificationService {
 	private UserService userService;
 	@Autowired
 	private EssayService essayService;
+	@Autowired
+	private RecordServiceImpl recordService;
+
 	
 	@Override
-	public Notification createOnReviewDone(String essayId, String senderId) throws UserNotExistsException, ReviewNotExistsException, EssayNotExistsException {
+	public Notification createOnReviewDone(String essayId, String senderId) 
+				throws UserNotExistsException, ReviewNotExistsException, EssayNotExistsException {
 		User sender = userService.findById(senderId);
 		
 		String timeStamp = generateTimeStamp(); 			
 		Essay essay = essayService.findById(essayId);
 		User receiver = userService.findById(essay.getUserId());
 		
+		this.commitPayment(receiver, sender, essayId);
+		
 		String description = "O usuário '" + sender.getUsername() + "' fez uma revisão na sua redação " + "'" + essay.getTitle() + "'.";
 		
 		Notification notification = new Notification(receiver.getId(), timeStamp, description, true);
 		messagingTemplate.convertAndSend("/notification_ch/" + notification.getUserId(), notification);
 		return notificationRepository.save(notification);
+	}
+	
+	private void commitPayment(User receiver, User sender, String essayId) throws UserNotExistsException {
+		if(receiver.getRole().equals(Role.PREMIUM_STUDENT)) {			
+			
+			Optional<Record> record = this.recordService.getByEssayId(essayId);
+			
+			if(record.isPresent() && sender.getRole().equals(Role.TEACHER)) {
+
+				
+				record.get().setCommited(true);
+				sender.setCash(sender.getCash() + record.get().getValue());
+				
+				this.userService.update(sender.getId(), sender);
+				this.recordService.update(record.get());
+			}
+		}
 	}
 	
 	private String generateTimeStamp() {

@@ -18,7 +18,7 @@ import lombok.Setter;
 @EqualsAndHashCode
 @NoArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Essay {
+public class Essay implements Comparable<Essay>{
 	@Id
 	private String id;
 
@@ -28,11 +28,12 @@ public class Essay {
 	private String content;
 	private Type type;
 	private String topicId;
+	private Boolean premium;
 	
 	@JsonIgnore
 	private ReviewStatus status;
 	
-	public Essay(String userId, String title, String theme, String content, Type type, String topicId) {
+	public Essay(String userId, String title, String theme, String content, Type type, String topicId, Boolean premium) {
 		this.userId = userId;
 		this.title = title;
 		this.theme = theme;
@@ -40,20 +41,32 @@ public class Essay {
 		this.type = type;
 		this.status = ReviewStatus.PENDING;
 		this.topicId = topicId;
+		this.premium = premium;
 	}
 	
-	public Essay(String userId, String title, String content, Type type, String topicId) {
+	public Essay(String userId, String title, String content, Type type, String topicId, Boolean premium) {
 		this.userId = userId;
 		this.title = title;
 		this.content = content;
 		this.type = type;
 		this.status = ReviewStatus.PENDING;
 		this.topicId = topicId;
+		this.premium = premium;
 	}
 
 	@Override
 	public String toString() {
 		return "Essay [id=" + id + ", userId=" + userId + ", title=" + title + ", theme=" + theme + ", content="
 				+ content + ", type=" + type + "]";
+	}
+
+	@Override
+	public int compareTo(Essay other) {
+		if (this.getPremium() && other.getPremium())
+			return 0;
+		else if(this.getPremium() && !other.getPremium())
+			return 1;
+		else
+			return -1;
 	}
 }
