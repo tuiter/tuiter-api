@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import org.corrige.ai.models.pack.CreatePackBean;
 import org.corrige.ai.models.pack.Pack;
-import org.corrige.ai.services.implementations.PacksService;
+import org.corrige.ai.services.implementations.PacksServiceImpl;
 import org.corrige.ai.util.ServerConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 		+ ServerConstants.PACKS_REQUESTS)
 public class PackController {
 	@Autowired
-	private PacksService packsService;
+	private PacksServiceImpl packsService;
 	
 	@PostMapping
 	public ResponseEntity<Pack> addPack(@RequestBody CreatePackBean pack) {

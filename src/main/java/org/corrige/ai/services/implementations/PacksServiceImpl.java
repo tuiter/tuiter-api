@@ -7,12 +7,13 @@ import org.corrige.ai.enums.PackageType;
 import org.corrige.ai.models.pack.CreatePackBean;
 import org.corrige.ai.models.pack.Pack;
 import org.corrige.ai.repositories.PackRepository;
+import org.corrige.ai.services.interfaces.PackService;
 import org.corrige.ai.validations.exceptions.PackNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class PacksService {
+public class PacksServiceImpl implements PackService {
 	@Autowired
 	private PackRepository packRepository;
 
@@ -46,6 +47,10 @@ public class PacksService {
 			return (Pack) packs.toArray()[0];
 		
 		return packs.stream().sorted().findFirst().get();
+	}
+	
+	public void update(Pack pack) {
+		this.packRepository.save(pack);
 	}
 
 	public void remove(String id) {

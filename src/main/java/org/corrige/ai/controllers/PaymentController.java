@@ -2,7 +2,7 @@ package org.corrige.ai.controllers;
 
 import org.corrige.ai.models.record.Record;
 import org.corrige.ai.models.record.RecordBean;
-import org.corrige.ai.services.implementations.RecordService;
+import org.corrige.ai.services.implementations.RecordServiceImpl;
 import org.corrige.ai.util.ServerConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 		+ ServerConstants.PAYMENT_REQUEST)
 public class PaymentController {
 	@Autowired
-	private RecordService recordService;
+	private RecordServiceImpl recordService;
 	
 	@PostMapping
 	public ResponseEntity<Record> register(@RequestBody RecordBean record) {

@@ -18,7 +18,7 @@ import lombok.Setter;
 @EqualsAndHashCode
 @NoArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Essay {
+public class Essay implements Comparable<Essay>{
 	@Id
 	private String id;
 
@@ -58,5 +58,15 @@ public class Essay {
 	public String toString() {
 		return "Essay [id=" + id + ", userId=" + userId + ", title=" + title + ", theme=" + theme + ", content="
 				+ content + ", type=" + type + "]";
+	}
+
+	@Override
+	public int compareTo(Essay other) {
+		if (this.getPremium() && other.getPremium())
+			return 0;
+		else if(this.getPremium() && !other.getPremium())
+			return 1;
+		else
+			return -1;
 	}
 }

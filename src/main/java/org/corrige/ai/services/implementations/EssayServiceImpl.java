@@ -11,6 +11,7 @@ import org.corrige.ai.enums.Role;
 import org.corrige.ai.models.essay.EditEssayBean;
 import org.corrige.ai.models.essay.Essay;
 import org.corrige.ai.models.essay.EssayBean;
+import org.corrige.ai.models.pack.Pack;
 import org.corrige.ai.models.review.EssayToReviewResponse;
 import org.corrige.ai.models.review.EssaysReviews;
 import org.corrige.ai.models.review.Review;
@@ -39,6 +40,8 @@ public class EssayServiceImpl implements EssayService{
 	private ReviewService reviewService;
 	@Autowired
 	private TopicService topicService;
+	@Autowired
+	private PacksServiceImpl packService;
 
 	@Override
 	public Essay create(EssayBean bean) throws UserNotExistsException, TopicNotExistsException{
@@ -53,7 +56,19 @@ public class EssayServiceImpl implements EssayService{
 					bean.getTheme(), bean.getContent(), bean.getType(), 
 					bean.getTopicId(), bean.getPremium());
 		
+		if(essay.getPremium())
+			this.updatePackCounter(essay, user.get().getId());
+		
 		return essayRepository.save(essay);
+	}
+	
+	private void updatePackCounter(Essay essay, String userId) {
+		Pack pack = this.packService.getMostRecentPack(userId);
+		if(pack.getCounter().equals(1))
+			this.packService.remove(pack.getId());
+		else
+			pack.setCounter(pack.getCounter() - 1);
+		this.packService.update(pack);
 	}
 
 	@Override
@@ -173,9 +188,9 @@ public class EssayServiceImpl implements EssayService{
 	
 	private Collection<Essay> getEssays(Role role) {
 		if (role.equals(Role.TEACHER)) {
-			return this.essayRepository.findByPremium(true);
+			return this.essayRepository.findByPremium(true).stream().sorted().collect(Collectors.toList());
 		}
-		return this.essayRepository.findAll();
+		return this.essayRepository.findAll().stream().sorted().collect(Collectors.toList());
 	}
 	
 	private Optional<Review> getPreviousReview(String userId) throws UserNotExistsException {
