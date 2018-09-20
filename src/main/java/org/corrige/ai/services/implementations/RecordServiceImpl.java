@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.corrige.ai.models.record.Record;
 import org.corrige.ai.models.record.RecordBean;
 import org.corrige.ai.repositories.RecordRepository;
+import org.corrige.ai.services.interfaces.RecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
