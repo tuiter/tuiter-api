@@ -19,6 +19,6 @@ public interface MetricsService {
 
 	Map<Vote, Long> getReviewEvaluation(String userId) throws UserNotExistsException;
 
-	Map<RatingClass, Long> getReviewEvaluationPerRating(String userId) throws UserNotExistsException;
+	Map<RatingClass, Map<Vote, Long>> getReviewEvaluationPerRating(String userId) throws UserNotExistsException;
 
 }

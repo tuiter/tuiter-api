@@ -46,7 +46,7 @@ public class MetricsController {
 	}
 	
 	@GetMapping("/eval-req-rating/{userId}")
-	public ResponseEntity<Map<RatingClass, Long>> getReviewEvaluationPerRating(@PathVariable String userId) throws UserNotExistsException {
+	public ResponseEntity<Map<RatingClass, Map<Vote, Long>>> getReviewEvaluationPerRating(@PathVariable String userId) throws UserNotExistsException {
 		return ResponseEntity.ok(this.metricsService.getReviewEvaluationPerRating(userId));
 	}
 }

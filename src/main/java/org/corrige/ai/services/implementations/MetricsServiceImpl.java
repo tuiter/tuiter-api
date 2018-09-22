@@ -91,12 +91,12 @@ public class MetricsServiceImpl implements MetricsService {
 	}
 
 	@Override
-	public Map<RatingClass, Long> getReviewEvaluationPerRating(String userId) throws UserNotExistsException {
+	public Map<RatingClass, Map<Vote, Long>> getReviewEvaluationPerRating(String userId) throws UserNotExistsException {
 		return this.reviewService
 			.findAllByUserId(userId)
 			.stream()
 			.map(review -> new MinimalReview(this.ratingService.findByReviewId(review.getId()), review.getRatings()))
-			.collect(Collectors.groupingBy(MinimalReview::getRating, Collectors.counting()));
+			.collect(Collectors.groupingBy(MinimalReview::getRating, Collectors.groupingBy(MinimalReview::getVote, Collectors.counting())));
 	}
 
 }
