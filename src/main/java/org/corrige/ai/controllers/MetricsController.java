@@ -5,6 +5,7 @@ import java.util.Map;
 import org.corrige.ai.enums.ReviewStatus;
 import org.corrige.ai.services.interfaces.MetricsService;
 import org.corrige.ai.util.ServerConstants;
+import org.corrige.ai.util.Vote;
 import org.corrige.ai.validations.exceptions.UserNotExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -38,8 +39,8 @@ public class MetricsController {
 	}
 	
 	@GetMapping("/eval-rating/{userId}")
-	public void getReviewEvaluation(@PathVariable String userId) {
-		this.metricsService.getReviewEvaluation(userId);
+	public ResponseEntity<Map<Vote, Long>> getReviewEvaluation(@PathVariable String userId) throws UserNotExistsException {
+		return ResponseEntity.ok(this.metricsService.getReviewEvaluation(userId));
 	}
 	
 	@GetMapping("/eval-req-rating/{userId}")

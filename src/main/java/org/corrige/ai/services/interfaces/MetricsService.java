@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.corrige.ai.enums.ReviewStatus;
 import org.corrige.ai.models.essay.Essay;
+import org.corrige.ai.util.Vote;
 import org.corrige.ai.validations.exceptions.UserNotExistsException;
 
 public interface MetricsService {
@@ -15,7 +16,7 @@ public interface MetricsService {
 
 	void getMeanRatingPerRequirement(String userId);
 
-	void getReviewEvaluation(String userId);
+	Map<Vote, Long> getReviewEvaluation(String userId) throws UserNotExistsException;
 
 	void getReviewEvaluationPerRating(String userId);
 

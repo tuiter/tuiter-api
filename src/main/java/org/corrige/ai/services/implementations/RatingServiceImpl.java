@@ -110,4 +110,9 @@ public class RatingServiceImpl implements RatingService {
 		throw new RatingNotExistsException();
 	}
 
+	@Override
+	public Optional<Rating> findByReviewId(String id) {
+		return this.ratingRepository.findAllByReviewId(id).stream().findFirst();
+	}
+
 }
