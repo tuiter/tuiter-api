@@ -2,8 +2,10 @@ package org.corrige.ai.services.implementations;
 
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.corrige.ai.enums.ReviewStatus;
 import org.corrige.ai.models.essay.Essay;
 import org.corrige.ai.services.interfaces.EssayService;
 import org.corrige.ai.services.interfaces.MetricsService;
@@ -24,9 +26,11 @@ public class MetricsServiceImpl implements MetricsService {
 	}
 
 	@Override
-	public void getEssaysStatusSummarised(String userId) {
-		// TODO Auto-generated method stub
-
+	public Map<ReviewStatus, Long> getEssaysStatusSummarised(String userId) throws UserNotExistsException {
+		return this.essayService
+			.findAllByUserId(userId)
+			.stream()
+			.collect(Collectors.groupingBy(Essay::getStatus, Collectors.counting()));
 	}
 
 	@Override

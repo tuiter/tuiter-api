@@ -1,5 +1,8 @@
 package org.corrige.ai.controllers;
 
+import java.util.Map;
+
+import org.corrige.ai.enums.ReviewStatus;
 import org.corrige.ai.services.interfaces.MetricsService;
 import org.corrige.ai.util.ServerConstants;
 import org.corrige.ai.validations.exceptions.UserNotExistsException;
@@ -25,8 +28,8 @@ public class MetricsController {
 	}
 	
 	@GetMapping("/essay-stats/{userId}")
-	public void getEssaysStatusSummarised(@PathVariable String userId) {
-		this.metricsService.getEssaysStatusSummarised(userId);
+	public ResponseEntity<Map<ReviewStatus, Long>> getEssaysStatusSummarised(@PathVariable String userId) throws UserNotExistsException {
+		return ResponseEntity.ok(this.metricsService.getEssaysStatusSummarised(userId));
 	}
 	
 	@GetMapping("/req-rating/{userId}")
