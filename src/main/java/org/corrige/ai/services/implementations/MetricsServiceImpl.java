@@ -7,9 +7,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.corrige.ai.enums.RatingClass;
 import org.corrige.ai.enums.ReviewStatus;
 import org.corrige.ai.models.essay.Essay;
 import org.corrige.ai.models.rating.Rating;
+import org.corrige.ai.models.review.MinimalReview;
 import org.corrige.ai.models.review.Review;
 import org.corrige.ai.services.interfaces.EssayService;
 import org.corrige.ai.services.interfaces.MetricsService;
@@ -32,10 +34,10 @@ public class MetricsServiceImpl implements MetricsService {
 	@Override
 	public Collection<Essay> getEvolution(String userId) throws UserNotExistsException {
 		return this.essayService
-				.findAllByUserId(userId)
-				.stream()
-				.sorted(Comparator.comparing(Essay::getCreatedAt))
-				.collect(Collectors.toList());
+			.findAllByUserId(userId)
+			.stream()
+			.sorted(Comparator.comparing(Essay::getCreatedAt))
+			.collect(Collectors.toList());
 	}
 
 	@Override
@@ -89,9 +91,12 @@ public class MetricsServiceImpl implements MetricsService {
 	}
 
 	@Override
-	public void getReviewEvaluationPerRating(String userId) {
-		// TODO Auto-generated method stub
-
+	public Map<RatingClass, Long> getReviewEvaluationPerRating(String userId) throws UserNotExistsException {
+		return this.reviewService
+			.findAllByUserId(userId)
+			.stream()
+			.map(review -> new MinimalReview(this.ratingService.findByReviewId(review.getId()), review.getRatings()))
+			.collect(Collectors.groupingBy(MinimalReview::getRating, Collectors.counting()));
 	}
 
 }

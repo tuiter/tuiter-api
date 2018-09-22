@@ -3,6 +3,7 @@ package org.corrige.ai.services.interfaces;
 import java.util.Collection;
 import java.util.Map;
 
+import org.corrige.ai.enums.RatingClass;
 import org.corrige.ai.enums.ReviewStatus;
 import org.corrige.ai.models.essay.Essay;
 import org.corrige.ai.util.Vote;
@@ -18,6 +19,6 @@ public interface MetricsService {
 
 	Map<Vote, Long> getReviewEvaluation(String userId) throws UserNotExistsException;
 
-	void getReviewEvaluationPerRating(String userId);
+	Map<RatingClass, Long> getReviewEvaluationPerRating(String userId) throws UserNotExistsException;
 
 }

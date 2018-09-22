@@ -3,6 +3,7 @@ package org.corrige.ai.controllers;
 import java.util.Collection;
 import java.util.Map;
 
+import org.corrige.ai.enums.RatingClass;
 import org.corrige.ai.enums.ReviewStatus;
 import org.corrige.ai.services.interfaces.MetricsService;
 import org.corrige.ai.util.ServerConstants;
@@ -45,7 +46,7 @@ public class MetricsController {
 	}
 	
 	@GetMapping("/eval-req-rating/{userId}")
-	public void getReviewEvaluationPerRating(@PathVariable String userId) {
-		this.metricsService.getReviewEvaluationPerRating(userId);
+	public ResponseEntity<Map<RatingClass, Long>> getReviewEvaluationPerRating(@PathVariable String userId) throws UserNotExistsException {
+		return ResponseEntity.ok(this.metricsService.getReviewEvaluationPerRating(userId));
 	}
 }
