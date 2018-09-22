@@ -60,9 +60,11 @@ public class MetricsServiceImpl implements MetricsService {
 	}
 	
 	private List<Double> reduceLists(List<Double> x, List<Double> y) {
+		int i = 0;
 		List<Double> response = new ArrayList<>();
-		for (int i = 0; i < x.size(); i++)
-			response.add(x.get(i) + y.get(i));
+		
+		for (Double xi : x)
+			response.add(xi + y.get(i++));	
 		return response;
 	}
 	
