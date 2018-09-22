@@ -1,6 +1,7 @@
 package org.corrige.ai.services.implementations;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -86,7 +87,7 @@ public class RatingServiceImpl implements RatingService {
 	}
 
 	@Override
-	public List<Rating> findAllUsersRatings(String userId) throws ReviewNotExistsException, UserNotExistsException {
+	public Collection<Rating> findAllUsersRatings(String userId) throws ReviewNotExistsException, UserNotExistsException {
 		List<Rating> ratings = new ArrayList<>();
 		if (userService.findById(userId) != null) {
 			Iterable<Review> reviews = reviewService.findAllByUserId(userId);

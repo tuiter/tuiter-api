@@ -1,5 +1,6 @@
 package org.corrige.ai.services.interfaces;
 
+import java.util.Collection;
 import java.util.Optional;
 
 import org.corrige.ai.models.rating.EditRatingBean;
@@ -14,7 +15,7 @@ public interface RatingService {
 	Rating create(RatingBean rating) throws ReviewNotExistsException, EmptyFieldsException, UserNotExistsException;
 	Rating update(String id, EditRatingBean editRatingBean) throws RatingNotExistsException, EmptyFieldsException;
 	Rating delete(String id) throws RatingNotExistsException;
-	Iterable<Rating> findAllUsersRatings(String userId) throws ReviewNotExistsException, UserNotExistsException;
+	Collection<Rating> findAllUsersRatings(String userId) throws ReviewNotExistsException, UserNotExistsException;
 	Rating findById(String id) throws RatingNotExistsException;
 	Optional<Rating> findByReviewId(String id);
 }

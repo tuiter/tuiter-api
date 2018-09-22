@@ -14,7 +14,7 @@ public interface MetricsService {
 
 	Map<ReviewStatus, Long> getEssaysStatusSummarised(String userId) throws UserNotExistsException;
 
-	void getMeanRatingPerRequirement(String userId);
+	Collection<Double> getMeanRatingPerRequirement(String userId) throws UserNotExistsException;
 
 	Map<Vote, Long> getReviewEvaluation(String userId) throws UserNotExistsException;
 

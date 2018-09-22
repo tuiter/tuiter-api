@@ -1,5 +1,6 @@
 package org.corrige.ai.controllers;
 
+import java.util.Collection;
 import java.util.Map;
 
 import org.corrige.ai.enums.ReviewStatus;
@@ -34,8 +35,8 @@ public class MetricsController {
 	}
 	
 	@GetMapping("/req-rating/{userId}")
-	public void getMeanRatingPerRequirement(@PathVariable String userId) {
-		this.metricsService.getMeanRatingPerRequirement(userId);
+	public ResponseEntity<Collection<Double>> getMeanRatingPerRequirement(@PathVariable String userId) throws UserNotExistsException {
+		return ResponseEntity.ok(this.metricsService.getMeanRatingPerRequirement(userId));
 	}
 	
 	@GetMapping("/eval-rating/{userId}")

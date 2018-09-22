@@ -1,13 +1,16 @@
 package org.corrige.ai.services.implementations;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.corrige.ai.enums.ReviewStatus;
 import org.corrige.ai.models.essay.Essay;
 import org.corrige.ai.models.rating.Rating;
+import org.corrige.ai.models.review.Review;
 import org.corrige.ai.services.interfaces.EssayService;
 import org.corrige.ai.services.interfaces.MetricsService;
 import org.corrige.ai.services.interfaces.RatingService;
@@ -44,9 +47,30 @@ public class MetricsServiceImpl implements MetricsService {
 	}
 
 	@Override
-	public void getMeanRatingPerRequirement(String userId) {
-		// TODO Auto-generated method stub
+	public Collection<Double> getMeanRatingPerRequirement(String userId) throws UserNotExistsException {
+		Collection<Review> reviews = this.reviewService.findAllByUserId(userId);
+		
+		return reviews
+			.stream()
+			.map(review -> review.getRatings())
+			.reduce((x, y) -> reduceLists(x, y))
+			.map(ratings -> getListOfMeans(ratings, reviews.size()))
+			.get();
 
+	}
+	
+	private List<Double> reduceLists(List<Double> x, List<Double> y) {
+		List<Double> response = new ArrayList<>();
+		for (int i = 0; i < x.size(); i++)
+			response.add(x.get(i) + y.get(i));
+		return response;
+	}
+	
+	private List<Double> getListOfMeans(List<Double> sumRatings, int count) {
+		return sumRatings
+			.stream()
+			.map(rating -> rating / count)
+			.collect(Collectors.toList());
 	}
 
 	@Override
