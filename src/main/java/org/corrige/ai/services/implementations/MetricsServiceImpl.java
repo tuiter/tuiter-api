@@ -61,7 +61,7 @@ public class MetricsServiceImpl implements MetricsService {
 			.map(review -> review.getRatings())
 			.reduce((x, y) -> reduceLists(x, y))
 			.map(ratings -> getListOfMeans(ratings, reviews.size()))
-			.get();
+			.orElse(new ArrayList<>());
 
 	}
 	
@@ -100,7 +100,10 @@ public class MetricsServiceImpl implements MetricsService {
 			.findAllByUserId(userId)
 			.stream()
 			.map(review -> new MinimalReview(this.ratingService.findByReviewId(review.getId()), review.getRatings()))
-			.collect(Collectors.groupingBy(MinimalReview::getRating, Collectors.groupingBy(MinimalReview::getVote, Collectors.counting())));
+			.filter(minReview -> minReview.getVote() != null && minReview.getRating() != null)
+			.collect(Collectors.groupingBy(MinimalReview::getRating, 
+					 Collectors.groupingBy(MinimalReview::getVote, 
+					 Collectors.counting())));
 	}
 
 }

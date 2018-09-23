@@ -16,12 +16,17 @@ public class MinimalReview {
 	private RatingClass rating;
 
 	public MinimalReview(Optional<Rating> optional, List<Double> ratings) {
-		this.vote = optional.get().getVote();
+		if(optional.isPresent())
+			optional.get().getVote();
 		this.rating = calcRatingClass(ratings);
 	}
 	
 	private RatingClass calcRatingClass(List<Double> ratings) {
-		Double rating = ratings.stream().reduce((x, y) -> x = y).get();
+		Optional<Double> ratingOP = ratings.stream().reduce((x, y) -> x = y);
+		if(!ratingOP.isPresent())
+			return null;
+		
+		Double rating = ratingOP.get();
 		if(rating < 300)
 			return RatingClass.ONE;
 		else if(rating < 700)
