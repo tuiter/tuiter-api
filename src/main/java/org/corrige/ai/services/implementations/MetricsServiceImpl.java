@@ -2,7 +2,6 @@ package org.corrige.ai.services.implementations;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -34,11 +33,14 @@ public class MetricsServiceImpl implements MetricsService {
 	private RatingService ratingService;
 
 	@Override
-	public Collection<Essay> getEvolution(String userId) throws UserNotExistsException {
+	public Collection<Double> getEvolution(String userId) throws UserNotExistsException {
 		return this.essayService
 			.findAllByUserId(userId)
 			.stream()
-			.sorted(Comparator.comparing(Essay::getCreatedAt))
+			.sorted(Essay::compareTo)
+			.map(essay -> this.essayService.getEssayRating(essay.getId()))
+			.filter(rating -> rating.isPresent())
+			.map(evaluation -> evaluation.getAsDouble())
 			.collect(Collectors.toList());
 	}
 

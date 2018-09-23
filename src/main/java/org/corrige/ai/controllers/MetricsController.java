@@ -26,8 +26,8 @@ public class MetricsController {
 	private MetricsService metricsService;
 	
 	@GetMapping("/evolution/{userId}")
-	public void getHistoryEvolution(@PathVariable String userId) throws UserNotExistsException {
-		ResponseEntity.ok(this.metricsService.getEvolution(userId));
+	public ResponseEntity<Collection<Double>> getHistoryEvolution(@PathVariable String userId) throws UserNotExistsException {
+		return ResponseEntity.ok(this.metricsService.getEvolution(userId));
 	}
 	
 	@GetMapping("/essay-stats/{userId}")

@@ -2,6 +2,7 @@ package org.corrige.ai.services.interfaces;
 
 import java.util.Collection;
 import java.util.Optional;
+import java.util.OptionalDouble;
 
 import org.corrige.ai.models.essay.EditEssayBean;
 import org.corrige.ai.models.essay.Essay;
@@ -26,4 +27,5 @@ public interface EssayService {
 	EssayToReviewResponse getEssayToReview(String id) throws EssayNotExistsException, UserNotExistsException, TopicNotExistsException, TopicNotFoundException;
 	Collection<EssaysReviews> getEssaysReviews(String id) throws EssayNotExistsException, UserNotExistsException;
 	Collection<Essay> getEssaysByTopic(String topicId) throws TopicNotExistsException;
+	OptionalDouble getEssayRating(String essayId) throws EssayNotExistsException;
 }
