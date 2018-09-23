@@ -20,7 +20,9 @@ import org.corrige.ai.services.interfaces.ReviewService;
 import org.corrige.ai.util.Vote;
 import org.corrige.ai.validations.exceptions.UserNotExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class MetricsServiceImpl implements MetricsService {
 	@Autowired
 	private EssayService essayService;
