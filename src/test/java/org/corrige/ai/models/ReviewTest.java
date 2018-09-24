@@ -1,4 +1,3 @@
-package org.corrige.ai.models;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -19,8 +18,4 @@ class ReviewTest {
 		review1 = new Review ("1", "1");
 	}
 	
-	@Test
-	void testIDs() {
-		Assert.assertArrayEquals(user1.getId(), review1.getUserId);
-	}
 }

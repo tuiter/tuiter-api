@@ -1,4 +1,3 @@
-package org.corrige.ai.models;
 
 import org.corrige.ai.enums.Role;
 import org.corrige.ai.models.user.User;
