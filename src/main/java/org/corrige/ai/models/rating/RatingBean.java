@@ -10,7 +10,7 @@ public class RatingBean {
 	
 	public RatingBean() {}
 
-	public RatingBean(String userId, String reviewId, Vote vote, String comment) {
+	public RatingBean(String userId, String reviewId, Vote vote, String comment) { 
 		this.userId = userId;
 		this.reviewId = reviewId;
 		this.vote = vote;

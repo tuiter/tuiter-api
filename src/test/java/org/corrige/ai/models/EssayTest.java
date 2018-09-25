@@ -1,4 +1,4 @@
-package org.corrige.ai.models;
+
 
 import org.junit.Assert;
 import org.junit.Before;
