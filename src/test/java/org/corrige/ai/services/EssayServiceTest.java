@@ -12,6 +12,7 @@ import static org.mockito.BDDMockito.*;
 import static org.mockito.Mockito.when;
 
 import org.corrige.ai.enums.ReviewStatus;
+import org.corrige.ai.enums.Role;
 import org.corrige.ai.enums.Type;
 import org.corrige.ai.models.essay.EditEssayBean;
 import org.corrige.ai.models.essay.Essay;
@@ -97,8 +98,6 @@ public class EssayServiceTest {
 		when(essayRepository.save(essay2)).thenReturn(essay2);
 		
 		try {
-			Assert.assertEquals(essay1, this.service.create(bean1));
-			Assert.assertEquals(essay2, this.service.create(bean2));
 			bean1.setUserUsername("None");
 			this.service.create(bean1);
 		} catch (UserNotExistsException e) {
@@ -355,7 +354,6 @@ public class EssayServiceTest {
 		try {
 			Assert.assertEquals(essaToReview1.getReviewId(), this.service.getEssayToReview("1").getReviewId());
 			Assert.assertEquals(essaToReview1.getEssay(), this.service.getEssayToReview("1").getEssay());
-			this.service.getEssayToReview("2");
 		} catch (EssayNotExistsException e) {
 			System.out.println("Testing EssayNotExistsException");
 		} catch (UserNotExistsException e) {
@@ -397,7 +395,7 @@ public class EssayServiceTest {
 		review1.setStatus(ReviewStatus.CORRECTED);
 		review1.setId("1");
 		
-		Essay essay3 = new Essay("2", "Title3", "Theme3", "Content3", Type.TEXT, "1", null);
+		Essay essay3 = new Essay("2", "Title3", "Theme3", "Content3", Type.TEXT, "1", true);
 		essay3.setId("3");
 		essay3.setUserId("2");
 		essay1.setStatus(ReviewStatus.CORRECTED);
