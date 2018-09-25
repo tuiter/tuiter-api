@@ -74,7 +74,7 @@ public class ReviewServiceImpl implements ReviewService {
 	}
 	
 	@Override
-	public Collection<Review> findAllByEssayId(String id) throws EssayNotExistsException {
+	public Collection<Review> findAllByEssayId(String id) {
 		Essay essay = essayService.findById(id);
 		
 		if (essay != null) {

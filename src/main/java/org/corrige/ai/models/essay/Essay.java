@@ -1,5 +1,7 @@
 package org.corrige.ai.models.essay;
 
+import java.util.Date;
+
 import org.corrige.ai.enums.ReviewStatus;
 import org.corrige.ai.enums.Type;
 import org.springframework.data.annotation.Id;
@@ -29,6 +31,7 @@ public class Essay implements Comparable<Essay>{
 	private Type type;
 	private String topicId;
 	private Boolean premium;
+	private Date createdAt;
 	
 	@JsonIgnore
 	private ReviewStatus status;
@@ -42,6 +45,7 @@ public class Essay implements Comparable<Essay>{
 		this.status = ReviewStatus.PENDING;
 		this.topicId = topicId;
 		this.premium = premium;
+		this.createdAt = new Date();
 	}
 	
 	public Essay(String userId, String title, String content, Type type, String topicId, Boolean premium) {
@@ -52,6 +56,7 @@ public class Essay implements Comparable<Essay>{
 		this.status = ReviewStatus.PENDING;
 		this.topicId = topicId;
 		this.premium = premium;
+		this.createdAt = new Date();
 	}
 
 	@Override

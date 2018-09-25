@@ -1,4 +1,4 @@
-package org.corrige.ai.services.implementations;
+package org.corrige.ai.services.interfaces;
 
 import java.util.Optional;
 

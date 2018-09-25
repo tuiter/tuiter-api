@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.OptionalDouble;
 import java.util.stream.Collectors;
 
 import org.corrige.ai.enums.ReviewStatus;
@@ -253,5 +254,15 @@ public class EssayServiceImpl implements EssayService{
 			.stream()
 			.filter(essay -> essay.getTopicId() != null && essay.getTopicId().equals(topicId))
 			.collect(Collectors.toList());
+	}
+
+	@Override
+	public OptionalDouble getEssayRating(String essayId) {
+		return this.reviewService
+			.findAllByEssayId(essayId)
+			.stream()
+			.map(review -> review.getRatings())
+			.map(ratings -> ratings.stream().mapToDouble(f -> f).sum())
+			.mapToDouble(s -> s).average();
 	}
 }
