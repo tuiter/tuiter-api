@@ -65,8 +65,8 @@ public class EssayServiceTest {
 	@MockBean
 	private TopicServiceImpl topicService;
 
-	User user1 = new User("user1@gmail.com", "user1", "User1", "pass123", "photo1");
-	User user2 = new User("user2@gmail.com", "user2", "User2", "pass123", "photo2");
+	User user1 = new User("user1@gmail.com", "user1", "User1", "pass123", "photo1", null);
+	User user2 = new User("user2@gmail.com", "user2", "User2", "pass123", "photo2", null);
 	
 	Optional<User> opt_user1 = Optional.of(user1);
 	Optional<User> opt_user2 = Optional.of(user2);
@@ -74,11 +74,11 @@ public class EssayServiceTest {
 	Topic topic1 = new Topic("Theme1", new Date("12/12/2010"), new Date("21/12/2010"));
 	Topic topic2 = new Topic("Theme2", new Date("12/12/2010"), new Date("21/12/2010"));
 
-	Essay essay1 = new Essay(null, "Title1", "Theme1", "Content1", Type.IMAGE, "1");
-	Essay essay2 = new Essay(null, "Title2", "Theme2", "Content2", Type.TEXT, "1");
+	Essay essay1 = new Essay(null, "Title1", "Theme1", "Content1", Type.IMAGE, "1", null);
+	Essay essay2 = new Essay(null, "Title2", "Theme2", "Content2", Type.TEXT, "1", null);
 	
-	EssayBean bean1 = new EssayBean("user1", "Title1", "Theme1",  "Content1", Type.IMAGE, "1");
-	EssayBean bean2 = new EssayBean("user2", "Title2", "Theme2", "Content2", Type.TEXT, "1");
+	EssayBean bean1 = new EssayBean("user1", "Title1", "Theme1",  "Content1", Type.IMAGE, "1", null);
+	EssayBean bean2 = new EssayBean("user2", "Title2", "Theme2", "Content2", Type.TEXT, "1", null);
 	
 	List<Essay> essays = new ArrayList<>();
 	
@@ -195,7 +195,7 @@ public class EssayServiceTest {
 	
 	@Test
 	public void findAllByUserUsernameTest() {
-		Essay essay3 = new Essay("1", "Title3", "Theme3", "Content3", Type.TEXT, "1");
+		Essay essay3 = new Essay("1", "Title3", "Theme3", "Content3", Type.TEXT, "1", null);
 		
 		essay1.setId("1");
 		essay2.setId("2");
@@ -231,7 +231,7 @@ public class EssayServiceTest {
 	
 	@Test
 	public void findAllByUserIdTest() {
-		Essay essay3 = new Essay("1", "Title3", "Theme3", "Content3", Type.TEXT, "1");
+		Essay essay3 = new Essay("1", "Title3", "Theme3", "Content3", Type.TEXT, "1", null);
 		
 		essay1.setId("1");
 		essay2.setId("2");
@@ -294,7 +294,7 @@ public class EssayServiceTest {
 		review1.setStatus(ReviewStatus.CORRECTED);
 		review1.setId("1");
 		
-		Essay essay3 = new Essay("2", "Title3", "Theme3", "Content3", Type.TEXT, "1");
+		Essay essay3 = new Essay("2", "Title3", "Theme3", "Content3", Type.TEXT, "1", null);
 		essay3.setId("3");
 		essay1.setStatus(ReviewStatus.CORRECTED);
 		essay3.setStatus(ReviewStatus.PENDING);
@@ -341,11 +341,7 @@ public class EssayServiceTest {
 		when(essayRepository.findById("1")).thenReturn(opt_essay1);
 		when(essayRepository.findById("2")).thenReturn(opt_essay2);
 		when(essayRepository.findById("3")).thenReturn(opt_essay3);
-		try {
-			when(topicService.getOpenTopic()).thenReturn(topic1);
-		} catch (TopicNotFoundException e) {
-			e.printStackTrace();
-		}
+
 		
 		try {
 			when(reviewService.findAllByUserId("1")).thenReturn(reviews1);
@@ -401,7 +397,7 @@ public class EssayServiceTest {
 		review1.setStatus(ReviewStatus.CORRECTED);
 		review1.setId("1");
 		
-		Essay essay3 = new Essay("2", "Title3", "Theme3", "Content3", Type.TEXT, "1");
+		Essay essay3 = new Essay("2", "Title3", "Theme3", "Content3", Type.TEXT, "1", null);
 		essay3.setId("3");
 		essay3.setUserId("2");
 		essay1.setStatus(ReviewStatus.CORRECTED);

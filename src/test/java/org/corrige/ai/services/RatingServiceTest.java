@@ -74,9 +74,9 @@ public class RatingServiceTest {
 	List<String> comments = new ArrayList<>();
 	List<Double> ratings = new ArrayList<>();
 	
-	User user1 = new User("user1@gmail.com", "user1", "User1", "pass123", "photo1");
+	User user1 = new User("user1@gmail.com", "user1", "User1", "pass123", "photo1", null);
 	
-	Essay essay1 = new Essay(user1.getId(), "Title1", "Theme1", "Content1", Type.IMAGE, "1");
+	Essay essay1 = new Essay(user1.getId(), "Title1", "Theme1", "Content1", Type.IMAGE, "1", null);
 	
 	Review review1 = new Review(user1.getId(), essay1.getId(), comments, ratings);
 	

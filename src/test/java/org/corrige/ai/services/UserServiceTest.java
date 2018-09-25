@@ -29,13 +29,13 @@ public class UserServiceTest {
 	@Autowired
 	private UserServiceImpl service;
 	
-	SignupBean bean1 = new SignupBean("user1@gmail.com", "User1", "pass123", "photo", "user1");
-	SignupBean bean2 = new SignupBean("user2@gmail.com", "User2", "pass123", "photo", "user2");
-	SignupBean bean3 = new SignupBean("user3@gmail.com", "User3", "pass123", "photo", "user3");
+	SignupBean bean1 = new SignupBean("user1@gmail.com", "User1", "pass123", "photo", "user1", null);
+	SignupBean bean2 = new SignupBean("user2@gmail.com", "User2", "pass123", "photo", "user2", null);
+	SignupBean bean3 = new SignupBean("user3@gmail.com", "User3", "pass123", "photo", "user3", null);
 	
-	User user1 = new User(bean1.getEmail(), bean1.getUsername(), bean1.getName(), bean1.getPassword(), bean1.getPhotoUrl());
-	User user2 = new User(bean2.getEmail(), bean2.getUsername(), bean2.getName(), bean2.getPassword(), bean2.getPhotoUrl());
-	User user3 = new User(bean3.getEmail(), bean3.getUsername(), bean3.getName(), bean3.getPassword(), bean3.getPhotoUrl());
+	User user1 = new User(bean1.getEmail(), bean1.getUsername(), bean1.getName(), bean1.getPassword(), bean1.getPhotoUrl(), null);
+	User user2 = new User(bean2.getEmail(), bean2.getUsername(), bean2.getName(), bean2.getPassword(), bean2.getPhotoUrl(), null);
+	User user3 = new User(bean3.getEmail(), bean3.getUsername(), bean3.getName(), bean3.getPassword(), bean3.getPhotoUrl(), null);
 
 	Optional<User> opt_user1 = Optional.of(user1);
 	Optional<User> opt_user2 = Optional.of(user2);

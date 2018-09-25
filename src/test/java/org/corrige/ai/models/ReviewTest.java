@@ -14,7 +14,7 @@ class ReviewTest {
 	
 	@Before
 	public void createUsersEssaysAndReviews () {
-		user1 = new User("1", "Ze", "Jose", "123456", "url");
+		user1 = new User("1", "Ze", "Jose", "123456", "url", null);
 		review1 = new Review ("1", "1");
 	}
 	
