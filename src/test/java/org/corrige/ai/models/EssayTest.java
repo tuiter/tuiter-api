@@ -1,3 +1,5 @@
+package org.corrige.ai.models;
+
 
 
 import org.junit.Assert;

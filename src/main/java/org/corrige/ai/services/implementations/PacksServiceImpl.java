@@ -2,13 +2,13 @@ package org.corrige.ai.services.implementations;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.Optional;
 
 import org.corrige.ai.enums.PackageType;
 import org.corrige.ai.models.pack.CreatePackBean;
 import org.corrige.ai.models.pack.Pack;
 import org.corrige.ai.repositories.PackRepository;
 import org.corrige.ai.services.interfaces.PackService;
-import org.corrige.ai.validations.exceptions.PackNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,14 +39,8 @@ public class PacksServiceImpl implements PackService {
 		return this.packRepository.findAllByUserId(userId);
 	}
 
-	public Pack getMostRecentPack(String userId) {
-		Collection<Pack> packs = this.getByUser(userId);
-		if(packs.isEmpty())
-			throw new PackNotFoundException();
-		if(packs.size() == 1)
-			return (Pack) packs.toArray()[0];
-		
-		return packs.stream().sorted().findFirst().get();
+	public Optional<Pack> getMostRecentPack(String userId) {
+		return this.getByUser(userId).stream().sorted().findFirst();
 	}
 	
 	public void update(Pack pack) {
