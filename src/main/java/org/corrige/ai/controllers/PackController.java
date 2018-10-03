@@ -36,7 +36,7 @@ public class PackController {
 	
 	@GetMapping("/{userId}/actual")
 	public ResponseEntity<Pack> getMostRecentPack(@PathVariable String userId) {
-		return ResponseEntity.ok(this.packsService.getMostRecentPack(userId));
+		return ResponseEntity.ok(this.packsService.getMostRecentPack(userId).get());
 	}
 	
 }

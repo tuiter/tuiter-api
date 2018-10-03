@@ -64,12 +64,14 @@ public class EssayServiceImpl implements EssayService{
 	}
 	
 	private void updatePackCounter(Essay essay, String userId) {
-		Pack pack = this.packService.getMostRecentPack(userId);
-		if(pack.getCounter().equals(1))
-			this.packService.remove(pack.getId());
+		Optional<Pack> pack = this.packService.getMostRecentPack(userId);
+		if (!pack.isPresent())
+			return;
+		if(pack.get().getCounter().equals(1))
+			this.packService.remove(pack.get().getId());
 		else
-			pack.setCounter(pack.getCounter() - 1);
-		this.packService.update(pack);
+			pack.get().setCounter(pack.get().getCounter() - 1);
+		this.packService.update(pack.get());
 	}
 
 	@Override
